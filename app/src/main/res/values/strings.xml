@@ -1,3 +1,10 @@
 <resources>
+
     <string name="app_name">GHandApp</string>
+
+    <!-- Screen Login -->
+    <string name="logar">Login</string>
+    <string name="email">Email</string>
+    <string name="senha">Password</string>
+    <string name="registrar">Não possui conta? registre aqui!</string>
 </resources>
