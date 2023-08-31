@@ -1,10 +1,10 @@
-package com.example.ghandapp.register.usuario.view
+package com.example.ghandapp.login.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ghandapp.R
 
-class UsuarioActivity: AppCompatActivity() {
+class LoginActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

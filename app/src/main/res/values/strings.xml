@@ -7,4 +7,10 @@
     <string name="email">Email</string>
     <string name="senha">Password</string>
     <string name="registrar">Não possui conta? registre aqui!</string>
+    
+    <!-- Screen register -->
+    <string name="name">Nome</string>
+    <string name="cnpj">Cnpj</string>
+    <string name="razaoSocial">Razão Social</string>
+    
 </resources>

@@ -1,4 +1,4 @@
-package com.example.ghandapp.register.usuario.presentation.model
+package com.example.ghandapp.register.registerUser.presentation.model
 
 sealed class UsuarioViewState {
 
