@@ -6,7 +6,8 @@
     <string name="logar">Login</string>
     <string name="email">Email</string>
     <string name="senha">Password</string>
-    <string name="registrar">Não possui conta? registre aqui!</string>
+    <string name="registrar">Não possui conta?</string>
+    <string name="recuperarSenha">Esqueceu a senha?</string>
     
     <!-- Screen register -->
     <string name="name">Nome</string>

@@ -5,7 +5,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".login.view.LoginActivity">
+        tools:context=".login.view.LoginActivity"
+        android:background="@color/Wheat">
 
 
 
@@ -25,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/email"
                 android:textColor="@color/black"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:gravity="center"
                 android:layout_marginHorizontal="40dp" />
 
@@ -36,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/ti_email"
-            app:layout_constraintBottom_toTopOf="@id/Sign_Up"
+            app:layout_constraintBottom_toTopOf="@id/Register"
             app:passwordToggleEnabled="true">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/pwd"
@@ -45,7 +46,7 @@
                 android:layout_marginHorizontal="40dp"
                 android:hint="@string/senha"
                 android:textColor="@color/black"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:gravity="center"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"/>
@@ -61,35 +62,49 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/Sign_Up" />
+            app:layout_constraintTop_toBottomOf="@id/Register" />
 
         <TextView
-            android:id="@+id/Sign_Up"
+            android:id="@+id/Register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginHorizontal="40dp"
+            android:layout_marginHorizontal="30dp"
             android:hint="@string/registrar"
-            android:textSize="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
+
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@id/bt_login"
             app:layout_constraintTop_toBottomOf="@id/ti_pwd"/>
 
+        <TextView
+            android:id="@+id/ForgotPwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/recuperarSenha"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/Register"
+            app:layout_constraintBottom_toTopOf="@id/bt_login"
+            app:layout_constraintTop_toBottomOf="@id/ti_pwd"
+            />
+
+
         <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/profile_image"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:src="@drawable/img"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/gh"
             android:layout_marginBottom="40dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/ti_email"
-            app:civ_border_width="2dp"
+            app:civ_border_width="1dp"
             app:civ_border_color="#FF000000"
             tools:ignore="MissingConstraints" />
+
+
 
         <ProgressBar
             android:id="@+id/pb_loading"
