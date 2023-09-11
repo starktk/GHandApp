@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
@@ -7,10 +8,12 @@
         <entry key="..\:/Users/Public/Raul/GHandApp/app/src/main/res/drawable/image.xml" value="0.1" />
         <entry key="..\:/Users/Public/Raul/GHandApp/app/src/main/res/drawable/log.xml" value="0.1" />
         <entry key="..\:/Users/Public/Raul/GHandApp/app/src/main/res/layout/activity_usuario.xml" value="0.22" />
+        <entry key="..\:/Users/Public/RaulTi21/GHand/App/GHand/app/src/main/res/layout/activity_login.xml" value="0.2" />
+        <entry key="..\:/Users/Public/RaulTi21/GHand/App/GHand/app/src/main/res/layout/activity_usuario.xml" value="0.1" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17_PREVIEW" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
