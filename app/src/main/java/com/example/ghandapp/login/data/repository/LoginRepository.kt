@@ -8,6 +8,7 @@ import com.example.ghandapp.login.data.remote.LoginResponse
 import com.example.ghandapp.network.RetrofitNetworkClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.ResponseBody
 import retrofit2.Response
 
 class LoginRepository {
@@ -34,11 +35,26 @@ class LoginRepository {
             }
         }
     }
-    suspend fun createUser(userRequest: UserRequest): Boolean {
+    suspend fun createUser(username: String, name: String, password: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val response = client.createUser()
+                val response = client.createUser(UserRequest(username, name, password))
+                response.isSuccessful
+            } catch (exception: Exception) {
+                Log.e("create", exception.message.orEmpty())
+                false
+            }
+        }
+    }
 
+    suspend fun findUser(username: String) {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = client.getUser(username = username)
+                response.isSuccessful
+            } catch (exception: Exception) {
+                Log.e("findUSer", exception.message.orEmpty())
+                false
             }
         }
     }
@@ -47,7 +63,7 @@ class LoginRepository {
         return withContext(Dispatchers.IO) {
             if (user.isSuccessful) {
                 user.body()?.run {
-                    database.userDao().insertProfile(
+                        database.userDao().insertProfile(
                         userResponseToEntity()
                     )
                 }
@@ -55,10 +71,13 @@ class LoginRepository {
         }
     }
 
+
     private fun LoginResponse.userResponseToEntity(): UserEntity {
         return UserEntity(
             username = username,
             name = name
         )
     }
+
+
 }

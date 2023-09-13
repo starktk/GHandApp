@@ -2,6 +2,7 @@ package com.example.ghandapp.login.data.repository
 
 import com.example.ghandapp.login.data.local.UserRequest
 import com.example.ghandapp.login.data.remote.LoginResponse
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -16,5 +17,8 @@ interface LoginService {
 
 
     @POST("/createUser")
-    suspend fun createUser(@Body userRequest: UserRequest)
+    suspend fun createUser(@Body userRequest: UserRequest): Response<ResponseBody>
+
+    @GET
+    suspend fun getUser(@Query("username") username: String):Response<LoginResponse>
 }
