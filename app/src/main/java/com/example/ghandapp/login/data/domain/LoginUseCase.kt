@@ -15,6 +15,6 @@ class LoginUseCase {
     }
 
     suspend fun findUser(username: String) {
-        return repository.findUser()
+        return repository.findUser(username)
     }
 }

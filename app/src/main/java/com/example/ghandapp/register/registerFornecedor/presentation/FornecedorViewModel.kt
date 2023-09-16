@@ -1,9 +1,9 @@
-package com.example.ghandapp.register.fornecedor.presentation
+package com.example.ghandapp.register.registerFornecedor.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.ghandapp.register.fornecedor.presentation.model.FornecedorViewState
+import com.example.ghandapp.register.registerFornecedor.presentation.model.FornecedorViewState
 
 class FornecedorViewModel: ViewModel() {
 

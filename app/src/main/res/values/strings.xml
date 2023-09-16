@@ -8,10 +8,13 @@
     <string name="senha">Password</string>
     <string name="registrar">Não possui conta?</string>
     <string name="recuperarSenha">Esqueceu a senha?</string>
-    
-    <!-- Screen register -->
+
+    <!-- Screen registerFornecedor -->
     <string name="name">Nome</string>
     <string name="cnpj">Cnpj</string>
     <string name="razaoSocial">Razão Social</string>
-    
+
+    <!-- Screen registerUser -->
+    <string name="register">Registrar</string>
+    <string name="goLogin">Já possui conta?</string>
 </resources>

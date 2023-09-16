@@ -1,4 +1,4 @@
-package com.example.ghandapp.register.fornecedor.presentation.model
+package com.example.ghandapp.register.registerFornecedor.presentation.model
 
 sealed class FornecedorViewState {
 

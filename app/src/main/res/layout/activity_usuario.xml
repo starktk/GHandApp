@@ -19,7 +19,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/ti_cnpj"
+            app:layout_constraintBottom_toTopOf="@id/ti_email"
             app:layout_constraintVertical_chainStyle="packed">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/nome"
@@ -34,38 +34,13 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ti_cnpj"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="18dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ti_nome"
-            app:layout_constraintBottom_toTopOf="@id/ti_email"
-            app:layout_constraintVertical_chainStyle="packed">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/cnpj"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/cnpj"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                android:gravity="center"
-                android:layout_marginHorizontal="40dp"
-                />
-
-
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/ti_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="18dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ti_cnpj"
+            app:layout_constraintTop_toBottomOf="@id/ti_nome"
             app:layout_constraintBottom_toTopOf="@id/ti_pwd"
             app:layout_constraintVertical_chainStyle="packed">
             <com.google.android.material.textfield.TextInputEditText
@@ -100,6 +75,28 @@
                 android:inputType="textPassword"/>
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15sp"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ti_pwd"
+            android:hint="@string/goLogin"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginEnd="32dp"
+            android:hint="@string/register"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
 
         <ProgressBar
             android:id="@+id/pb_loading"
