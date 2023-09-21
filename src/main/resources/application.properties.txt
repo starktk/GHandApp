@@ -1,0 +1,6 @@
+spring.data.mongodb.uri=mongodb+srv://starktk:raulsurf@bankgh.dhdfrcr.mongodb.net/?retryWrites=true&w=majority
+spring.data.mongodb.host=localhost
+spring.data.mongodb.port=27017
+spring.data.mongodb.database=GHand
+
+server.port=8084

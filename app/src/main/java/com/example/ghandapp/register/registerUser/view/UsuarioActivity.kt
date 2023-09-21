@@ -21,6 +21,8 @@ class UsuarioActivity: AppCompatActivity() {
         setContentView(binding.root)
 
         initializeObserver()
+
+
     }
 
     private fun initializeObserver() {

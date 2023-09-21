@@ -10,4 +10,8 @@ class FornecedorViewModel: ViewModel() {
     private val viewState = MutableLiveData<FornecedorViewState>()
     val state: LiveData<FornecedorViewState> = viewState
 
+
+    fun validateInputs() {
+
+    }
 }
