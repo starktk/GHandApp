@@ -4,7 +4,7 @@
 
     <!-- Screen Login -->
     <string name="logar">Login</string>
-    <string name="email">Email</string>
+    <string name="email">Username</string>
     <string name="senha">Password</string>
     <string name="registrar">Não possui conta?</string>
     <string name="recuperarSenha">Esqueceu a senha?</string>

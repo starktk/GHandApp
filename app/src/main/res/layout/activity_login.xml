@@ -11,7 +11,7 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ti_email"
+            android:id="@+id/ti_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="18dp"
@@ -21,7 +21,7 @@
             app:layout_constraintBottom_toTopOf="@id/ti_pwd"
             app:layout_constraintVertical_chainStyle="packed">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/email"
+                android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/email"
@@ -36,7 +36,7 @@
             android:id="@+id/ti_pwd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/ti_email"
+            app:layout_constraintTop_toBottomOf="@id/ti_username"
             app:layout_constraintBottom_toTopOf="@id/Register"
             app:passwordToggleEnabled="true">
             <com.google.android.material.textfield.TextInputEditText
@@ -99,7 +99,7 @@
             android:layout_marginBottom="40dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/ti_email"
+            app:layout_constraintBottom_toTopOf="@id/ti_username"
             app:civ_border_width="1dp"
             app:civ_border_color="#FF000000"
             tools:ignore="MissingConstraints" />

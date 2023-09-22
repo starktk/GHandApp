@@ -7,6 +7,7 @@ import com.example.ghandapp.login.data.domain.LoginUseCase
 import com.example.ghandapp.register.registerUser.presentation.model.UsuarioViewState
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import java.util.regex.Pattern
 
 class UsuarioViewModel: ViewModel() {
 
@@ -15,11 +16,7 @@ class UsuarioViewModel: ViewModel() {
 
     private val usecase by lazy { LoginUseCase() }
     fun validateInputs(username: String, name: String, password: String) {
-
-
-
         viewState.value = UsuarioViewState.showLoading
-
 
         if (username.isNullOrBlank() && password.isNullOrBlank() && name.isNullOrBlank()) {
             viewState.value = UsuarioViewState.showInvalidInputs
