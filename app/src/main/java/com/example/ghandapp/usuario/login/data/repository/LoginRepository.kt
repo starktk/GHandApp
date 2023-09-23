@@ -50,7 +50,7 @@ class LoginRepository {
     suspend fun findUser(username: String) {
         return withContext(Dispatchers.IO) {
             try {
-                val response = client.getUser(username = username)
+                val response = client.findUser(username = username)
                 response.isSuccessful
             } catch (exception: Exception) {
                 Log.e("findUSer", exception.message.orEmpty())
