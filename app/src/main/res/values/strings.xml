@@ -9,6 +9,16 @@
     <string name="registrar">Não possui conta?</string>
     <string name="recuperarSenha">Esqueceu a senha?</string>
 
+    <!-- Error Messages -->
+    <string name="username_error">Username Inválido</string>
+    <string name="password_error">Password Inválida</string>
+    <string name="generic_error">Algo deu errado</string>
+    <string name="login_invalid">Login Inválido</string>
+    <string name="blank_fields">Preencha os campos</string>
+    <string name="name_error">Nome inválido</string>
+    <string name="invalid_creation">Fornecedor Inválido</string>
+
+
     <!-- Screen registerFornecedor -->
     <string name="name">Nome</string>
     <string name="cnpj">Cnpj</string>
@@ -17,4 +27,6 @@
     <!-- Screen registerUser -->
     <string name="register">Registrar</string>
     <string name="goLogin">Já possui conta?</string>
+
+
 </resources>

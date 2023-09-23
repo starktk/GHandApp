@@ -13,7 +13,7 @@ private const val TIME_OUT = 60L
 
 object RetrofitNetworkClient {
 
-    fun createNetworkClient(baseUrl: String = "https://fundatec.herokuapp.com") =
+    fun createNetworkClient(baseUrl: String = "http://localhost:8084") =
         retrofitClient(
             baseUrl,
             httpClint(),

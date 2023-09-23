@@ -5,7 +5,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".login.view.LoginActivity"
+        tools:context=".usuario.login.view.LoginActivity"
         android:background="@color/Wheat">
 
 
