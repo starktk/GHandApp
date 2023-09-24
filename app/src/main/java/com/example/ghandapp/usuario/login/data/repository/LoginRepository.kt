@@ -59,7 +59,9 @@ class LoginRepository {
         }
     }
 
-
+    suspend fun getusername(): String {
+        return database.userDao().getUsername()
+    }
 
     private suspend fun saveUser(user: Response<LoginResponse>) {
         return withContext(Dispatchers.IO) {

@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class FornecedorEntitiy (
     @PrimaryKey
     val razaoSocial: String,
-    val cnpj: Integer
+    val cnpj: String,
+    val status: String
         )

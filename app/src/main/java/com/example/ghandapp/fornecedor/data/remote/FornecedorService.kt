@@ -27,5 +27,8 @@ interface FornecedorService {
     @GET("fornecedor/getAllFornecedores/{id}")
     suspend fun getAllFornecedores(@Query("id") id: String): Response<List<FornecedorResponse>>
 
+    @PUT("fornecedor/alterStatus")
+    suspend fun alterStatus(@Query("razaoSocial") razaoSocial: String,
+                            @Query("status") status: String): Response<FornecedorResponse>
 
 }

@@ -54,31 +54,31 @@ class UsuarioActivity: AppCompatActivity() {
         }
     }
     private fun showLoading() {
-        binding.root.show()
+        binding.pbLoading.show()
     }
 
     private fun showGenericMessage() {
-        binding.root.hide()
+        binding.pbLoading.hide()
         Snackbar.make(binding.root, R.string.generic_error, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun showNameInvalidMessage() {
-        binding.root.hide()
+        binding.pbLoading.hide()
         Snackbar.make(binding.nome, R.string.name_error, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun showInvalidInputs() {
-        binding.root.hide()
+        binding.pbLoading.hide()
         Snackbar.make(binding.registerUser, R.string.invalid_creation, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun showPasswordInvalidMessage() {
-        binding.root.hide()
+        binding.pbLoading.hide()
         Snackbar.make(binding.pwd, R.string.password_error, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun showInvalidCreation() {
-        binding.root.hide()
+        binding.pbLoading.hide()
         Snackbar.make(binding.root, R.string.invalid_creation, Snackbar.LENGTH_SHORT).show()
     }
     private fun isCreated() {

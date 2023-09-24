@@ -15,15 +15,24 @@
     <string name="generic_error">Algo deu errado</string>
     <string name="login_invalid">Login Inválido</string>
     <string name="blank_fields">Preencha os campos</string>
-    <string name="name_error">Nome inválido</string>
+    <string name="name_error">Nome Inválido</string>
     <string name="invalid_creation">Fornecedor Inválido</string>
+    <string name="invalid_situation">Selecione um status</string>
+    <string name="cnpj_error">Cnpj Inválido</string>
+    <string name="razaoSocial_error">Razão Social Inválida</string>
 
 
     <!-- Screen registerFornecedor -->
     <string name="name">Nome</string>
     <string name="cnpj">Cnpj</string>
     <string name="razaoSocial">Razão Social</string>
+    <string name="status">Status</string>
 
+    <string-array name="situation">
+        <item>Status</item>
+        <item>Invative</item>
+        <item>Active</item>
+    </string-array>
     <!-- Screen registerUser -->
     <string name="register">Registrar</string>
     <string name="goLogin">Já possui conta?</string>

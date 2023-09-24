@@ -17,7 +17,7 @@ interface LoginService {
     suspend fun getLog(@Query("username") username: String,
                        @Query("password") password: String): Response<LoginResponse>
 
-    @POST("usuario/createUser")
+    @POST("usuario/createFornecedor")
     suspend fun createUser(@Body userRequest: UserRequest): Response<ResponseBody>
 
     @GET("usuario/getUser/{username}")
