@@ -8,4 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="Wheat">#F5DEB3</color>
+    <color name="red">#750E24</color>
+    <color name="middleSilver">#737874</color>
+    <color name="ice_white">#DDD9CE</color>
+    <color name="green">#5EBF8D</color>
 </resources>

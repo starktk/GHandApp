@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/calendarioOptions"
+        android:title="Agenda"
+        android:icon="@drawable/ic_calendario"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/agendarRecebimento"
+                android:title="Agendar recebimento" />
+            <item
+                android:id="@+id/agendarPagamentos"
+                android:title="Agendar pagamentos" />
+
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/despesa"
+        android:title="Livro de despesas"
+        android:icon="@drawable/ic_book_despesas"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/findDespesas"
+                android:title="Listar despesas"
+                />
+        </menu>
+    </item>
+
+
+
+    <item
+        android:id="@+id/fornecedor"
+        android:title="Fornecedor"
+        android:icon="@drawable/ic_fornecedor"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/list"
+                android:title="@string/listar_fornecedores" />
+            <item
+                android:id="@+id/registro"
+                android:title="Registrar fornecedor" />
+        </menu>
+    </item>
+
+</menu>
