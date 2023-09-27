@@ -9,16 +9,25 @@
         android:layout_height="match_parent"
         tools:context=".home.view.HomeActivity">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:background="@drawable/bg_toolbar_gradient"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/tool"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="8dp"
-            android:textSize="24sp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:title="Home"
-            />
+            tools:ignore="MissingConstraints">
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:background="@drawable/bg_toolbar_gradient"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="8dp"
+                android:textSize="24sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="Home"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_Listagem"
@@ -26,9 +35,8 @@
             android:layout_height="0dp"
             app:spanCount="2"
             android:layout_margin="14dp"
-
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintTop_toBottomOf="@+id/tool"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">

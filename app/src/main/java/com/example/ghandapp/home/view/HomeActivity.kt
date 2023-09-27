@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.ghandapp.R
 import com.example.ghandapp.databinding.ActivityHomeBinding
 import com.example.ghandapp.databinding.FornecedorListItemBinding
+import com.example.ghandapp.fornecedor.data.remote.FornecedorModel
 import com.example.ghandapp.fornecedor.view.FornecedorActivity
 import com.github.furkankaplan.fkblurview.FKBlurView
 
@@ -21,6 +22,8 @@ class HomeActivity: AppCompatActivity() {
         bindingActivity = ActivityHomeBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
+
+
 
         val blurView = FKBlurView(binding as Context)
         blurView.setBlur(binding as Context, blurView, 20)
@@ -58,6 +61,8 @@ class HomeActivity: AppCompatActivity() {
             finish()
         }
 
+        private fun showFornecedorList(list: List<FornecedorModel>) {
 
+        }
 }
 
