@@ -1,37 +1,64 @@
 package com.example.ghandapp.home.view
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ghandapp.R
 import com.example.ghandapp.databinding.ActivityHomeBinding
-import com.example.ghandapp.databinding.FornecedorListItemBinding
+import com.example.ghandapp.extencoes.hide
+import com.example.ghandapp.extencoes.show
 import com.example.ghandapp.fornecedor.data.remote.FornecedorModel
 import com.example.ghandapp.fornecedor.view.FornecedorActivity
-import com.github.furkankaplan.fkblurview.FKBlurView
+import com.example.ghandapp.fornecedor.view.FornecedorListAdapter
+import com.example.ghandapp.home.presentation.HomeViewModel
+import com.example.ghandapp.home.presentation.model.HomeViewState
 
 class HomeActivity: AppCompatActivity() {
 
     private lateinit var bindingActivity: ActivityHomeBinding
-    private lateinit var binding: FornecedorListItemBinding
+
+    private val fornecedorAdapter by lazy {
+        FornecedorListAdapter()
+    }
+
+    private val viewModel: HomeViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindingActivity = ActivityHomeBinding.inflate(layoutInflater)
 
-        setContentView(binding.root)
+        setContentView(bindingActivity.root)
 
+        bindingActivity.rvListagem.adapter = fornecedorAdapter
 
+        initializeOberseve()
 
-        val blurView = FKBlurView(binding as Context)
-        blurView.setBlur(binding as Context, blurView, 20)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return super.onCreateOptionsMenu(menu)
+    private fun initializeOberseve() {
+        viewModel.state.observe(this) { viewState ->
+            when(viewState) {
+                is HomeViewState.showHomeScreen -> showFornecedorList(viewState.list)
+                HomeViewState.showAgenda -> showAgenda()
+                HomeViewState.showFindAgenda -> findAgenda()
+                HomeViewState.showEmptyList -> showEmptyList()
+                HomeViewState.showLoading -> showLoading()
+            }
+        }
+    }
+
+
+    private fun showFornecedorList(list: List<FornecedorModel>) {
+        bindingActivity.pbLoading.hide()
+        fornecedorAdapter.add(list)
+    }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu_main, menu)
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -40,16 +67,11 @@ class HomeActivity: AppCompatActivity() {
                 true
             }
             R.id.list -> {
+                listar()
                 true
             }
             R.id.registro -> {
                 showRegisterScreen()
-                true
-            }
-            R.id.calendarioOptions -> {
-                true
-            }
-            R.id.despesa -> {
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -61,8 +83,24 @@ class HomeActivity: AppCompatActivity() {
             finish()
         }
 
-        private fun showFornecedorList(list: List<FornecedorModel>) {
+    private fun showLoading() {
+        bindingActivity.pbLoading.show()
+    }
 
-        }
+    private fun showAgenda() {
+
+    }
+
+    private fun findAgenda() {
+
+    }
+
+    private fun showEmptyList() {
+        bindingActivity.pbLoading.hide()
+    }
+
+    private fun listar() {
+        viewModel.listFornecedor()
+    }
 }
 

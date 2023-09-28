@@ -21,18 +21,7 @@
         </menu>
     </item>
 
-    <item
-        android:id="@+id/despesa"
-        android:title="Livro de despesas"
-        android:icon="@drawable/ic_book_despesas"
-        app:showAsAction="always">
-        <menu>
-            <item
-                android:id="@+id/findDespesas"
-                android:title="Listar despesas"
-                />
-        </menu>
-    </item>
+
 
 
 

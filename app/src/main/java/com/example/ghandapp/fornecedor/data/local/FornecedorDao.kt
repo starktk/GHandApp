@@ -10,9 +10,6 @@ interface FornecedorDao {
     @Insert
     fun insertFornecedor(fornecedorEntitiy: FornecedorEntitiy)
 
-    @Query("SELECT razaoSocial, cnpj FROM fornecedorTable ORDER BY razaoSocial")
-    fun listarFornecedor()
-
     @Query("DELETE from fornecedorTable")
     fun cleanFornecedor()
 }
