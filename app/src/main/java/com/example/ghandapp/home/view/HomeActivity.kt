@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.Toolbar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ghandapp.R
+import com.example.ghandapp.agenda.view.AgendaActivity
 import com.example.ghandapp.databinding.ActivityHomeBinding
 import com.example.ghandapp.extencoes.hide
 import com.example.ghandapp.extencoes.show
@@ -16,6 +18,7 @@ import com.example.ghandapp.fornecedor.view.FornecedorActivity
 import com.example.ghandapp.fornecedor.view.FornecedorListAdapter
 import com.example.ghandapp.home.presentation.HomeViewModel
 import com.example.ghandapp.home.presentation.model.HomeViewState
+import com.google.android.material.appbar.MaterialToolbar
 
 class HomeActivity: AppCompatActivity() {
 
@@ -34,16 +37,26 @@ class HomeActivity: AppCompatActivity() {
 
         bindingActivity.rvListagem.adapter = fornecedorAdapter
 
+        observeEvents()
         initializeOberseve()
 
     }
 
+    private fun observeEvents() {
+        bindingActivity.iconRegisterFornecedor.setOnClickListener {
+            showRegisterScreen()
+        }
+        bindingActivity.iconListFornecedor.setOnClickListener {
+            listar()
+        }
+        bindingActivity.iconAgendarProducts.setOnClickListener {
+            showAgenda()
+        }
+    }
     private fun initializeOberseve() {
         viewModel.state.observe(this) { viewState ->
             when(viewState) {
                 is HomeViewState.showHomeScreen -> showFornecedorList(viewState.list)
-                HomeViewState.showAgenda -> showAgenda()
-                HomeViewState.showFindAgenda -> findAgenda()
                 HomeViewState.showEmptyList -> showEmptyList()
                 HomeViewState.showLoading -> showLoading()
             }
@@ -55,40 +68,19 @@ class HomeActivity: AppCompatActivity() {
         bindingActivity.pbLoading.hide()
         fornecedorAdapter.add(list)
     }
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.menu_main, menu)
-        return true
+
+    private fun showRegisterScreen() {
+        startActivity(Intent(this@HomeActivity, FornecedorActivity::class.java))
+        finish()
     }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
-            R.id.fornecedor -> {
-                true
-            }
-            R.id.list -> {
-                listar()
-                true
-            }
-            R.id.registro -> {
-                showRegisterScreen()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-            }
-        }
-
-        private fun showRegisterScreen() {
-            startActivity(Intent(this@HomeActivity, FornecedorActivity::class.java))
-            finish()
-        }
 
     private fun showLoading() {
         bindingActivity.pbLoading.show()
     }
 
     private fun showAgenda() {
-
+        startActivity(Intent(this@HomeActivity, AgendaActivity::class.java))
+        finish()
     }
 
     private fun findAgenda() {

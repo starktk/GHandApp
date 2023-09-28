@@ -31,7 +31,7 @@
     <!-- Screen MarkAgenda -->
     <string name="nameProduct">Nome do produto</string>
     <string name="amount">Quantidade do produto</string>
-    <string name="dateTime">Escolha a data</string>
+    <string name="dateTime">Selecione a data</string>
 
     <string-array name="situation">
         <item>Status</item>
