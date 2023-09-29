@@ -20,7 +20,9 @@
     <string name="invalid_situation">Selecione um status</string>
     <string name="cnpj_error">Cnpj Inválido</string>
     <string name="razaoSocial_error">Razão Social Inválida</string>
-
+    <string name="nameProduct_error">Nome do produto inválido</string>
+    <string name="amount_error">Quantidade de produtos inválidas</string>
+    <string name="date_error">Data Inválida</string>
 
     <!-- Screen registerFornecedor -->
     <string name="name">Nome</string>

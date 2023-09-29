@@ -7,4 +7,8 @@ sealed class AgendaViewState {
     object amountError : AgendaViewState()
     object razaoSocialErrorMessage : AgendaViewState()
     object showLoading: AgendaViewState()
+
+    object showIsSucess: AgendaViewState()
+
+    object badCreation: AgendaViewState()
 }

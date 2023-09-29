@@ -35,7 +35,7 @@ class HomeActivity: AppCompatActivity() {
 
         setContentView(bindingActivity.root)
 
-        bindingActivity.rvListagem.adapter = fornecedorAdapter
+
 
         observeEvents()
         initializeOberseve()
@@ -84,7 +84,7 @@ class HomeActivity: AppCompatActivity() {
     }
 
     private fun findAgenda() {
-
+        bindingActivity.rvListagem
     }
 
     private fun showEmptyList() {
@@ -92,6 +92,7 @@ class HomeActivity: AppCompatActivity() {
     }
 
     private fun listar() {
+        bindingActivity.rvListagem.adapter = fornecedorAdapter
         viewModel.listFornecedor()
     }
 }
