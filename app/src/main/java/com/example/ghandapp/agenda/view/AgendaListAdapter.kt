@@ -1,11 +1,14 @@
 package com.example.ghandapp.agenda.view
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.ghandapp.databinding.AgendaItemBinding
 
 class AgendaListAdapter: RecyclerView.Adapter<AgendaViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AgendaViewHolder {
-        TODO("Not yet implemented")
+        val binding = AgendaItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return AgendaViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
