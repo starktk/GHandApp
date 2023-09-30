@@ -102,4 +102,6 @@ class AgendaActivity: AppCompatActivity() {
         binding.pbLoading.hide()
         Snackbar.make(binding.root, getString(R.string.generic_error), Snackbar.LENGTH_SHORT).show()
     }
+
+
 }

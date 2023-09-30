@@ -1,15 +1,20 @@
 package com.example.ghandapp.home.view
 
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.Window
 import android.widget.Toolbar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ghandapp.R
 import com.example.ghandapp.agenda.view.AgendaActivity
+import com.example.ghandapp.agenda.view.AgendaListAdapter
 import com.example.ghandapp.databinding.ActivityHomeBinding
 import com.example.ghandapp.extencoes.hide
 import com.example.ghandapp.extencoes.show
@@ -26,6 +31,10 @@ class HomeActivity: AppCompatActivity() {
 
     private val fornecedorAdapter by lazy {
         FornecedorListAdapter()
+    }
+
+    private val agendaAdapter by lazy {
+        AgendaListAdapter()
     }
 
     private val viewModel: HomeViewModel by viewModels()
@@ -94,6 +103,16 @@ class HomeActivity: AppCompatActivity() {
     private fun listar() {
         bindingActivity.rvListagem.adapter = fornecedorAdapter
         viewModel.listFornecedor()
+    }
+
+    private fun showCustomDialog() {
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.custom_dialog)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.GRAY))
+
+        dialog.setTitle("Select Month")
     }
 }
 

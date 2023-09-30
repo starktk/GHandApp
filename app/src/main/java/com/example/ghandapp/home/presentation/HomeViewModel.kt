@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.ghandapp.agenda.data.domain.AgendaUseCase
 import com.example.ghandapp.fornecedor.data.domain.FornecedorUseCase
 import com.example.ghandapp.home.presentation.model.HomeViewState
 import com.example.ghandapp.usuario.login.data.domain.LoginUseCase
@@ -18,6 +19,9 @@ class HomeViewModel: ViewModel() {
     }
     private val logUsecase by lazy {
         LoginUseCase()
+    }
+    private val agendaUseCase by lazy {
+        AgendaUseCase()
     }
 
     fun listFornecedor() {
@@ -34,6 +38,9 @@ class HomeViewModel: ViewModel() {
         }
     }
 
+    fun listAgenda() {
+
+    }
 
 
 }
