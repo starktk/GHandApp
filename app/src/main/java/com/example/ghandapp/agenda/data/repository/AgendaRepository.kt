@@ -26,7 +26,7 @@ class AgendaRepository {
         }
     }
 
-    suspend fun findAgenda(razaoSocial: String, mes: Int): Boolean {
+    suspend fun findAgenda(razaoSocial: String, mes: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 val response = client.findAgenda(AgendaToFindModel(razaoSocial, mes))

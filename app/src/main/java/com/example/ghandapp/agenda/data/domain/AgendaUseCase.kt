@@ -12,7 +12,7 @@ class AgendaUseCase {
         return repository.createDateInAgenda(razaoSocial, nameProduct, amount, date)
     }
 
-    suspend fun findAgenda(razaoSocial: String, mes: Int): Boolean {
+    suspend fun findAgenda(razaoSocial: String, mes: String): Boolean {
         return repository.findAgenda(razaoSocial, mes)
     }
 }

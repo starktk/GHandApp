@@ -1,6 +1,9 @@
 package com.example.ghandapp.home.view
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -8,11 +11,16 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.view.Window
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.Spinner
 import android.widget.Toolbar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ghandapp.R
+import com.example.ghandapp.agenda.data.local.AgendaModel
 import com.example.ghandapp.agenda.view.AgendaActivity
 import com.example.ghandapp.agenda.view.AgendaListAdapter
 import com.example.ghandapp.databinding.ActivityHomeBinding
@@ -61,15 +69,29 @@ class HomeActivity: AppCompatActivity() {
         bindingActivity.iconAgendarProducts.setOnClickListener {
             showAgenda()
         }
+        bindingActivity.listarAgenda.setOnClickListener {
+            showCustomDialog()
+        }
     }
     private fun initializeOberseve() {
         viewModel.state.observe(this) { viewState ->
             when(viewState) {
                 is HomeViewState.showHomeScreen -> showFornecedorList(viewState.list)
+                is HomeViewState.showAgendaScreen -> showAgendaList(viewState.list)
                 HomeViewState.showEmptyList -> showEmptyList()
                 HomeViewState.showLoading -> showLoading()
+                HomeViewState.showEmptyAgenda -> showEmptyAgenda()
             }
         }
+    }
+
+    private fun showEmptyAgenda() {
+        bindingActivity.pbLoading.hide()
+    }
+
+    private fun showAgendaList(list: List<AgendaModel>) {
+        bindingActivity.pbLoading.hide()
+        agendaAdapter.add(list)
     }
 
 
@@ -105,14 +127,24 @@ class HomeActivity: AppCompatActivity() {
         viewModel.listFornecedor()
     }
 
-    private fun showCustomDialog() {
-        val dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.custom_dialog)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.GRAY))
+    private fun listarAgenda(razaoSocial: String, mes: String) {
+        bindingActivity.rvListagem.adapter = agendaAdapter
+        viewModel.listAgenda(razaoSocial, mes)
+    }
 
-        dialog.setTitle("Select Month")
+    private fun showCustomDialog() {
+        val dialog = DialogCustomFragment()
+        dialog.show(supportFragmentManager, dialog.tag)
+        val text = R.id.btn_razaoSocial.toString()
+        val button = findViewById<Button>(R.id.btn_submit)
+        val spinner = findViewById<Spinner>(R.id.spinner_month)
+
+        button.setOnClickListener {
+            listarAgenda(
+                razaoSocial = text,
+                mes = spinner.selectedItem.toString()
+            )
+        }
     }
 }
 

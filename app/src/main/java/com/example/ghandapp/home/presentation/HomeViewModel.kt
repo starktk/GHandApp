@@ -38,8 +38,15 @@ class HomeViewModel: ViewModel() {
         }
     }
 
-    fun listAgenda() {
+    fun listAgenda(razaoString: String, mes: String) {
+        viewModelScope.launch {
+            viewState.value = HomeViewState.showLoading
+            val agenda = agendaUseCase.findAgenda(razaoString, mes)
 
+            if (agenda) {
+
+            }
+        }
     }
 
 
