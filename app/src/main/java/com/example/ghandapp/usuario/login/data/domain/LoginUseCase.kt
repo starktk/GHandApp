@@ -18,8 +18,11 @@ class LoginUseCase {
         return repository.findUser(username)
     }
 
-    suspend fun getUsername(): String {
-        return repository.getusername()
+    suspend fun getUsername(): Boolean {
+        val exist = repository.getusername()
+        if (exist.isNullOrBlank()) {
+            return false
+        }
+        return true
     }
-
 }

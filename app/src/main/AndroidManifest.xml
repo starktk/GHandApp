@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.ghandapp">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -22,6 +23,16 @@
 
         <activity
             android:name=".home.view.HomeActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".agenda.view.AgendaActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".fornecedor.view.FornecedorActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".splashscreen.view.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
