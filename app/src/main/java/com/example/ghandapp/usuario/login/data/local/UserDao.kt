@@ -15,4 +15,6 @@ interface UserDao {
 
     @Query("SELECT username FROM userTable")
     fun getUsername(): String
+
+
 }

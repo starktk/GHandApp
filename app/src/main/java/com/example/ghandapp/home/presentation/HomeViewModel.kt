@@ -27,7 +27,7 @@ class HomeViewModel: ViewModel() {
     fun listFornecedor() {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
-            val id = logUsecase.getUsername()
+            val id = logUsecase.pegarUsername()
             val list = fornecedorUseCase.getAllFornecedores(id)
 
             if (list.isEmpty()) {

@@ -40,7 +40,7 @@ class FornecedorViewModel: ViewModel() {
 
     private fun fetchCreate(razaoSocial: String, cnpj: String, status: String) {
         viewModelScope.launch {
-            val username = usecaseLogin.getUsername()
+            val username = usecaseLogin.pegarUsername()
             if (username.isNullOrEmpty()) {
                 viewState.value = FornecedorViewState.missingUsernameReference
             }
