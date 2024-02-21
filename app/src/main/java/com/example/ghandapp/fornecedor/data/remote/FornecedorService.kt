@@ -19,7 +19,7 @@ interface FornecedorService {
     suspend fun createFornecedor(@Body fornecedorRequest: FornecedorRequest): Response<ResponseBody>
 
     @PUT("fornecedor/alterFornecedor")
-    suspend fun alterFornecedor(@Body fornecedorResponse: FornecedorResponse): Response<FornecedorResponse>
+    suspend fun alterFornecedor(@Body fornecedorRequest: FornecedorRequest): Response<FornecedorResponse>
 
     @DELETE("fornecedor/deleteFornecedor/{id}")
     suspend fun deleteFornecedor(@Query("id") id: String): Response<ResponseBody>
