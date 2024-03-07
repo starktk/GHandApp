@@ -1,26 +1,13 @@
 package com.example.ghandapp.home.view
 
-import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.app.Dialog
-import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.Window
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
-import android.widget.Toolbar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ghandapp.R
-import com.example.ghandapp.agenda.data.local.AgendaModel
+import com.example.ghandapp.agenda.data.remote.AgendaModel
 import com.example.ghandapp.agenda.view.AgendaActivity
 import com.example.ghandapp.agenda.view.AgendaListAdapter
 import com.example.ghandapp.databinding.ActivityHomeBinding
@@ -31,7 +18,6 @@ import com.example.ghandapp.fornecedor.view.FornecedorActivity
 import com.example.ghandapp.fornecedor.view.FornecedorListAdapter
 import com.example.ghandapp.home.presentation.HomeViewModel
 import com.example.ghandapp.home.presentation.model.HomeViewState
-import com.google.android.material.appbar.MaterialToolbar
 
 class HomeActivity: AppCompatActivity() {
 

@@ -27,7 +27,7 @@ class HomeViewModel: ViewModel() {
     fun listFornecedor() {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
-            val id = logUsecase.pegarUsername()
+            val id = logUsecase.getUser().username
             val list = fornecedorUseCase.getAllFornecedores(id)
 
             if (list.isEmpty()) {
@@ -41,10 +41,10 @@ class HomeViewModel: ViewModel() {
     fun listAgenda(razaoString: String, mes: String) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
-            val agenda = agendaUseCase.findAgenda(razaoString, mes)
+            val agenda = agendaUseCase.findAgendaByMonth(razaoString, mes)
 
-            if (agenda) {
-
+            if (agenda.isNullOrEmpty()) {
+                viewState.value = HomeViewState.showEmptyList
             }
         }
     }

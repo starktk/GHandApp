@@ -3,7 +3,7 @@ package com.example.ghandapp.usuario.login.data.repository
 import android.util.Log
 import com.example.ghandapp.database.FHdatabase
 import com.example.ghandapp.usuario.login.data.local.UserEntity
-import com.example.ghandapp.usuario.login.data.local.UserRequest
+import com.example.ghandapp.usuario.login.data.remote.UserRequest
 import com.example.ghandapp.usuario.login.data.remote.LoginResponse
 import com.example.ghandapp.network.RetrofitNetworkClient
 import com.example.ghandapp.usuario.login.data.remote.LoginService
@@ -23,7 +23,6 @@ class LoginRepository {
             .create(LoginService::class.java)
 
     suspend fun logar(username: String, password: String): Boolean {
-
         return withContext(Dispatchers.IO) {
             try {
                 val response = client.getLog(username, password)
@@ -59,10 +58,9 @@ class LoginRepository {
         }
     }
 
-    suspend fun getusername(): String {
-        return database.userDao().getUsername()
+    fun getUser(): UserEntity {
+        return database.userDao().getUser()
     }
-
     private suspend fun saveUser(user: Response<LoginResponse>) {
         return withContext(Dispatchers.IO) {
             if (user.isSuccessful) {

@@ -1,7 +1,5 @@
 package com.example.ghandapp.usuario.login.data.remote
 
-import com.example.ghandapp.usuario.login.data.local.UserRequest
-import com.example.ghandapp.usuario.login.data.remote.LoginResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body

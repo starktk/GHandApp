@@ -16,5 +16,6 @@ interface UserDao {
     @Query("SELECT username FROM userTable")
     fun getUsername(): String
 
-
+    @Query("SELECT * FROM userTable")
+    fun getUser(): UserEntity
 }

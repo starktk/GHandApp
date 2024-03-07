@@ -1,4 +1,4 @@
-package com.example.ghandapp.usuario.login.data.local
+package com.example.ghandapp.usuario.login.data.remote
 
 data class UserRequest (
     val username: String,

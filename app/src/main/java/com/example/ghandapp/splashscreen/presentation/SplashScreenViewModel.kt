@@ -19,7 +19,7 @@ class SplashScreenViewModel: ViewModel() {
 
     fun validateLog() {
         viewModelScope.launch {
-            val isSucess = usecase.getUsername()
+            val isSucess = usecase.validateLog()
             if (isSucess) {
                 viewState.value = SplashScreenViewState.showIsSucess
             } else {

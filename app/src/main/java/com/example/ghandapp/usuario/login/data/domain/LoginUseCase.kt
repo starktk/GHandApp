@@ -1,5 +1,6 @@
 package com.example.ghandapp.usuario.login.data.domain
 
+import com.example.ghandapp.usuario.login.data.local.UserEntity
 import com.example.ghandapp.usuario.login.data.repository.LoginRepository
 
 class LoginUseCase {
@@ -14,16 +15,13 @@ class LoginUseCase {
         return repository.createUser(username, name, password)
     }
 
-    suspend fun findUser(username: String) {
-        return repository.findUser(username)
+    suspend fun getUser(): UserEntity {
+        return repository.getUser()
     }
 
-    suspend fun pegarUsername(): String {
-        return repository.getusername()
-    }
-    suspend fun getUsername(): Boolean {
-        val exist = repository.getusername()
-        if (exist.isNullOrBlank()) {
+    suspend fun validateLog(): Boolean {
+        val userEntity: UserEntity = getUser()
+        if (userEntity.username.isNullOrBlank()) {
             return false
         }
         return true
