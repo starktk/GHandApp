@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ghandapp.databinding.FornecedorListItemBinding
-import com.example.ghandapp.fornecedor.data.remote.FornecedorModel
+import com.example.ghandapp.fornecedor.data.model.FornecedorModel
 
 class FornecedorListAdapter: RecyclerView.Adapter<FornecedorViewHolder>() {
 
@@ -22,9 +22,14 @@ class FornecedorListAdapter: RecyclerView.Adapter<FornecedorViewHolder>() {
     override fun onBindViewHolder(holder: FornecedorViewHolder, position: Int) {
         holder.bind(list[position])
     }
-    fun add(items: List<FornecedorModel>) {
+    fun addAllItems(items: List<FornecedorModel>) {
         list.clear()
         list.addAll(items)
+        notifyDataSetChanged()
+    }
+    fun addSingleItem(items: FornecedorModel) {
+        list.clear()
+        list.add(items)
         notifyDataSetChanged()
     }
 }

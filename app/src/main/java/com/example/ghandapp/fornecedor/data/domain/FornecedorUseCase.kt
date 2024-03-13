@@ -1,29 +1,46 @@
 package com.example.ghandapp.fornecedor.data.domain
 
-import com.example.ghandapp.fornecedor.data.remote.FornecedorModel
+import com.example.ghandapp.fornecedor.data.model.FornecedorModel
 import com.example.ghandapp.fornecedor.data.repository.FornecedorRepository
+import com.example.ghandapp.fornecedor.presentation.enums.SituacaoFornecedor
+import com.example.ghandapp.usuario.login.data.domain.LoginUseCase
 
 class FornecedorUseCase {
 
     private val repositoryFornecedor by lazy { FornecedorRepository() }
 
-    suspend fun createFornecedor(razaoSocial: String, cnpj: String, status: String, username: String): Boolean {
-        return repositoryFornecedor.createFornecedor(razaoSocial, cnpj, status, username)
+    private val loginUseCase by lazy {
+        LoginUseCase()
+    }
+    suspend fun createFornecedor(razaoSocial: String, cnpj: String,): Boolean {
+        return repositoryFornecedor.createFornecedor(razaoSocial, cnpj, loginUseCase.getUser().username, loginUseCase.getUser().name)
     }
 
-    suspend fun findFornecedor(id: String): Boolean {
-        return repositoryFornecedor.findFornecedor(id)
+    suspend fun findFornecedorByCnpj(cnpj: String): FornecedorModel? {
+        return repositoryFornecedor.findFornecedorByCnpj(loginUseCase.getUser().username, cnpj)
     }
 
-    suspend fun deleteFornecedor(id: String): Boolean {
-        return repositoryFornecedor.deleteFornecedor(id)
+    suspend fun deleteFornecedor(cnpj: String): Boolean {
+        return repositoryFornecedor.deleteFornecedor(loginUseCase.getUser().username, cnpj)
     }
 
-    suspend fun modifyStatus(razaoSocial: String, status:String): Boolean {
-        return repositoryFornecedor.modifyStatus(razaoSocial, status)
+    suspend fun modifyStatus(cnpj: String,status: SituacaoFornecedor): Boolean {
+        return repositoryFornecedor.modifyStatus(loginUseCase.getUser().username, cnpj, status)
     }
 
-    suspend fun getAllFornecedores(id: String): List<FornecedorModel> {
-        return repositoryFornecedor.getAllFornecedores(id)
+    suspend fun getAllFornecedores(): List<FornecedorModel> {
+        return repositoryFornecedor.getAllFornecedores(loginUseCase.getUser().username)
+    }
+
+    suspend fun findFornecedoresByRazaoSocial(razaoSocial: String): List<FornecedorModel> {
+        return repositoryFornecedor.findByRazaoSocial(loginUseCase.getUser().username, razaoSocial)
+    }
+
+    suspend fun findFornecedoresByStatus(status: SituacaoFornecedor): List<FornecedorModel> {
+        return repositoryFornecedor.findByStatus(loginUseCase.getUser().username, status)
+    }
+
+    suspend fun alterFornecedor(razaoSocial: String, cnpj: String, status: SituacaoFornecedor): FornecedorModel? {
+        return repositoryFornecedor.alterFornecedor(loginUseCase.getUser().username, cnpj, razaoSocial, status, loginUseCase.getUser().name)
     }
 }

@@ -13,7 +13,7 @@ import com.example.ghandapp.agenda.view.AgendaListAdapter
 import com.example.ghandapp.databinding.ActivityHomeBinding
 import com.example.ghandapp.extencoes.hide
 import com.example.ghandapp.extencoes.show
-import com.example.ghandapp.fornecedor.data.remote.FornecedorModel
+import com.example.ghandapp.fornecedor.data.model.FornecedorModel
 import com.example.ghandapp.fornecedor.view.FornecedorActivity
 import com.example.ghandapp.fornecedor.view.FornecedorListAdapter
 import com.example.ghandapp.home.presentation.HomeViewModel
@@ -64,11 +64,17 @@ class HomeActivity: AppCompatActivity() {
             when(viewState) {
                 is HomeViewState.showHomeScreen -> showFornecedorList(viewState.list)
                 is HomeViewState.showAgendaScreen -> showAgendaList(viewState.list)
+                is HomeViewState.showFornecedorSingle -> showFornecedor(viewState.fornecedor)
                 HomeViewState.showEmptyList -> showEmptyList()
                 HomeViewState.showLoading -> showLoading()
                 HomeViewState.showEmptyAgenda -> showEmptyAgenda()
             }
         }
+    }
+
+    private fun showFornecedor(fornecedorModel: FornecedorModel) {
+        bindingActivity.pbLoading.hide()
+        fornecedorAdapter.addSingleItem(fornecedorModel)
     }
 
     private fun showEmptyAgenda() {
@@ -83,7 +89,7 @@ class HomeActivity: AppCompatActivity() {
 
     private fun showFornecedorList(list: List<FornecedorModel>) {
         bindingActivity.pbLoading.hide()
-        fornecedorAdapter.add(list)
+        fornecedorAdapter.addAllItems(list)
     }
 
     private fun showRegisterScreen() {

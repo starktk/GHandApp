@@ -1,19 +1,23 @@
 package com.example.ghandapp.fornecedor.data.repository
 
-import android.util.Log
 import com.example.ghandapp.database.FHdatabase
+import com.example.ghandapp.databinding.ActivityFornecedorBinding
 import com.example.ghandapp.fornecedor.data.local.FornecedorEntitiy
-import com.example.ghandapp.fornecedor.data.local.FornecedorRequest
-import com.example.ghandapp.fornecedor.data.remote.FornecedorModel
+import com.example.ghandapp.fornecedor.data.remote.FornecedorRequest
+import com.example.ghandapp.fornecedor.data.model.FornecedorModel
 import com.example.ghandapp.fornecedor.data.remote.FornecedorResponse
 import com.example.ghandapp.fornecedor.data.remote.FornecedorService
+import com.example.ghandapp.fornecedor.presentation.enums.SituacaoFornecedor
 import com.example.ghandapp.network.RetrofitNetworkClient
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.ResponseBody
 import retrofit2.Response
 
 class FornecedorRepository {
+
+    private lateinit var bindingFornecedor: ActivityFornecedorBinding
+
 
     private val database: FHdatabase by lazy {
         FHdatabase.getInstance()
@@ -24,26 +28,29 @@ class FornecedorRepository {
             .createNetworkClient()
             .create(FornecedorService::class.java)
 
-    suspend fun createFornecedor(razaoSocial: String, cnpj: String, status: String, username: String): Boolean {
+    suspend fun createFornecedor(razaoSocial: String, cnpj: String, username: String, name: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val response = client.createFornecedor(FornecedorRequest(razaoSocial, cnpj, status, username))
+                val response = client.createFornecedor(FornecedorRequest(razaoSocial = razaoSocial, cnpj = cnpj, status = SituacaoFornecedor.Ativa , username = username, name = name))
                 response.isSuccessful
             } catch (exception: Exception) {
-                Log.e("create", exception.message.orEmpty())
+                Snackbar.make(bindingFornecedor.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
                 false
             }
         }
     }
-    suspend fun findFornecedor(id: String): Boolean {
+    suspend fun findFornecedorByCnpj(username: String, cnpj: String): FornecedorModel? {
         return withContext(Dispatchers.IO) {
             try {
-                val fornecedorFind = client.findFornecedor(id = id)
-                saveFornecedor(fornecedorFind)
-                fornecedorFind.isSuccessful
+                val fornecedorFind = client.findFornecedorByCnpj(FornecedorRequest(username = username, cnpj = cnpj))
+                if (fornecedorFind.isSuccessful) {
+                    fornecedorFind.body().fornecedorResponseToFornecedorModel()
+                } else {
+                    null
+                }
             } catch (exception: Exception) {
-                Log.e("find Fornecedor", exception.message.orEmpty())
-                false
+               Snackbar.make(bindingFornecedor.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+                null
             }
         }
     }
@@ -54,49 +61,94 @@ class FornecedorRepository {
         }
     }
 
-    suspend fun getAllFornecedores(id: String): List<FornecedorModel> {
+    suspend fun getAllFornecedores(username: String): List<FornecedorModel> {
         return withContext(Dispatchers.IO) {
             try {
-                val fornecedoresReturn = client.getAllFornecedores(id)
+                val fornecedoresReturn = client.getAllFornecedores(username = username)
                 if(fornecedoresReturn.isSuccessful) {
                     fornecedoresReturn.body()?.mapperFornecedor() ?: emptyList()
                 } else {
                     emptyList()
                 }
             } catch (exception: Exception) {
-                Log.e("findFornecedor", exception.message.orEmpty())
+               Snackbar.make(bindingFornecedor.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
                 emptyList()
             }
         }
     }
 
-    suspend fun alterFornecedor() {
-
-    }
-
-    suspend fun modifyStatus(razaoSocial: String, status: String): Boolean {
+    suspend fun alterFornecedor(username: String, cnpj: String, razaoSocial: String, status: SituacaoFornecedor, name: String): FornecedorModel? {
         return withContext(Dispatchers.IO) {
             try {
-                val response = client.alterStatus(razaoSocial = razaoSocial, status = status)
+                val response = client.alterFornecedor(FornecedorRequest(razaoSocial = razaoSocial, cnpj = cnpj, status = status, username = username, name = name))
+                if (response.isSuccessful) {
+                    response.body().fornecedorResponseToFornecedorModel()
+                } else {
+                    null
+                }
+            } catch (exception: Exception) {
+                Snackbar.make(bindingFornecedor.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+                null
+            }
+        }
+    }
+
+
+    suspend fun modifyStatus(username: String, cnpj: String, status: SituacaoFornecedor): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = client.alterStatus(FornecedorRequest(username = username, cnpj = cnpj, status = status))
                 saveFornecedor(response)
                 response.isSuccessful
             } catch (exception: Exception) {
-                Log.e("change Modify", exception.message.orEmpty())
+                Snackbar.make(bindingFornecedor.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
                 false
             }
         }
     }
-    suspend fun deleteFornecedor(id: String): Boolean {
+    suspend fun deleteFornecedor(username: String, cnpj: String): Boolean {
         return withContext(Dispatchers.IO) {
            try {
-               val response = client.deleteFornecedor(id)
+               val response = client.deleteFornecedor(FornecedorRequest(username = username, cnpj = cnpj))
                response.isSuccessful
            } catch (exception: Exception) {
-               Log.e("Deletar Fornecedor", exception.message.orEmpty())
+               Snackbar.make(bindingFornecedor.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
                false
            }
         }
     }
+
+    suspend fun findByRazaoSocial(username: String, razaoSocial: String): List<FornecedorModel> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = client.findFornecedoresByRazaoSocial(FornecedorRequest(razaoSocial = razaoSocial, username = username))
+                if (response.isSuccessful) {
+                    response.body()?.mapperFornecedor() ?: emptyList()
+                } else {
+                    emptyList()
+                }
+            } catch (exception: Exception) {
+                Snackbar.make(bindingFornecedor.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+                emptyList()
+            }
+        }
+    }
+    suspend fun findByStatus(username: String, status: SituacaoFornecedor): List<FornecedorModel> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = client.findByStatus(FornecedorRequest(username = username , status = status))
+                if (response.isSuccessful) {
+                    response.body()?.mapperFornecedor() ?: emptyList()
+                } else {
+                    emptyList()
+                }
+            } catch (exception: Exception) {
+                Snackbar.make(bindingFornecedor.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+                emptyList()
+            }
+        }
+    }
+
     private suspend fun saveFornecedor(fornecedor: Response<FornecedorResponse>) {
         return withContext(Dispatchers.IO) {
             if (fornecedor.isSuccessful) {
@@ -115,11 +167,11 @@ class FornecedorRepository {
         }
     }
 
-    private fun FornecedorResponse.fornecedorResponseToFornecedorModel(): FornecedorModel {
+    private fun FornecedorResponse?.fornecedorResponseToFornecedorModel(): FornecedorModel {
         return FornecedorModel(
-            razaoSocial = razaoSocial,
-            cnpj = cnpj,
-            status = status
+            razaoSocial = this?.razaoSocial,
+            cnpj = this?.cnpj,
+            status = this?.status?.toString()
         )
     }
 
@@ -127,7 +179,7 @@ class FornecedorRepository {
         return FornecedorEntitiy(
             razaoSocial = razaoSocial,
             cnpj = cnpj,
-            status = status
+            status = status.toString()
         )
     }
 }

@@ -1,6 +1,6 @@
 package com.example.ghandapp.agenda.data.remote
 
-import com.example.ghandapp.fornecedor.data.model.FornecedorResponse
+import com.example.ghandapp.fornecedor.data.remote.FornecedorResponse
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)

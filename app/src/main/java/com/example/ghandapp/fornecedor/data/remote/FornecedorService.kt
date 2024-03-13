@@ -1,6 +1,5 @@
 package com.example.ghandapp.fornecedor.data.remote
 
-import com.example.ghandapp.fornecedor.data.local.FornecedorRequest
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -12,23 +11,28 @@ import retrofit2.http.Query
 
 interface FornecedorService {
 
-    @GET("fornecedor/getFornecedor/{id}")
-    suspend fun findFornecedor(@Query("id") id: String): Response<FornecedorResponse>
-
+    @GET("fornecedor/findFornecedorByCnpj")
+    suspend fun findFornecedorByCnpj(@Body fornecedorRequest: FornecedorRequest): Response<FornecedorResponse>
+    @GET("fornecedor/findFornecedorByRazaoSocial")
+    suspend fun findFornecedoresByRazaoSocial(@Body fornecedorRequest: FornecedorRequest): Response<List<FornecedorResponse>>
     @POST("fornecedor/createFornecedor")
     suspend fun createFornecedor(@Body fornecedorRequest: FornecedorRequest): Response<ResponseBody>
 
-    @PUT("fornecedor/alterFornecedor")
+    @PUT("fornecedor/updateFornecedor")
     suspend fun alterFornecedor(@Body fornecedorRequest: FornecedorRequest): Response<FornecedorResponse>
 
-    @DELETE("fornecedor/deleteFornecedor/{id}")
-    suspend fun deleteFornecedor(@Query("id") id: String): Response<ResponseBody>
+    @DELETE("fornecedor/deleteFornecedor")
+    suspend fun deleteFornecedor(@Body fornecedorRequest: FornecedorRequest): Response<ResponseBody>
 
-    @GET("fornecedor/getAllFornecedores/{id}")
-    suspend fun getAllFornecedores(@Query("id") id: String): Response<List<FornecedorResponse>>
+    @GET("fornecedor/findAllFornecedores/{id}")
+    suspend fun getAllFornecedores(@Query("id") username: String): Response<List<FornecedorResponse>>
 
     @PUT("fornecedor/alterStatus")
-    suspend fun alterStatus(@Query("razaoSocial") razaoSocial: String,
-                            @Query("status") status: String): Response<FornecedorResponse>
+    suspend fun alterStatus(@Body fornecedorRequest: FornecedorRequest): Response<FornecedorResponse>
 
+    @GET("fornecedor/findFornecedorByStatus")
+    suspend fun findByStatus(@Body fornecedorRequest: FornecedorRequest): Response<List<FornecedorResponse>>
+
+    @PUT("fornecedor/updateStatus")
+    suspend fun updateByStatus(@Body fornecedorRequest: FornecedorRequest): Response<FornecedorResponse>
 }

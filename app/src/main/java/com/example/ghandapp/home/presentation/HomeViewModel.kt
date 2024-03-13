@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ghandapp.agenda.data.domain.AgendaUseCase
 import com.example.ghandapp.fornecedor.data.domain.FornecedorUseCase
+import com.example.ghandapp.fornecedor.data.model.FornecedorModel
+import com.example.ghandapp.fornecedor.presentation.enums.SituacaoFornecedor
 import com.example.ghandapp.home.presentation.model.HomeViewState
 import com.example.ghandapp.usuario.login.data.domain.LoginUseCase
 import kotlinx.coroutines.launch
@@ -27,13 +29,36 @@ class HomeViewModel: ViewModel() {
     fun listFornecedor() {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
-            val id = logUsecase.getUser().username
-            val list = fornecedorUseCase.getAllFornecedores(id)
-
+            val list = fornecedorUseCase.getAllFornecedores()
             if (list.isEmpty()) {
                 viewState.value = HomeViewState.showEmptyList
             } else {
                 viewState.value = HomeViewState.showHomeScreen(list)
+            }
+        }
+    }
+    fun modifyStatus(cnpj: String, status: String) {
+        viewModelScope.launch {
+            viewState.value = HomeViewState.showLoading
+            val statusOf = SituacaoFornecedor.valueOf(status)
+            val response = fornecedorUseCase.modifyStatus(cnpj, statusOf)
+
+            if (response) {
+                viewState.value = HomeViewState.changeStatus
+            } else {
+                viewState.value = HomeViewState.showFailedMessage
+            }
+        }
+    }
+    fun findFornecedorByCnpj(cnpj: String) {
+        viewModelScope.launch {
+            viewState.value = HomeViewState.showLoading
+            val modelResponse = fornecedorUseCase.findFornecedorByCnpj(cnpj)
+
+            if (modelResponse == null) {
+                viewState.value = HomeViewState.showFailedMessage
+            } else {
+                viewState.value = HomeViewState.showFornecedorSingle(modelResponse)
             }
         }
     }
