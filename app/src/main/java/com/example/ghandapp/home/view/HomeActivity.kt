@@ -2,6 +2,8 @@ package com.example.ghandapp.home.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.Spinner
 import androidx.activity.viewModels
@@ -40,25 +42,26 @@ class HomeActivity: AppCompatActivity() {
 
 
 
-        observeEvents()
+
         initializeOberseve()
 
     }
 
-    private fun observeEvents() {
-        bindingActivity.iconRegisterFornecedor.setOnClickListener {
-            showRegisterScreen()
-        }
-        bindingActivity.iconListFornecedor.setOnClickListener {
-            listar()
-        }
-        bindingActivity.iconAgendarProducts.setOnClickListener {
-            showAgenda()
-        }
-        bindingActivity.listarAgenda.setOnClickListener {
-            showCustomDialog()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_listFor -> {
+                listar()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+
     private fun initializeOberseve() {
         viewModel.state.observe(this) { viewState ->
             when(viewState) {
@@ -115,12 +118,12 @@ class HomeActivity: AppCompatActivity() {
     }
 
     private fun listar() {
-        bindingActivity.rvListagem.adapter = fornecedorAdapter
+        bindingActivity.rvList.adapter = fornecedorAdapter
         viewModel.listFornecedor()
     }
 
     private fun listarAgenda(razaoSocial: String, mes: String) {
-        bindingActivity.rvListagem.adapter = agendaAdapter
+        bindingActivity.rvList.adapter = agendaAdapter
         viewModel.listAgenda(razaoSocial, mes)
     }
 
