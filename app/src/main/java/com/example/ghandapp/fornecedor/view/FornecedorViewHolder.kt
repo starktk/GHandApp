@@ -11,9 +11,9 @@ class FornecedorViewHolder(private val binding: FornecedorListItemBinding): Recy
     fun bind(fornecedor: FornecedorModel) {
         binding.tvRazaoSocial.text = fornecedor.razaoSocial
         binding.tvCnpj.text = fornecedor.cnpj
-        if (fornecedor.status.equals(SituacaoFornecedor.Ativa)) {
+        if (fornecedor.status == SituacaoFornecedor.Ativa.toString()) {
             binding.btnStatus.setBackgroundResource(R.color.green)
-        } else if (fornecedor.status.equals(SituacaoFornecedor.Inativa)) {
+        } else if (fornecedor.status == SituacaoFornecedor.Inativa.toString()) {
             binding.btnStatus.setBackgroundResource(R.color.red)
         }
 

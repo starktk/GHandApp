@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.example.ghandapp.R
 
-class DialogCustomFragment: DialogFragment() {
+class AgendaDialogFragment: DialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,

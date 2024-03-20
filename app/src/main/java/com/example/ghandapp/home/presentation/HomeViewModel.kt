@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ghandapp.agenda.data.domain.AgendaUseCase
 import com.example.ghandapp.fornecedor.data.domain.FornecedorUseCase
-import com.example.ghandapp.fornecedor.data.model.FornecedorModel
 import com.example.ghandapp.fornecedor.presentation.enums.SituacaoFornecedor
 import com.example.ghandapp.home.presentation.model.HomeViewState
+import com.example.ghandapp.home.presentation.model.StateStart
 import com.example.ghandapp.usuario.login.data.domain.LoginUseCase
 import kotlinx.coroutines.launch
 
@@ -26,6 +26,13 @@ class HomeViewModel: ViewModel() {
         AgendaUseCase()
     }
 
+    fun initializer(state: StateStart) {
+        when (state) {
+            StateStart.FORNECEDOR -> viewState.value = HomeViewState.stateFornecedor
+            StateStart.AGENDA -> viewState.value = HomeViewState.stateAgenda
+
+        }
+    }
     fun listFornecedor() {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
@@ -35,6 +42,18 @@ class HomeViewModel: ViewModel() {
             } else {
                 viewState.value = HomeViewState.showHomeScreen(list)
             }
+        }
+    }
+    fun listByRazaoSocial(razaoSocial: String) {
+        viewModelScope.launch {
+            viewState.value = HomeViewState.showLoading
+            val list = fornecedorUseCase.findFornecedoresByRazaoSocial(razaoSocial)
+            if (list.isEmpty()) {
+                viewState.value = HomeViewState.showEmptyList
+            } else {
+                viewState.value = HomeViewState.showHomeScreen(list)
+            }
+
         }
     }
     fun modifyStatus(cnpj: String, status: String) {
@@ -53,6 +72,9 @@ class HomeViewModel: ViewModel() {
     fun findFornecedorByCnpj(cnpj: String) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
+            if (cnpj.isNullOrEmpty()) {
+                viewState.value = HomeViewState.showFailedMessage
+            }
             val modelResponse = fornecedorUseCase.findFornecedorByCnpj(cnpj)
 
             if (modelResponse == null) {
@@ -63,10 +85,15 @@ class HomeViewModel: ViewModel() {
         }
     }
 
-    fun listAgenda(razaoString: String, mes: String) {
+    fun getNameToShow() {
+        viewModelScope.launch {
+            logUsecase.getUser().name
+        }
+    }
+    fun listAgenda(cnpj: String, mes: String) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
-            val agenda = agendaUseCase.findAgendaByMonth(razaoString, mes)
+            val agenda = agendaUseCase.findAgendaByMonth(cnpj, mes)
 
             if (agenda.isNullOrEmpty()) {
                 viewState.value = HomeViewState.showEmptyList

@@ -2,8 +2,6 @@ package com.example.ghandapp.home.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Button
 import android.widget.Spinner
 import androidx.activity.viewModels
@@ -13,6 +11,7 @@ import com.example.ghandapp.agenda.data.remote.AgendaModel
 import com.example.ghandapp.agenda.view.AgendaActivity
 import com.example.ghandapp.agenda.view.AgendaListAdapter
 import com.example.ghandapp.databinding.ActivityHomeBinding
+import com.example.ghandapp.databinding.FornecedorDialogBinding
 import com.example.ghandapp.extencoes.hide
 import com.example.ghandapp.extencoes.show
 import com.example.ghandapp.fornecedor.data.model.FornecedorModel
@@ -20,10 +19,12 @@ import com.example.ghandapp.fornecedor.view.FornecedorActivity
 import com.example.ghandapp.fornecedor.view.FornecedorListAdapter
 import com.example.ghandapp.home.presentation.HomeViewModel
 import com.example.ghandapp.home.presentation.model.HomeViewState
+import com.example.ghandapp.home.presentation.model.StateStart
 
-class HomeActivity: AppCompatActivity() {
+class HomeActivity(private val stateStart: StateStart): AppCompatActivity() {
 
     private lateinit var bindingActivity: ActivityHomeBinding
+    private lateinit var bindingDialogFornecedor: FornecedorDialogBinding
 
     private val fornecedorAdapter by lazy {
         FornecedorListAdapter()
@@ -37,30 +38,10 @@ class HomeActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindingActivity = ActivityHomeBinding.inflate(layoutInflater)
-
         setContentView(bindingActivity.root)
-
-
-
-
+        viewModel.initializer(stateStart)
         initializeOberseve()
-
     }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_listFor -> {
-                listar()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return true
-    }
-
 
     private fun initializeOberseve() {
         viewModel.state.observe(this) { viewState ->
@@ -71,8 +52,26 @@ class HomeActivity: AppCompatActivity() {
                 HomeViewState.showEmptyList -> showEmptyList()
                 HomeViewState.showLoading -> showLoading()
                 HomeViewState.showEmptyAgenda -> showEmptyAgenda()
+                HomeViewState.stateFornecedor -> bindForFornecedor()
+                HomeViewState.changeStatus -> TODO()
+                HomeViewState.showFailedMessage -> TODO()
+                HomeViewState.stateAgenda -> TODO()
             }
         }
+    }
+
+    private fun bindForFornecedor() {
+        bindingActivity.rvList.adapter = fornecedorAdapter
+        bindingActivity.iconHome.setOnClickListener {
+           finish()
+        }
+        bindingActivity.iconAdd.setOnClickListener {
+            showRegisterScreen()
+        }
+        bindingActivity.iconSearch.setOnClickListener {
+            showFornecedorDialog()
+        }
+
     }
 
     private fun showFornecedor(fornecedorModel: FornecedorModel) {
@@ -109,34 +108,59 @@ class HomeActivity: AppCompatActivity() {
         finish()
     }
 
-    private fun findAgenda() {
-        bindingActivity.rvListagem
-    }
+//    private fun findAgenda() {
+//        bindingActivity.rvListagem
+//    }
 
     private fun showEmptyList() {
         bindingActivity.pbLoading.hide()
     }
 
     private fun listar() {
-        bindingActivity.rvList.adapter = fornecedorAdapter
         viewModel.listFornecedor()
     }
 
-    private fun listarAgenda(razaoSocial: String, mes: String) {
+    private fun listarAgenda(cnpj: String, mes: String) {
         bindingActivity.rvList.adapter = agendaAdapter
-        viewModel.listAgenda(razaoSocial, mes)
+        viewModel.listAgenda(cnpj, mes)
+    }
+    private fun showFornecedorDialog() {
+        val dialog = FornecedorDialogFragment()
+        dialog.show(supportFragmentManager, dialog.tag)
+        bindingDialogFornecedor.btnCnpj.setOnClickListener {
+            val cnpj = bindingDialogFornecedor.etvCnpj.text.toString()
+            val editText = bindingDialogFornecedor.etvCnpj
+            editText.isEnabled = true
+            bindingDialogFornecedor.btnSubmitFornecedor.setOnClickListener {
+                viewModel.findFornecedorByCnpj(cnpj)
+            }
+        }
+        bindingDialogFornecedor.btnRazaoSocial.setOnClickListener {
+            val razaoSocial = bindingDialogFornecedor.etvRazaoSocial.text.toString()
+            val editText = bindingDialogFornecedor.etvRazaoSocial
+            editText.isEnabled = true
+           bindingDialogFornecedor.btnSubmitFornecedor.setOnClickListener {
+               viewModel.listByRazaoSocial(razaoSocial)
+           }
+        }
+        bindingDialogFornecedor.btnGetAll.setOnClickListener {
+            listar()
+        }
+
+
     }
 
+
     private fun showCustomDialog() {
-        val dialog = DialogCustomFragment()
+        val dialog = AgendaDialogFragment()
         dialog.show(supportFragmentManager, dialog.tag)
-        val text = R.id.btn_razaoSocial.toString()
+        val text = R.id.btn_cnpj.toString()
         val button = findViewById<Button>(R.id.btn_submit)
         val spinner = findViewById<Spinner>(R.id.spinner_month)
 
         button.setOnClickListener {
             listarAgenda(
-                razaoSocial = text,
+                cnpj = text,
                 mes = spinner.selectedItem.toString()
             )
         }

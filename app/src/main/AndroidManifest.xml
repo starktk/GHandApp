@@ -23,7 +23,8 @@
 
         <activity
             android:name=".home.view.HomeActivity"
-            android:exported="false"/>
+            android:exported="false"
+            tools:ignore="Instantiatable" />
 
         <activity
             android:name=".agenda.view.AgendaActivity"

@@ -7,7 +7,7 @@ import com.example.ghandapp.databinding.AgendaItemBinding
 class AgendaViewHolder(private val binding: AgendaItemBinding): RecyclerView.ViewHolder(binding.root) {
 
     fun bind(agenda: AgendaModel) {
-        binding.nameProductCd.text = agenda.nomeProduct
+        binding.nameProductCd.text = agenda.nameProduct
         binding.amountCd.text = agenda.amount.toString()
         binding.dateAgendaCd.text = agenda.date
         binding.statusCd.text = agenda.status

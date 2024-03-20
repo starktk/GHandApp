@@ -30,6 +30,11 @@
     <string name="razaoSocial">Razão Social</string>
     <string name="status">Status</string>
 
+    <!-- Home Screen  -->
+    <string name="btn_fornecedor">Fornecedor </string>
+    <string name="btn_agenda">Agenda</string>
+    <string name="btn_accout">Conta</string>
+
     <!-- Screen MarkAgenda -->
     <string name="nameProduct">Nome do produto</string>
     <string name="amount">Quantidade do produto</string>
@@ -63,6 +68,10 @@
     <string name="listar_fornecedores">Listar Fornecedores</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="digite_razaoSocial">Digite a razão Social</string>
+    <string name="digite_cnpj">Digite o Cnpj</string>
+    <string name="digite_razaoSocial">Digite a Razão Social</string>
     <string name="submit">Submit</string>
+    <string name="agenda">Agenda</string>
+    <string name="fornecedor">fornecedor</string>
+    <string name="gett_AllFornecedores">Listar todos</string>
 </resources>
