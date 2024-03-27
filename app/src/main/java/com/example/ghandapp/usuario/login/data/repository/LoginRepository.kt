@@ -1,12 +1,14 @@
 package com.example.ghandapp.usuario.login.data.repository
 
 import android.util.Log
+import android.view.View
 import com.example.ghandapp.database.FHdatabase
 import com.example.ghandapp.usuario.login.data.local.UserEntity
 import com.example.ghandapp.usuario.login.data.remote.UserRequest
 import com.example.ghandapp.usuario.login.data.remote.LoginResponse
 import com.example.ghandapp.network.RetrofitNetworkClient
 import com.example.ghandapp.usuario.login.data.remote.LoginService
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
@@ -22,14 +24,14 @@ class LoginRepository {
             .createNetworkClient()
             .create(LoginService::class.java)
 
-    suspend fun logar(username: String, password: String): Boolean {
+    suspend fun logar(username: String, password: String, contextView: View): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val response = client.getLog(username, password)
+                val response = client.getLog(UserRequest(username = username, password = password))
                 saveUser(response)
                 response.isSuccessful
             } catch (exception: Exception) {
-                Log.e("login", exception.message.orEmpty())
+                Snackbar.make(contextView, exception.message.toString(), Snackbar.LENGTH_LONG).show()
                 false
             }
         }

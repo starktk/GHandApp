@@ -5,6 +5,7 @@ plugins {
 }
 
 android {
+    namespace 'com.example.ghandapp'
     compileSdk 33
 
     defaultConfig {

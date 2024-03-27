@@ -3,6 +3,7 @@ package com.example.ghandapp.agenda.data.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.ghandapp.databinding.ActivityAgendaBinding
 import com.example.ghandapp.agenda.data.local.AgendaToDelete
 import com.example.ghandapp.agenda.data.remote.AgendaModel
 import com.example.ghandapp.agenda.data.remote.AgendaRequestModel
@@ -10,7 +11,7 @@ import com.example.ghandapp.agenda.data.remote.AgendaToFindModel
 import com.example.ghandapp.agenda.data.local.SituacaoProduto
 import com.example.ghandapp.agenda.data.remote.AgendaResponse
 import com.example.ghandapp.agenda.presentation.model.AgendaViewState
-import com.example.ghandapp.databinding.ActivityAgendaBinding
+
 import com.example.ghandapp.network.RetrofitNetworkClient
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers

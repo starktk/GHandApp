@@ -1,7 +1,7 @@
 package com.example.ghandapp.usuario.login.data.remote
 
 data class UserRequest (
-    val username: String,
-    val name: String,
-    val password: String
+    val username: String? = null,
+    val name: String? = null,
+    val password: String? = null
     )

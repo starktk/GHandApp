@@ -11,11 +11,10 @@ import retrofit2.http.Query
 
 interface LoginService {
 
-    @GET("usuario")
-    suspend fun getLog(@Query("username") username: String,
-                       @Query("password") password: String): Response<LoginResponse>
+    @GET("/usuario/logUser")
+    suspend fun getLog(@Body userRequest: UserRequest): Response<LoginResponse>
 
-    @POST("usuario/createFornecedor")
+    @POST("usuario/create")
     suspend fun createUser(@Body userRequest: UserRequest): Response<ResponseBody>
 
     @GET("usuario/getUser/{username}")

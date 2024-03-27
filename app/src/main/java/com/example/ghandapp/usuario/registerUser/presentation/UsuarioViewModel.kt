@@ -28,7 +28,7 @@ class UsuarioViewModel: ViewModel() {
             return
         }
 
-        if (password.isNullOrBlank()) {
+        if (password == "") {
             viewState.value = UsuarioViewState.passwordInvalidMessage
             return
         }

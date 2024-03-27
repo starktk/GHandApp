@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ghandapp.splashscreen.presentation.model.SplashScreenViewState
 import com.example.ghandapp.usuario.login.data.domain.LoginUseCase
+import com.example.ghandapp.usuario.login.data.local.UserEntity
 import kotlinx.coroutines.launch
 
 class SplashScreenViewModel: ViewModel() {
@@ -17,14 +18,14 @@ class SplashScreenViewModel: ViewModel() {
         LoginUseCase()
     }
 
-    fun validateLog() {
+    init {
         viewModelScope.launch {
-            val isSucess = usecase.validateLog()
-            if (isSucess) {
-                viewState.value = SplashScreenViewState.showIsSucess
-            } else {
-                viewState.value = SplashScreenViewState.showFailed
-            }
+                val isSucess: UserEntity = usecase.getUser()
+                if (isSucess != null) {
+                    viewState.value = SplashScreenViewState.showIsSucess
+                } else {
+                    viewState.value = SplashScreenViewState.showFailed
+                }
         }
     }
 }

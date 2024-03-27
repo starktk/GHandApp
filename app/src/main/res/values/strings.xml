@@ -16,7 +16,7 @@
     <string name="login_invalid">Login Inválido</string>
     <string name="blank_fields">Preencha os campos</string>
     <string name="name_error">Nome Inválido</string>
-    <string name="invalid_creation">Fornecedor Inválido</string>
+    <string name="invalid_creation">Usuario inválido</string>
     <string name="invalid_situation">Selecione um status</string>
     <string name="cnpj_error">Cnpj Inválido</string>
     <string name="razaoSocial_error">Razão Social Inválida</string>

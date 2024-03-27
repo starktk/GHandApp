@@ -1,5 +1,6 @@
 package com.example.ghandapp.usuario.login.presentation
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,7 +16,7 @@ class LoginViewModel: ViewModel() {
 
     private val useCase by lazy { LoginUseCase() }
 
-    fun validateInputs(username: String, password: String) {
+    fun validateInputs(username: String, password: String, contextView: View) {
         viewState.value = LoginViewState.showLoading
 
         if (username.isNullOrBlank() && password.isNullOrBlank()) {
@@ -31,12 +32,12 @@ class LoginViewModel: ViewModel() {
             return
         }
 
-        fetchLogin(username, password)
+        fetchLogin(contextView ,username, password)
     }
 
-    private fun fetchLogin(username: String, password: String) {
+    private fun fetchLogin(contextView: View, username: String, password: String) {
         viewModelScope.launch {
-            val isSucess = useCase.login(username, password)
+            val isSucess = useCase.login(username, password, contextView)
             if(isSucess) {
                 viewState.value = LoginViewState.showIsSucess
             } else {

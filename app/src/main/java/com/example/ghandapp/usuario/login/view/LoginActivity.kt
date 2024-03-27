@@ -28,7 +28,8 @@ class LoginActivity: AppCompatActivity() {
         binding.btLogin.setOnClickListener {
             viewModel.validateInputs(
                 username = binding.username.text.toString(),
-                password = binding.pwd.text.toString()
+                password = binding.pwd.text.toString(),
+                binding.root
             )
         }
 
