@@ -24,10 +24,10 @@
         <activity
             android:name=".home.view.HomeActivity"
             android:exported="false"
-            tools:ignore="Instantiatable" />
+            />
 
         <activity
-            android:name=".agenda.view.AgendaActivity"
+            android:name=".agenda.agendaProduto.view.AgendaProductActivity"
             android:exported="false"/>
         <activity
             android:name=".fornecedor.view.FornecedorActivity"

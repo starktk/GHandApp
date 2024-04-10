@@ -23,7 +23,6 @@
                 android:textSize="25sp"
                 android:layout_marginTop="40dp"
                 android:layout_marginStart="10dp"
-                android:enabled="false"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
             <EditText
@@ -37,32 +36,40 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="10dp"/>
 
-            <RadioButton
-                android:id="@+id/btn_cnpj"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
-                android:layout_marginRight="40dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.349"
-                app:layout_constraintTop_toTopOf="parent" />
 
-            <RadioButton
-                android:id="@+id/btn_razaoSocial"
+            <RadioGroup
+                android:id="@+id/rd_group"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/btn_cnpj"
+                android:layout_height="match_parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="40dp"/>
-            <RadioButton
-                android:id="@+id/btn_getAll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/btn_razaoSocial"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="40dp"/>
+                tools:layout_editor_absoluteY="0dp">
+
+                <RadioButton
+                    android:id="@+id/btn_cnpj"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="48dp"
+                    android:layout_marginRight="40dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.349"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RadioButton
+                    android:id="@+id/btn_razaoSocial"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="40dp"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <RadioButton
+                    android:id="@+id/btn_getAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="40dp"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </RadioGroup>
 
             <Button
                 android:id="@+id/btn_submitFornecedor"
@@ -75,13 +82,13 @@
                 android:backgroundTint="@color/Strong_green"/>
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
                 android:hint="@string/gett_AllFornecedores"
                 android:textSize="30sp"
                 app:layout_constraintTop_toBottomOf="@+id/etv_razaoSocial"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"/>
 
 

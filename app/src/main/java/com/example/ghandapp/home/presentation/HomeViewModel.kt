@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ghandapp.agenda.data.domain.AgendaUseCase
+import com.example.ghandapp.agenda.agendaPagamento.data.domain.AgendaPagamentoUseCase
+import com.example.ghandapp.agenda.agendaProduto.data.domain.AgendaProdutoUseCase
 import com.example.ghandapp.fornecedor.data.domain.FornecedorUseCase
 import com.example.ghandapp.fornecedor.presentation.enums.SituacaoFornecedor
 import com.example.ghandapp.home.presentation.model.HomeViewState
@@ -22,14 +23,17 @@ class HomeViewModel: ViewModel() {
     private val logUsecase by lazy {
         LoginUseCase()
     }
-    private val agendaUseCase by lazy {
-        AgendaUseCase()
+    private val agendaProdutoUseCase by lazy {
+        AgendaProdutoUseCase()
+    }
+    private val agendaPagamentoUseCase by lazy {
+        AgendaPagamentoUseCase()
     }
 
-    fun initializer(state: StateStart) {
+    fun initializer(state: String) {
         when (state) {
-            StateStart.FORNECEDOR -> viewState.value = HomeViewState.stateFornecedor
-            StateStart.AGENDA -> viewState.value = HomeViewState.stateAgenda
+            StateStart.FORNECEDOR.toString() -> viewState.value = HomeViewState.stateFornecedor
+            StateStart.AGENDA.toString() -> viewState.value = HomeViewState.stateAgenda
 
         }
     }
@@ -90,16 +94,29 @@ class HomeViewModel: ViewModel() {
             logUsecase.getUser().name
         }
     }
-    fun listAgenda(cnpj: String, mes: String) {
+    fun listAgendaProduto(cnpj: String, mes: String) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
-            val agenda = agendaUseCase.findAgendaByMonth(cnpj, mes)
+            val agenda = agendaProdutoUseCase.findAgendaByMonth(cnpj, mes)
 
-            if (agenda.isNullOrEmpty()) {
+            if (agenda.isEmpty()) {
+                viewState.value = HomeViewState.showEmptyList
+            } else {
+                viewState.value = HomeViewState.showAgendaProdutoScreen(agenda)
+            }
+        }
+    }
+    fun listAgendaPagamento(cnpj: String, mes: String) {
+        viewModelScope.launch {
+            viewState.value = HomeViewState.showLoading
+            val agenda = agendaPagamentoUseCase.findAgendaByMonth(cnpj, mes)
+
+            if (agenda.isEmpty()) {
+                viewState.value = HomeViewState.showAgendaPagamentoScreen(agenda)
+            } else {
                 viewState.value = HomeViewState.showEmptyList
             }
         }
     }
-
 
 }

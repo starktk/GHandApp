@@ -35,11 +35,16 @@
     <string name="btn_agenda">Agenda</string>
     <string name="btn_accout">Conta</string>
 
-    <!-- Screen MarkAgenda -->
+    <!-- Screen MarkAgendaProduto -->
     <string name="nameProduct">Nome do produto</string>
     <string name="amount">Quantidade do produto</string>
     <string name="dateTime">Selecione a data</string>
 
+    <!-- Screen MarkAgendaPagamento -->
+    <string name="valueToPay">Valor a pagar</string>
+    <string name="errorValue">Valor inválido</string>
+    <string name="badCration">Criação inválida</string>
+    
     <string-array name="situation">
         <item>Status</item>
         <item>Invative</item>
@@ -51,6 +56,7 @@
         <item>Fevereiro</item>
         <item>Março</item>
         <item>Abril</item>
+        <item>Maio</item>
         <item>Junho</item>
         <item>Julho</item>
         <item>Agosto</item>

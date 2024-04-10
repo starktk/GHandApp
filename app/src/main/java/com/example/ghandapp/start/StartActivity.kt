@@ -16,18 +16,17 @@ class StartActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityStartBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        inicializateNavigation()
     }
 
     private fun inicializateNavigation() {
         binding.btnFornecedor.setOnClickListener {
-            startActivity(Intent(this@StartActivity, HomeActivity::class.java))
-            HomeActivity(stateStart = StateStart.FORNECEDOR)
-            finish()
+
         }
         binding.btnAgenda.setOnClickListener {
-            startActivity(Intent(this@StartActivity, HomeActivity::class.java))
-            HomeActivity(stateStart = StateStart.AGENDA)
+            val intent = (Intent(this@StartActivity, HomeActivity::class.java))
+            intent.putExtra("stateStart", StateStart.AGENDA.toString())
+            startActivity(intent)
             finish()
         }
     }

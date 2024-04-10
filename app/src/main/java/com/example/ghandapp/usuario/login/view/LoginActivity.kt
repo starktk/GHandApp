@@ -6,9 +6,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ghandapp.R
 import com.example.ghandapp.databinding.ActivityLoginBinding
+
 import com.example.ghandapp.extencoes.hide
 import com.example.ghandapp.extencoes.show
+import com.example.ghandapp.home.presentation.model.StateStart
 import com.example.ghandapp.home.view.HomeActivity
+import com.example.ghandapp.start.StartActivity
 import com.example.ghandapp.usuario.login.presentation.LoginViewModel
 import com.example.ghandapp.usuario.login.presentation.model.LoginViewState
 import com.example.ghandapp.usuario.registerUser.view.UsuarioActivity
@@ -33,6 +36,8 @@ class LoginActivity: AppCompatActivity() {
             )
         }
 
+
+
         binding.Register.setOnClickListener {
             showRegisterUser()
         }
@@ -52,6 +57,8 @@ class LoginActivity: AppCompatActivity() {
             }
         }
     }
+
+
     private fun showLoading() {
         binding.pbLoading.show()
     }
@@ -84,7 +91,7 @@ class LoginActivity: AppCompatActivity() {
     }
 
     private fun showHome() {
-        startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
+        startActivity(Intent(this@LoginActivity, StartActivity::class.java))
         finish()
     }
 

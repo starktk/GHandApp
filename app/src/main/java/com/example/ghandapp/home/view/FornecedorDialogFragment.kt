@@ -8,7 +8,6 @@ import androidx.fragment.app.DialogFragment
 import com.example.ghandapp.R
 
 class FornecedorDialogFragment: DialogFragment() {
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

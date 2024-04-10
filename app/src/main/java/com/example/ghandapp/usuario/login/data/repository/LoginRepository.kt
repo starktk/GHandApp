@@ -8,6 +8,7 @@ import com.example.ghandapp.usuario.login.data.remote.UserRequest
 import com.example.ghandapp.usuario.login.data.remote.LoginResponse
 import com.example.ghandapp.network.RetrofitNetworkClient
 import com.example.ghandapp.usuario.login.data.remote.LoginService
+import com.example.ghandapp.usuario.login.data.remote.UserLogRequest
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -27,7 +28,7 @@ class LoginRepository {
     suspend fun logar(username: String, password: String, contextView: View): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val response = client.getLog(UserRequest(username = username, password = password))
+                val response = client.getLog(username)
                 saveUser(response)
                 response.isSuccessful
             } catch (exception: Exception) {
@@ -52,6 +53,7 @@ class LoginRepository {
         return withContext(Dispatchers.IO) {
             try {
                 val response = client.findUser(username = username)
+                saveUser(response)
                 response.isSuccessful
             } catch (exception: Exception) {
                 Log.e("findUSer", exception.message.orEmpty())

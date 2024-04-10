@@ -14,6 +14,7 @@ abstract class FHdatabase: RoomDatabase() {
 
     abstract fun fornecedorDao(): FornecedorDao
 
+
     companion object {
         fun getInstance(): FHdatabase {
             return Room.databaseBuilder(

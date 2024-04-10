@@ -11,6 +11,8 @@ import com.example.ghandapp.extencoes.show
 import com.example.ghandapp.home.view.HomeActivity
 import com.example.ghandapp.fornecedor.presentation.FornecedorViewModel
 import com.example.ghandapp.fornecedor.presentation.model.FornecedorViewState
+import com.example.ghandapp.home.presentation.model.StateStart
+import com.example.ghandapp.start.StartActivity
 import com.example.ghandapp.usuario.login.view.LoginActivity
 import com.google.android.material.snackbar.Snackbar
 
@@ -32,9 +34,17 @@ class FornecedorActivity: AppCompatActivity() {
                 status = binding.situacao.selectedItem.toString().uppercase()
             )
         }
+
+        binding.iconHome.setOnClickListener {
+            backHomePage()
+        }
         initializeObserver()
     }
 
+    private fun backHomePage() {
+        startActivity(Intent(this@FornecedorActivity, StartActivity::class.java))
+        finish()
+    }
     private fun initializeObserver() {
         viewModel.state.observe(this) { viewState ->
             when (viewState) {
@@ -84,7 +94,9 @@ class FornecedorActivity: AppCompatActivity() {
     }
 
     private fun showIsCreatedSucess() {
-        startActivity(Intent(this@FornecedorActivity, HomeActivity::class.java))
+        val intent = Intent(this@FornecedorActivity, HomeActivity::class.java)
+        intent.putExtra("stateStart", StateStart.FORNECEDOR.toString())
+        startActivity(intent)
         finish()
     }
 

@@ -38,7 +38,7 @@ class LoginViewModel: ViewModel() {
     private fun fetchLogin(contextView: View, username: String, password: String) {
         viewModelScope.launch {
             val isSucess = useCase.login(username, password, contextView)
-            if(isSucess) {
+            if(isSucess == true) {
                 viewState.value = LoginViewState.showIsSucess
             } else {
                 viewState.value = LoginViewState.loginInvalidMessage
