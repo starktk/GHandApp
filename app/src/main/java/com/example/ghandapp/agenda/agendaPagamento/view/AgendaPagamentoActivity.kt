@@ -29,6 +29,7 @@ class AgendaPagamentoActivity: AppCompatActivity() {
         binding.agendarData.setOnClickListener {
             viewModel.validateInputs(
                 valueToPay = binding.valueToPay.text.toString(),
+                dateToPayOrReceive = binding.dateTimePicker.toString(),
                 cnpj = binding.cnpjDigite.text.toString(),
                 binding.root
             )
@@ -55,8 +56,14 @@ class AgendaPagamentoActivity: AppCompatActivity() {
                 AgendaPagamentoViewState.showLoading -> showLoading()
                 AgendaPagamentoViewState.showSucess -> showSucess()
                 AgendaPagamentoViewState.valueErrorMessage -> showValueErrorMessage()
+                AgendaPagamentoViewState.dateErrorMessage -> showDateErrorMessage()
             }
         }
+    }
+
+    private fun showDateErrorMessage() {
+        binding.pbLoading.hide()
+        Snackbar.make(binding.root, "Data inválida", Snackbar.LENGTH_SHORT).show()
     }
 
     private fun showValueErrorMessage() {

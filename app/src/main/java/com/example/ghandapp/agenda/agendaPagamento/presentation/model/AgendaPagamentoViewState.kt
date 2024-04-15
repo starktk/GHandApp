@@ -14,5 +14,7 @@ sealed class AgendaPagamentoViewState {
 
     object valueErrorMessage: AgendaPagamentoViewState()
 
+    object dateErrorMessage: AgendaPagamentoViewState()
+
     object showLoading: AgendaPagamentoViewState()
 }

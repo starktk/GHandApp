@@ -11,6 +11,9 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ghandapp.R
+import com.example.ghandapp.agenda.agendaPagamento.data.local.AgendaPagamentoModel
+import com.example.ghandapp.agenda.agendaPagamento.view.AgendaPagamentoActivity
+import com.example.ghandapp.agenda.agendaPagamento.view.AgendaPagamentoListAdapter
 import com.example.ghandapp.agenda.agendaProduto.data.local.AgendaProdutoModel
 import com.example.ghandapp.agenda.agendaProduto.view.AgendaProductActivity
 import com.example.ghandapp.agenda.agendaProduto.view.AgendaProdutoListAdapter
@@ -34,8 +37,11 @@ class HomeActivity: AppCompatActivity() {
         FornecedorListAdapter()
     }
 
-    private val agendaAdapter by lazy {
+    private val agendaProdutoAdapter by lazy {
         AgendaProdutoListAdapter()
+    }
+    private val agendaPagamentoAdapter by lazy {
+        AgendaPagamentoListAdapter()
     }
 
     private val viewModel: HomeViewModel by viewModels()
@@ -55,9 +61,9 @@ class HomeActivity: AppCompatActivity() {
         viewModel.state.observe(this) { viewState ->
             when(viewState) {
                 is HomeViewState.showHomeScreen -> showFornecedorList(viewState.list)
-                is HomeViewState.showAgendaProdutoScreen -> showAgendaList(viewState.list)
+                is HomeViewState.showAgendaProdutoScreen -> showAgendaProdutoList(viewState.list)
                 is HomeViewState.showFornecedorSingle -> showFornecedor(viewState.fornecedor)
-                is HomeViewState.showAgendaPagamentoScreen -> TODO()
+                is HomeViewState.showAgendaPagamentoScreen -> showAgendaPagamentoList(viewState.list)
                 HomeViewState.showEmptyList -> showEmptyList()
                 HomeViewState.showLoading -> showLoading()
                 HomeViewState.showEmptyAgenda -> showEmptyAgenda()
@@ -69,6 +75,10 @@ class HomeActivity: AppCompatActivity() {
         }
     }
 
+    private fun showAgendaPagamentoList(list: List<AgendaPagamentoModel>) {
+
+    }
+
     private fun showFailMessage() {
         binding.pbLoading.hide()
         Snackbar.make(binding.root, "Procura inválida", Snackbar.LENGTH_SHORT).show()
@@ -76,12 +86,11 @@ class HomeActivity: AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun bindAgenda() {
-        binding.rvList.adapter = agendaAdapter
         binding.iconHome.setOnClickListener {
             finish()
         }
         binding.iconAdd.setOnClickListener {
-            showRegisterAgendaScren()
+            showMiddleChoiceDIalog()
         }
         binding.iconSearch.setOnClickListener {
             showAgendaDialog()
@@ -103,8 +112,12 @@ class HomeActivity: AppCompatActivity() {
 
     }
 
-    private fun showRegisterAgendaScren() {
+    private fun showRegisterAgendaProdutoScren() {
         startActivity(Intent(this@HomeActivity, AgendaProductActivity::class.java))
+        finish()
+    }
+    private fun showRegisterAgendaPagamentoScreen() {
+        startActivity(Intent(this@HomeActivity, AgendaPagamentoActivity::class.java))
         finish()
     }
 
@@ -117,9 +130,9 @@ class HomeActivity: AppCompatActivity() {
         binding.pbLoading.hide()
     }
 
-    private fun showAgendaList(list: List<AgendaProdutoModel>) {
+    private fun showAgendaProdutoList(list: List<AgendaProdutoModel>) {
         binding.pbLoading.hide()
-        agendaAdapter.add(list)
+        agendaProdutoAdapter.add(list)
     }
 
 
@@ -145,9 +158,9 @@ class HomeActivity: AppCompatActivity() {
         viewModel.listFornecedor()
     }
 
-    private fun listarAgenda(cnpj: String, mes: String) {
-        binding.rvList.adapter = agendaAdapter
-        viewModel.listAgendaProduto(cnpj, mes)
+    private fun listarAgendaProduto(mes: String) {
+        binding.rvList.adapter = agendaProdutoAdapter
+        viewModel.listAgendaProduto(mes, binding.root)
     }
     private fun showFornecedorDialog() {
         val dialog = FornecedorDialogFragment()
@@ -198,11 +211,21 @@ class HomeActivity: AppCompatActivity() {
         return dateNow
     }
 
+    private fun showMiddleChoiceDIalog() {
+        val dialog = MiddleDialogFragment()
+        dialog.show(supportFragmentManager, dialog.tag)
+        val rdGroup = findViewById<RadioGroup>(R.id.rd_groupMiddle)
+        rdGroup.setOnCheckedChangeListener { _, checkId ->
+            when(checkId) {
+                R.id.btn_pagamentoMiddle -> showRegisterAgendaPagamentoScreen()
+                R.id.btn_produtoMiddle -> showRegisterAgendaProdutoScren()
+            }
+        }
+    }
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showAgendaDialog() {
         val dialog = AgendaDialogFragment()
         dialog.show(supportFragmentManager, dialog.tag)
-        val text = R.id.btn_cnpj.toString()
         val rdGroup = findViewById<RadioGroup>(R.id.rd_group)
         val button = findViewById<Button>(R.id.btn_submit)
         rdGroup.setOnCheckedChangeListener { _, checkId ->
@@ -210,17 +233,19 @@ class HomeActivity: AppCompatActivity() {
                 R.id.btn_pagamento -> button.setOnClickListener {
 
                 }
+                R.id.btn_produto -> button.setOnClickListener {
+                    val spinner = findViewById<Spinner>(R.id.spinner_month)
+                    val month = setDateMonth(spinner)
+                    button.setOnClickListener {
+                        listarAgendaProduto(
+                            mes = month.toString()
+                        )
+                    }
+                }
             }
         }
 
-        val spinner = findViewById<Spinner>(R.id.spinner_month)
-        val month = setDateMonth(spinner)
-        button.setOnClickListener {
-            listarAgenda(
-                cnpj = text,
-                mes = month.toString()
-            )
-        }
+
     }
 }
 

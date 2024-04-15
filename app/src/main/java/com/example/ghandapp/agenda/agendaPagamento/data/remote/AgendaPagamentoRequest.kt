@@ -7,5 +7,6 @@ data class AgendaPagamentoRequest (
     val name: String? = null,
     val cnpj: String? = null,
     val valueToPay: Double? = null,
-    val situacaoPagamento: SituacaoPagamento? = null
+    val situacaoPagamento: SituacaoPagamento? = null,
+    val dateToPayOrReceive: String? = null
 )

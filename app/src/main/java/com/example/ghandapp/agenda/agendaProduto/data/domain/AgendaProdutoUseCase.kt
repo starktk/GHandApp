@@ -19,8 +19,8 @@ class AgendaProdutoUseCase {
         val user: UserEntity = loginRepo.getUser()
         return repository.createDateInAgenda(user.username, user.name, cnpj, nameProduct, amount, date, contextView)
     }
-    suspend fun findAgendaByMonth(cnpj: String, mes: String): List<AgendaProdutoModel> {
-        return repository.findAgenda(loginRepo.getUser().username, cnpj, mes)
+    suspend fun findAgendaByMonth(dateToPayOrReceive: String, contextView: View): List<AgendaProdutoModel> {
+        return repository.findAgenda(loginRepo.getUser().username, dateToPayOrReceive, contextView)
     }
     suspend fun deleteAgenda(cnpj: String, dateToPayOrReceive: String) {
         return repository.deleteAgenda(loginRepo.getUser().username, cnpj, dateToPayOrReceive)

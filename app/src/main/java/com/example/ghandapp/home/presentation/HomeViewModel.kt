@@ -1,5 +1,6 @@
 package com.example.ghandapp.home.presentation
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -94,10 +95,10 @@ class HomeViewModel: ViewModel() {
             logUsecase.getUser().name
         }
     }
-    fun listAgendaProduto(cnpj: String, mes: String) {
+    fun listAgendaProduto(mes: String, contextView: View) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
-            val agenda = agendaProdutoUseCase.findAgendaByMonth(cnpj, mes)
+            val agenda = agendaProdutoUseCase.findAgendaByMonth(mes, contextView)
 
             if (agenda.isEmpty()) {
                 viewState.value = HomeViewState.showEmptyList
@@ -106,10 +107,10 @@ class HomeViewModel: ViewModel() {
             }
         }
     }
-    fun listAgendaPagamento(cnpj: String, mes: String) {
+    fun listAgendaPagamento(mes: String, contextView: View) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
-            val agenda = agendaPagamentoUseCase.findAgendaByMonth(cnpj, mes)
+            val agenda = agendaPagamentoUseCase.findAgendaByMonth(mes, contextView)
 
             if (agenda.isEmpty()) {
                 viewState.value = HomeViewState.showAgendaPagamentoScreen(agenda)

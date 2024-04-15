@@ -37,17 +37,17 @@ class AgendaProdutoRepository {
         }
     }
 
-    suspend fun findAgenda(username: String,cnpj: String, mes: String): List<AgendaProdutoModel> {
+    suspend fun findAgenda(username: String, dateToPayOrReceive: String, contextView: View): List<AgendaProdutoModel> {
         return withContext(Dispatchers.IO) {
             try {
-                val response = client.findAgenda(AgendaToFindModel(username,cnpj, mes))
+                val response = client.findAgenda(AgendaToFindModel(username = username, dateToPayOrReceive = dateToPayOrReceive))
                 if (response.isSuccessful) {
                     response.body()?.mapperAgenda() ?: emptyList()
                 } else {
                     emptyList()
                 }
             } catch (exception: Exception) {
-                Log.e("findAgenda", exception.message.orEmpty())
+                Snackbar.make(contextView, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
                 emptyList()
             }
         }

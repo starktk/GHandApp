@@ -80,4 +80,5 @@
     <string name="agenda">Agenda</string>
     <string name="fornecedor">fornecedor</string>
     <string name="gett_AllFornecedores">Listar todos</string>
+    <string name="selecione_o_m_s">Selecione o mês</string>
 </resources>

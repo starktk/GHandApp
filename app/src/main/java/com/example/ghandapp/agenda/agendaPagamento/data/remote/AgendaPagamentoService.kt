@@ -12,6 +12,6 @@ interface AgendaPagamentoService {
     suspend fun setDateToPay(@Body agendaPagamentoRequest: AgendaPagamentoRequest): Response<ResponseBody>
 
     @GET()
-    suspend fun getMarkedDate(@Body agendaPagamentoRequest: AgendaPagamentoRequest): Response<AgendaPagamentoResponse>
+    suspend fun getMarkedDate(@Body agendaPagamentoRequest: AgendaPagamentoRequest): Response<List<AgendaPagamentoResponse>>
 
 }

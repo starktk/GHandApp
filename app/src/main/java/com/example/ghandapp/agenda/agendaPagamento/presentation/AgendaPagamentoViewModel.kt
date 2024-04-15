@@ -18,7 +18,7 @@ class AgendaPagamentoViewModel: ViewModel() {
         AgendaPagamentoUseCase()
     }
 
-    fun validateInputs(valueToPay: String, cnpj: String, contextView: View) {
+    fun validateInputs(valueToPay: String, dateToPayOrReceive: String ,cnpj: String, contextView: View) {
         viewState.value = AgendaPagamentoViewState.showLoading
         if (valueToPay.isNullOrEmpty() && cnpj.isNullOrEmpty()) {
             viewState.value = AgendaPagamentoViewState.genericErrorMessage
@@ -32,14 +32,18 @@ class AgendaPagamentoViewModel: ViewModel() {
             viewState.value = AgendaPagamentoViewState.cnpjErrorMessage
             return
         }
-        fetchCreation(valueToPay.toDouble(), cnpj, contextView)
+        if (dateToPayOrReceive.length == 0 || dateToPayOrReceive.isNullOrEmpty()) {
+            viewState.value = AgendaPagamentoViewState.dateErrorMessage
+            return
+        }
+        fetchCreation(valueToPay.toDouble(), cnpj, dateToPayOrReceive, contextView)
     }
 
-    private fun fetchCreation(valueToPay: Double, cnpj: String, contextView: View) {
+    private fun fetchCreation(valueToPay: Double, cnpj: String,dateToPayOrReceive: String, contextView: View) {
         viewModelScope.launch {
             viewState.value = AgendaPagamentoViewState.showLoading
 
-            val response = useCase.createDate(cnpj, valueToPay, contextView)
+            val response = useCase.createDate(cnpj, valueToPay, dateToPayOrReceive, contextView)
 
             if (!response) {
                 viewState.value = AgendaPagamentoViewState.badCreation
