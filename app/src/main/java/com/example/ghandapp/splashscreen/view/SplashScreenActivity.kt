@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.ghandapp.R
 import com.example.ghandapp.databinding.ActivitySplashscreenBinding
 import com.example.ghandapp.splashscreen.presentation.SplashScreenViewModel
 import com.example.ghandapp.splashscreen.presentation.model.SplashScreenViewState
@@ -20,15 +19,20 @@ class SplashScreenActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splashscreen)
-        viewModel.state.observe(this) {viewState -> when(viewState) {
-            SplashScreenViewState.showIsSucess -> showIsSucess()
-            SplashScreenViewState.showFailed -> showFailed()
+        binding = ActivitySplashscreenBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        viewModel.init()
+        initializer()
+    }
+
+    fun initializer() {
+        viewModel.state.observe(this) {
+                viewState -> when(viewState) {
+                SplashScreenViewState.showIsSucess -> showIsSucess()
+                SplashScreenViewState.showFailed -> showFailed()
             }
         }
     }
-
-
 
 
     private fun showIsSucess() {

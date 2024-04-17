@@ -113,7 +113,7 @@ class HomeActivity: AppCompatActivity() {
             showRegisterFornecedorScreen()
         }
         binding.iconSearch.setOnClickListener {
-            showFornecedorDialog()
+            listar()
         }
 
     }
@@ -173,27 +173,33 @@ class HomeActivity: AppCompatActivity() {
         dialog.show(supportFragmentManager, dialog.tag)
         val radioGroup: RadioGroup? = findViewById(R.id.rd_group)
         val btnSubmitFornecedor: Button? = findViewById(R.id.btn_submitFornecedor)
-        radioGroup?.setOnCheckedChangeListener { _, checkId ->
-                when (checkId) {
-                R.id.btn_cnpj -> {
-                    val cnpj: EditText = findViewById(R.id.etv_cnpj)
-                    btnSubmitFornecedor?.setOnClickListener {
-                        viewModel.findFornecedorByCnpj(cnpj.text.toString())
-                    }
-                }
-                R.id.btn_razaoSocial -> {
-                    val razaoSocial: EditText = findViewById(R.id.etv_razaoSocial)
-                    btnSubmitFornecedor?.setOnClickListener {
-                       viewModel.listByRazaoSocial(razaoSocial.text.toString())
-                   }
-                }
-                R.id.btn_getAll -> {
-                    btnSubmitFornecedor?.setOnClickListener {
-                        listar()
-                    }
-                }
-            }
+
+        val checkId = radioGroup?.checkedRadioButtonId
+        btnSubmitFornecedor?.setOnClickListener {
+           listar()
         }
+
+//        radioGroup?.setOnCheckedChangeListener { _, checkId ->
+//                when (checkId) {
+//                R.id.btn_cnpj -> {
+//                    val cnpj: EditText = findViewById(R.id.etv_cnpj)
+//                    btnSubmitFornecedor?.setOnClickListener {
+//                        viewModel.findFornecedorByCnpj(cnpj.text.toString())
+//                    }
+//                }
+//                R.id.btn_razaoSocial -> {
+//                    val razaoSocial: EditText = findViewById(R.id.etv_razaoSocial)
+//                    btnSubmitFornecedor?.setOnClickListener {
+//                       viewModel.listByRazaoSocial(razaoSocial.text.toString())
+//                   }
+//                }
+//                R.id.btn_getAll -> {
+//                    btnSubmitFornecedor?.setOnClickListener {
+//                        listar()
+//                    }
+//                }
+//            }
+//        }
     }
 
 

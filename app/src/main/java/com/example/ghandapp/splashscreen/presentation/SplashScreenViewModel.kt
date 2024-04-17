@@ -18,7 +18,7 @@ class SplashScreenViewModel: ViewModel() {
         LoginUseCase()
     }
 
-    init {
+    fun init() {
         viewModelScope.launch {
                 val isSucess: UserEntity = usecase.getUser()
                 if (isSucess != null) {
