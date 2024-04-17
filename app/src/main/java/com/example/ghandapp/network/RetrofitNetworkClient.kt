@@ -1,6 +1,5 @@
 package com.example.ghandapp.network
 
-import com.example.ghandapp.BuildConfig
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
@@ -13,7 +12,7 @@ private const val TIME_OUT = 60L
 
 object RetrofitNetworkClient {
 
-    fun createNetworkClient(baseUrl: String = "http://18.229.82.68:8084") =
+    fun createNetworkClient(baseUrl: String = "http://192.168.0.14:8084") =
         retrofitClient(
             baseUrl,
             httpClint(),
@@ -36,11 +35,7 @@ object RetrofitNetworkClient {
 
     private fun logginInterceptor() =
         HttpLoggingInterceptor().apply {
-            level = if (BuildConfig.DEBUG) {
-                HttpLoggingInterceptor.Level.BODY
-            } else {
-                HttpLoggingInterceptor.Level.NONE
-            }
+            level = HttpLoggingInterceptor.Level.BODY
         }
 
     private fun retrofitClient(

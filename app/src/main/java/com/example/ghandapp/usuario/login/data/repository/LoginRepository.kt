@@ -28,7 +28,7 @@ class LoginRepository {
     suspend fun logar(username: String, password: String, contextView: View): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val response = client.getLog(username)
+                val response = client.getLog(UserRequest(username = username, password = password))
                 saveUser(response)
                 response.isSuccessful
             } catch (exception: Exception) {

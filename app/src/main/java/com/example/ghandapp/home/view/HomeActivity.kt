@@ -25,6 +25,7 @@ import com.example.ghandapp.fornecedor.view.FornecedorActivity
 import com.example.ghandapp.fornecedor.view.FornecedorListAdapter
 import com.example.ghandapp.home.presentation.HomeViewModel
 import com.example.ghandapp.home.presentation.model.HomeViewState
+import com.example.ghandapp.start.StartActivity
 import com.google.android.material.snackbar.Snackbar
 import java.time.LocalDate
 
@@ -43,7 +44,7 @@ class HomeActivity: AppCompatActivity() {
     private val agendaPagamentoAdapter by lazy {
         AgendaPagamentoListAdapter()
     }
-
+    
     private val viewModel: HomeViewModel by viewModels()
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +53,10 @@ class HomeActivity: AppCompatActivity() {
         setContentView(binding.root)
         val intent = intent
 
+        binding.iconHome.setOnClickListener {
+            startActivity(Intent(this@HomeActivity, StartActivity::class.java))
+            finish()
+        }
         viewModel.initializer(intent.getStringExtra("stateStart").toString())
         initializeOberseve()
     }
@@ -76,7 +81,8 @@ class HomeActivity: AppCompatActivity() {
     }
 
     private fun showAgendaPagamentoList(list: List<AgendaPagamentoModel>) {
-
+        binding.pbLoading.hide()
+        agendaPagamentoAdapter.add(list)
     }
 
     private fun showFailMessage() {

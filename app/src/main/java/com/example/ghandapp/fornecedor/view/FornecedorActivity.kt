@@ -30,8 +30,7 @@ class FornecedorActivity: AppCompatActivity() {
         binding.registerFornecedor.setOnClickListener {
             viewModel.validateInputs(
                 razaoSocial = binding.razaoSocial.text.toString(),
-                cnpj = binding.cnpj.text.toString(),
-                status = binding.situacao.selectedItem.toString().uppercase()
+                cnpj = binding.cnpj.text.toString()
             )
         }
 
@@ -54,7 +53,6 @@ class FornecedorActivity: AppCompatActivity() {
                 FornecedorViewState.badCreation -> badCreation()
                 FornecedorViewState.razaoSocialErrorMessage -> showRazaoSocialMessageError()
                 FornecedorViewState.cnpjErrorMessage -> showCnpjErrorMessage()
-                FornecedorViewState.missingStatus -> missingStatus()
                 FornecedorViewState.missingUsernameReference -> missingUsernameReference()
                 FornecedorViewState.blankOrEmptyInputs -> showInputsInvalidMessage()
             }
@@ -67,11 +65,6 @@ class FornecedorActivity: AppCompatActivity() {
     private fun showInputsInvalidMessage() {
         binding.pbLoading.hide()
         Snackbar.make(binding.registerFornecedor, R.string.invalid_creation, Snackbar.LENGTH_SHORT).show()
-    }
-
-    private fun missingStatus() {
-        binding.pbLoading.hide()
-        Snackbar.make(binding.situacao, R.string.invalid_situation, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun showCnpjErrorMessage() {

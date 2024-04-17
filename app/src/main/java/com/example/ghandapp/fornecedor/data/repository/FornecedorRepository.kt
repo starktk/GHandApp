@@ -7,7 +7,7 @@ import com.example.ghandapp.fornecedor.data.remote.FornecedorRequest
 import com.example.ghandapp.fornecedor.data.model.FornecedorModel
 import com.example.ghandapp.fornecedor.data.remote.FornecedorResponse
 import com.example.ghandapp.fornecedor.data.remote.FornecedorService
-import com.example.ghandapp.fornecedor.presentation.enums.SituacaoFornecedor
+import com.example.ghandapp.fornecedor.presentation.enums.Situacao
 import com.example.ghandapp.network.RetrofitNetworkClient
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +31,7 @@ class FornecedorRepository {
     suspend fun createFornecedor(razaoSocial: String, cnpj: String, username: String, name: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val response = client.createFornecedor(FornecedorRequest(razaoSocial = razaoSocial, cnpj = cnpj, status = SituacaoFornecedor.Ativa , username = username, name = name))
+                val response = client.createFornecedor(FornecedorRequest(razaoSocial = razaoSocial, cnpj = cnpj, status = Situacao.Ativa , username = username, name = name))
                 response.isSuccessful
             } catch (exception: Exception) {
                 Snackbar.make(bindingFornecedor.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
@@ -77,7 +77,7 @@ class FornecedorRepository {
         }
     }
 
-    suspend fun alterFornecedor(username: String, cnpj: String, razaoSocial: String, status: SituacaoFornecedor, name: String): FornecedorModel? {
+    suspend fun alterFornecedor(username: String, cnpj: String, razaoSocial: String, status: Situacao, name: String): FornecedorModel? {
         return withContext(Dispatchers.IO) {
             try {
                 val response = client.alterFornecedor(FornecedorRequest(razaoSocial = razaoSocial, cnpj = cnpj, status = status, username = username, name = name))
@@ -94,7 +94,7 @@ class FornecedorRepository {
     }
 
 
-    suspend fun modifyStatus(username: String, cnpj: String, status: SituacaoFornecedor): Boolean {
+    suspend fun modifyStatus(username: String, cnpj: String, status: Situacao): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 val response = client.alterStatus(FornecedorRequest(username = username, cnpj = cnpj, status = status))
@@ -133,7 +133,7 @@ class FornecedorRepository {
             }
         }
     }
-    suspend fun findByStatus(username: String, status: SituacaoFornecedor): List<FornecedorModel> {
+    suspend fun findByStatus(username: String, status: Situacao): List<FornecedorModel> {
         return withContext(Dispatchers.IO) {
             try {
                 val response = client.findByStatus(FornecedorRequest(username = username , status = status))

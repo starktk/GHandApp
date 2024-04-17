@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.ghandapp.agenda.agendaPagamento.data.domain.AgendaPagamentoUseCase
 import com.example.ghandapp.agenda.agendaProduto.data.domain.AgendaProdutoUseCase
 import com.example.ghandapp.fornecedor.data.domain.FornecedorUseCase
-import com.example.ghandapp.fornecedor.presentation.enums.SituacaoFornecedor
+import com.example.ghandapp.fornecedor.presentation.enums.Situacao
 import com.example.ghandapp.home.presentation.model.HomeViewState
 import com.example.ghandapp.home.presentation.model.StateStart
 import com.example.ghandapp.usuario.login.data.domain.LoginUseCase
@@ -64,7 +64,7 @@ class HomeViewModel: ViewModel() {
     fun modifyStatus(cnpj: String, status: String) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
-            val statusOf = SituacaoFornecedor.valueOf(status)
+            val statusOf = Situacao.valueOf(status)
             val response = fornecedorUseCase.modifyStatus(cnpj, statusOf)
 
             if (response) {

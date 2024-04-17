@@ -21,7 +21,10 @@ class StartActivity: AppCompatActivity() {
 
     private fun inicializateNavigation() {
         binding.btnFornecedor.setOnClickListener {
-
+            val intent = (Intent(this@StartActivity, HomeActivity::class.java))
+            intent.putExtra("stateStart", StateStart.FORNECEDOR.toString())
+            startActivity(intent)
+            finish()
         }
         binding.btnAgenda.setOnClickListener {
             val intent = (Intent(this@StartActivity, HomeActivity::class.java))

@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ghandapp.fornecedor.data.domain.FornecedorUseCase
 import com.example.ghandapp.fornecedor.presentation.model.FornecedorViewState
-import com.example.ghandapp.fornecedor.presentation.enums.SituacaoFornecedor
 import com.example.ghandapp.usuario.login.data.domain.LoginUseCase
 import kotlinx.coroutines.launch
 
@@ -18,10 +17,10 @@ class FornecedorViewModel: ViewModel() {
 
     private val usecaseFornecedor by lazy { FornecedorUseCase() }
     private val usecaseLogin by lazy { LoginUseCase() }
-    fun validateInputs(razaoSocial: String, cnpj: String, status: String) {
+    fun validateInputs(razaoSocial: String, cnpj: String) {
         viewState.value = FornecedorViewState.showLoading
 
-        if(razaoSocial.isNullOrEmpty() && cnpj.isNullOrEmpty () && status.isNullOrEmpty()) {
+        if(razaoSocial.isNullOrEmpty() && cnpj.isNullOrEmpty ()) {
             viewState.value = FornecedorViewState.blankOrEmptyInputs
             return
         }
@@ -29,16 +28,11 @@ class FornecedorViewModel: ViewModel() {
             viewState.value = FornecedorViewState.cnpjErrorMessage
             return
         }
-        if (!status.equals(SituacaoFornecedor.Ativa) || !status.equals(
-                SituacaoFornecedor.Inativa)) {
-            viewState.value = FornecedorViewState.missingStatus
-            return
-        }
 
-        fetchCreate(razaoSocial, cnpj, status)
+        fetchCreate(razaoSocial, cnpj)
     }
 
-    private fun fetchCreate(razaoSocial: String, cnpj: String, status: String) {
+    private fun fetchCreate(razaoSocial: String, cnpj: String) {
         viewModelScope.launch {
             val username = usecaseLogin.getUser().username
             if (username.isNullOrEmpty()) {

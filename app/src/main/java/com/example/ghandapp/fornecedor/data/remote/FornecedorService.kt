@@ -11,23 +11,23 @@ import retrofit2.http.Query
 
 interface FornecedorService {
 
-    @GET("fornecedor/findFornecedorByCnpj")
+    @POST("/fornecedor/findFornecedorByCnpj")
     suspend fun findFornecedorByCnpj(@Body fornecedorRequest: FornecedorRequest): Response<FornecedorResponse>
-    @GET("fornecedor/findFornecedorByRazaoSocial")
+    @GET("/fornecedor/findFornecedorByRazaoSocial")
     suspend fun findFornecedoresByRazaoSocial(@Body fornecedorRequest: FornecedorRequest): Response<List<FornecedorResponse>>
-    @POST("fornecedor/createFornecedor")
+    @POST("/fornecedor/createFornecedor")
     suspend fun createFornecedor(@Body fornecedorRequest: FornecedorRequest): Response<ResponseBody>
 
-    @PUT("fornecedor/updateFornecedor")
+    @PUT("/fornecedor/updateFornecedor")
     suspend fun alterFornecedor(@Body fornecedorRequest: FornecedorRequest): Response<FornecedorResponse>
 
-    @DELETE("fornecedor/deleteFornecedor")
+    @DELETE("/fornecedor/deleteFornecedor")
     suspend fun deleteFornecedor(@Body fornecedorRequest: FornecedorRequest): Response<ResponseBody>
 
-    @GET("fornecedor/findAllFornecedores/{id}")
+    @POST("/fornecedor/findAllFornecedores/{id}")
     suspend fun getAllFornecedores(@Query("id") username: String): Response<List<FornecedorResponse>>
 
-    @PUT("fornecedor/alterStatus")
+    @PUT("/fornecedor/alterStatus")
     suspend fun alterStatus(@Body fornecedorRequest: FornecedorRequest): Response<FornecedorResponse>
 
     @GET("fornecedor/findFornecedorByStatus")
