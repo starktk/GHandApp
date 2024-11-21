@@ -1,12 +1,21 @@
 package com.example.ghandapp.home.view
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+import android.view.MenuItem
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
+import android.widget.PopupMenu
 import android.widget.RadioGroup
 import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +35,7 @@ import com.example.ghandapp.fornecedor.view.FornecedorListAdapter
 import com.example.ghandapp.home.presentation.HomeViewModel
 import com.example.ghandapp.home.presentation.model.HomeViewState
 import com.example.ghandapp.start.StartActivity
+import com.example.ghandapp.usuario.login.view.LoginActivity
 import com.google.android.material.snackbar.Snackbar
 import java.time.LocalDate
 
@@ -53,10 +63,8 @@ class HomeActivity: AppCompatActivity() {
         setContentView(binding.root)
         val intent = intent
 
-        binding.iconHome.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, StartActivity::class.java))
-            finish()
-        }
+        observeEvents()
+
         viewModel.initializer(intent.getStringExtra("stateStart").toString())
         initializeOberseve()
     }
@@ -77,6 +85,18 @@ class HomeActivity: AppCompatActivity() {
                 HomeViewState.showFailedMessage -> showFailMessage()
                 HomeViewState.stateAgenda -> bindAgenda()
             }
+        }
+    }
+
+    private fun observeEvents() {
+        binding.iconHome.setOnClickListener {
+            startActivity(Intent(this@HomeActivity, StartActivity::class.java))
+            finish()
+        }
+
+        binding.iconProfile.setOnClickListener{
+            startActivity(Intent(this@HomeActivity, LoginActivity::class.java))
+            finish()
         }
     }
 
@@ -104,18 +124,44 @@ class HomeActivity: AppCompatActivity() {
 
     }
 
+    @SuppressLint("ResourceType")
     private fun bindForFornecedor() {
         binding.rvList.adapter = fornecedorAdapter
+        listar()
         binding.iconHome.setOnClickListener {
-           finish()
+            finish()
         }
         binding.iconAdd.setOnClickListener {
             showRegisterFornecedorScreen()
         }
         binding.iconSearch.setOnClickListener {
-            listar()
-        }
+            val popupMenu = PopupMenu(this, it)
+            menuInflater.inflate(R.menu.menu_search, popupMenu.menu)
 
+            popupMenu.show()
+            val scaleAnim = AnimationUtils.loadAnimation(this, R.anim.selectopt)
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                menuItem.actionView?.startAnimation(scaleAnim)
+                when (menuItem.itemId) {
+                    R.id.item_razao_social -> {
+                        // Ação para Razão Social
+                        Toast.makeText(this, "Razão Social selecionado", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+                    R.id.item_cnpj -> {
+                        // Ação para CNPJ
+                        Toast.makeText(this, "CNPJ selecionado", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+                    R.id.item_status -> {
+                        // Ação para Status
+                        Toast.makeText(this, "Status selecionado", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
     }
 
     private fun showRegisterAgendaProdutoScren() {
@@ -161,7 +207,7 @@ class HomeActivity: AppCompatActivity() {
     }
 
     private fun listar() {
-        viewModel.listFornecedor()
+        viewModel.listFornecedor(binding.root)
     }
 
     private fun listarAgendaProduto(mes: String) {

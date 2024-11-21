@@ -1,5 +1,6 @@
 package com.example.ghandapp.home.presentation
 
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -38,10 +39,10 @@ class HomeViewModel: ViewModel() {
 
         }
     }
-    fun listFornecedor() {
+    fun listFornecedor(contextView: View) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
-            val list = fornecedorUseCase.getAllFornecedores()
+            val list = fornecedorUseCase.getAllFornecedores(contextView)
             if (list.isEmpty()) {
                 viewState.value = HomeViewState.showEmptyList
             } else {

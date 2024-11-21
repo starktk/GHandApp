@@ -6,8 +6,17 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/Wheat"
-        tools:context=".home.view.HomeActivity">
+        tools:context=".home.view.HomeActivity"
+        tools:ignore="MissingClass">
+
+        <FrameLayout
+            android:id="@+id/blurredBackground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            />
+
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/tool_menu"
@@ -50,17 +59,18 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_List"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="14dp"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            tools:listitem="@layout/fornecedor_list_item"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tool_menu"
             app:layout_constraintVertical_bias="0.5"
-            app:spanCount="1">
+            >
 
         </androidx.recyclerview.widget.RecyclerView>
 

@@ -1,9 +1,11 @@
 package com.example.ghandapp.fornecedor.data.remote
 
-import com.example.ghandapp.agenda.agendaProduto.data.local.SituacaoProduto
+import com.example.ghandapp.fornecedor.presentation.enums.Situacao
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class FornecedorResponse(
     val razaoSocial: String,
     val cnpj: String,
-    val status: SituacaoProduto
+    val status: Situacao
 )

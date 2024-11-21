@@ -12,7 +12,7 @@ private const val TIME_OUT = 60L
 
 object RetrofitNetworkClient {
 
-    fun createNetworkClient(baseUrl: String = "http://192.168.0.14:8084") =
+    fun createNetworkClient(baseUrl: String = "https://ghapisupply-production.up.railway.app") =
         retrofitClient(
             baseUrl,
             httpClint(),
@@ -31,6 +31,7 @@ object RetrofitNetworkClient {
             .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
             .readTimeout(TIME_OUT, TimeUnit.SECONDS)
             .writeTimeout(TIME_OUT, TimeUnit.SECONDS)
+            .followRedirects(true)
             .build()
 
     private fun logginInterceptor() =

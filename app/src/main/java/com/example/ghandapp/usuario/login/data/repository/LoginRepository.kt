@@ -40,6 +40,7 @@ class LoginRepository {
     suspend fun createUser(username: String, name: String, password: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
+                println(name)
                 val response = client.createUser(UserRequest(username, name, password))
                 response.isSuccessful
             } catch (exception: Exception) {
@@ -65,8 +66,12 @@ class LoginRepository {
     fun getUser(): UserEntity {
         return database.userDao().getUser()
     }
+    suspend fun getUsername(): String {
+        return database.userDao().getUsername()
+    }
     private suspend fun saveUser(user: Response<LoginResponse>) {
         return withContext(Dispatchers.IO) {
+            database.userDao().cleanCache()
             if (user.isSuccessful) {
                 user.body()?.run {
                         database.userDao().insertProfile(

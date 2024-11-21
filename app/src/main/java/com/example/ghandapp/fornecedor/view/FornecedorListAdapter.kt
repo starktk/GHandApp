@@ -1,5 +1,6 @@
 package com.example.ghandapp.fornecedor.view
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -22,11 +23,14 @@ class FornecedorListAdapter: RecyclerView.Adapter<FornecedorViewHolder>() {
     override fun onBindViewHolder(holder: FornecedorViewHolder, position: Int) {
         holder.bind(list[position])
     }
+    @SuppressLint("NotifyDataSetChanged")
     fun addAllItems(items: List<FornecedorModel>) {
+        println(items)
         list.clear()
         list.addAll(items)
         notifyDataSetChanged()
     }
+    @SuppressLint("NotifyDataSetChanged")
     fun addSingleItem(items: FornecedorModel) {
         list.clear()
         list.add(items)

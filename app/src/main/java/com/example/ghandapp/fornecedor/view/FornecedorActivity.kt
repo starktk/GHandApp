@@ -64,7 +64,7 @@ class FornecedorActivity: AppCompatActivity() {
     }
     private fun showInputsInvalidMessage() {
         binding.pbLoading.hide()
-        Snackbar.make(binding.registerFornecedor, R.string.invalid_creation, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(binding.registerFornecedor, "Informações inválidas", Snackbar.LENGTH_SHORT).show()
     }
 
     private fun showCnpjErrorMessage() {

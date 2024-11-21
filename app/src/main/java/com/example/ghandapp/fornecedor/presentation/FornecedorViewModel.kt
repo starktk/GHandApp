@@ -20,7 +20,7 @@ class FornecedorViewModel: ViewModel() {
     fun validateInputs(razaoSocial: String, cnpj: String) {
         viewState.value = FornecedorViewState.showLoading
 
-        if(razaoSocial.isNullOrEmpty() && cnpj.isNullOrEmpty ()) {
+        if(!razaoSocial.isNullOrEmpty() && cnpj.isNullOrEmpty ()) {
             viewState.value = FornecedorViewState.blankOrEmptyInputs
             return
         }

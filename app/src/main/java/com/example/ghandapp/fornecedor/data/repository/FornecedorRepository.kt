@@ -1,5 +1,7 @@
 package com.example.ghandapp.fornecedor.data.repository
 
+import android.util.Log
+import android.view.View
 import com.example.ghandapp.database.FHdatabase
 import com.example.ghandapp.databinding.ActivityFornecedorBinding
 import com.example.ghandapp.fornecedor.data.local.FornecedorEntitiy
@@ -31,7 +33,7 @@ class FornecedorRepository {
     suspend fun createFornecedor(razaoSocial: String, cnpj: String, username: String, name: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val response = client.createFornecedor(FornecedorRequest(razaoSocial = razaoSocial, cnpj = cnpj, status = Situacao.Ativa , username = username, name = name))
+                val response = client.createFornecedor(FornecedorRequest(razaoSocial, cnpj, status = Situacao.ATIVA , username, name = name))
                 response.isSuccessful
             } catch (exception: Exception) {
                 Snackbar.make(bindingFornecedor.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
@@ -61,21 +63,24 @@ class FornecedorRepository {
         }
     }
 
-    suspend fun getAllFornecedores(username: String): List<FornecedorModel> {
+    suspend fun getAllFornecedores(username: String, contextView: View): List<FornecedorModel> {
         return withContext(Dispatchers.IO) {
             try {
                 val fornecedoresReturn = client.getAllFornecedores(username = username)
                 if(fornecedoresReturn.isSuccessful) {
+                    println(fornecedoresReturn.body())
                     fornecedoresReturn.body()?.mapperFornecedor() ?: emptyList()
                 } else {
+                    println("Erro na requisição: Código ${fornecedoresReturn.code()} - ${fornecedoresReturn.message()}")
                     emptyList()
                 }
             } catch (exception: Exception) {
-               Snackbar.make(bindingFornecedor.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+               Snackbar.make(contextView, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
                 emptyList()
             }
         }
     }
+
 
     suspend fun alterFornecedor(username: String, cnpj: String, razaoSocial: String, status: Situacao, name: String): FornecedorModel? {
         return withContext(Dispatchers.IO) {
@@ -162,12 +167,15 @@ class FornecedorRepository {
     }
 
     private fun List<FornecedorResponse>.mapperFornecedor(): List<FornecedorModel> {
+        Log.d("MapLog Info", "Lsta: ${this.size}")
         return map {
             it.fornecedorResponseToFornecedorModel()
         }
     }
 
+
     private fun FornecedorResponse?.fornecedorResponseToFornecedorModel(): FornecedorModel {
+
         return FornecedorModel(
             razaoSocial = this?.razaoSocial,
             cnpj = this?.cnpj,

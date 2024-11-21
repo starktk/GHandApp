@@ -1,5 +1,6 @@
 package com.example.ghandapp.fornecedor.data.domain
 
+import android.view.View
 import com.example.ghandapp.fornecedor.data.model.FornecedorModel
 import com.example.ghandapp.fornecedor.data.repository.FornecedorRepository
 import com.example.ghandapp.fornecedor.presentation.enums.Situacao
@@ -28,8 +29,8 @@ class FornecedorUseCase {
         return repositoryFornecedor.modifyStatus(loginUseCase.getUser().username, cnpj, status)
     }
 
-    suspend fun getAllFornecedores(): List<FornecedorModel> {
-        return repositoryFornecedor.getAllFornecedores(loginUseCase.getUser().username)
+    suspend fun getAllFornecedores(contextView: View): List<FornecedorModel> {
+        return repositoryFornecedor.getAllFornecedores(loginUseCase.getUsername(), contextView)
     }
 
     suspend fun findFornecedoresByRazaoSocial(razaoSocial: String): List<FornecedorModel> {

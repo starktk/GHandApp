@@ -1,6 +1,8 @@
 package com.example.ghandapp.usuario.login.data.local
 
 import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.DeleteTable
 import androidx.room.Insert
 import androidx.room.Query
 
@@ -18,4 +20,7 @@ interface UserDao {
 
     @Query("SELECT * FROM userTable")
     fun getUser(): UserEntity
+
+    @Query("DELETE FROM userTable")
+    fun cleanCache()
 }
