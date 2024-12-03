@@ -14,7 +14,7 @@ interface FornecedorService {
 
     @POST("/fornecedor/findFornecedorByCnpj")
     suspend fun findFornecedorByCnpj(@Body fornecedorRequest: FornecedorRequest): Response<FornecedorResponse>
-    @GET("/fornecedor/findFornecedorByRazaoSocial")
+    @POST("/fornecedor/findFornecedorByRazaoSocial")
     suspend fun findFornecedoresByRazaoSocial(@Body fornecedorRequest: FornecedorRequest): Response<List<FornecedorResponse>>
     @POST("/fornecedor/createFornecedor")
     suspend fun createFornecedor(@Body fornecedorRequest: FornecedorRequest): Response<ResponseBody>
@@ -28,7 +28,7 @@ interface FornecedorService {
     @POST("/fornecedor/findAllFornecedores/{id}")
     suspend fun getAllFornecedores(@Path("id") username: String): Response<List<FornecedorResponse>>
 
-    @PUT("/fornecedor/alterStatus")
+    @PUT("/fornecedor/updateStatus")
     suspend fun alterStatus(@Body fornecedorRequest: FornecedorRequest): Response<FornecedorResponse>
 
     @GET("fornecedor/findFornecedorByStatus")

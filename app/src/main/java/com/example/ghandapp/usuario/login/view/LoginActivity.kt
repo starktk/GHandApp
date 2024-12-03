@@ -9,8 +9,6 @@ import com.example.ghandapp.databinding.ActivityLoginBinding
 
 import com.example.ghandapp.extencoes.hide
 import com.example.ghandapp.extencoes.show
-import com.example.ghandapp.home.presentation.model.StateStart
-import com.example.ghandapp.home.view.HomeActivity
 import com.example.ghandapp.start.StartActivity
 import com.example.ghandapp.usuario.login.presentation.LoginViewModel
 import com.example.ghandapp.usuario.login.presentation.model.LoginViewState

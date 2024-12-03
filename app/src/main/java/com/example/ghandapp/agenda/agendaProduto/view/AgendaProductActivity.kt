@@ -12,7 +12,7 @@ import com.example.ghandapp.agenda.agendaProduto.presentation.model.AgendaProdut
 import com.example.ghandapp.databinding.ActivityAgendaproductBinding
 import com.example.ghandapp.extencoes.hide
 import com.example.ghandapp.extencoes.show
-import com.example.ghandapp.home.presentation.model.StateStart
+import com.example.ghandapp.home.presentation.enums.StateStart
 import com.example.ghandapp.home.view.HomeActivity
 import com.example.ghandapp.start.StartActivity
 import com.google.android.material.snackbar.Snackbar

@@ -2,23 +2,18 @@ package com.example.ghandapp.home.view
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import android.view.MenuItem
-import android.view.animation.AnimationUtils
 import android.widget.Button
-import android.widget.EditText
 import android.widget.PopupMenu
 import android.widget.RadioGroup
 import android.widget.Spinner
-import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
+import androidx.core.content.ContextCompat
 import com.example.ghandapp.R
 import com.example.ghandapp.agenda.agendaPagamento.data.local.AgendaPagamentoModel
 import com.example.ghandapp.agenda.agendaPagamento.view.AgendaPagamentoActivity
@@ -33,6 +28,7 @@ import com.example.ghandapp.fornecedor.data.model.FornecedorModel
 import com.example.ghandapp.fornecedor.view.FornecedorActivity
 import com.example.ghandapp.fornecedor.view.FornecedorListAdapter
 import com.example.ghandapp.home.presentation.HomeViewModel
+import com.example.ghandapp.home.presentation.enums.StatusSearch
 import com.example.ghandapp.home.presentation.model.HomeViewState
 import com.example.ghandapp.start.StartActivity
 import com.example.ghandapp.usuario.login.view.LoginActivity
@@ -45,7 +41,9 @@ class HomeActivity: AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
 
     private val fornecedorAdapter by lazy {
-        FornecedorListAdapter()
+        FornecedorListAdapter { fornecedor ->
+            viewModel.modifyStatus(fornecedor.cnpj.toString(), fornecedor.status.toString().uppercase())
+        }
     }
 
     private val agendaProdutoAdapter by lazy {
@@ -81,12 +79,18 @@ class HomeActivity: AppCompatActivity() {
                 HomeViewState.showLoading -> showLoading()
                 HomeViewState.showEmptyAgenda -> showEmptyAgenda()
                 HomeViewState.stateFornecedor -> bindForFornecedor()
-                HomeViewState.changeStatus -> TODO()
+                HomeViewState.changeStatus -> showMessageStatus()
                 HomeViewState.showFailedMessage -> showFailMessage()
                 HomeViewState.stateAgenda -> bindAgenda()
             }
         }
     }
+
+    private fun showMessageStatus() {
+        binding.pbLoading.hide()
+        Snackbar.make(binding.root, "Status modificado com sucesso", Snackbar.LENGTH_LONG).show()
+    }
+
 
     private fun observeEvents() {
         binding.iconHome.setOnClickListener {
@@ -136,31 +140,31 @@ class HomeActivity: AppCompatActivity() {
         }
         binding.iconSearch.setOnClickListener {
             val popupMenu = PopupMenu(this, it)
-            menuInflater.inflate(R.menu.menu_search, popupMenu.menu)
+            listar()
+        //          menuInflater.inflate(R.menu.menu_search, popupMenu.menu)
 
-            popupMenu.show()
-            val scaleAnim = AnimationUtils.loadAnimation(this, R.anim.selectopt)
-            popupMenu.setOnMenuItemClickListener { menuItem ->
-                menuItem.actionView?.startAnimation(scaleAnim)
-                when (menuItem.itemId) {
-                    R.id.item_razao_social -> {
-                        // Ação para Razão Social
-                        Toast.makeText(this, "Razão Social selecionado", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-                    R.id.item_cnpj -> {
-                        // Ação para CNPJ
-                        Toast.makeText(this, "CNPJ selecionado", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-                    R.id.item_status -> {
-                        // Ação para Status
-                        Toast.makeText(this, "Status selecionado", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-                    else -> false
-                }
-            }
+//            popupMenu.show()
+//            val scaleAnim = AnimationUtils.loadAnimation(this, R.anim.selectopt)
+//            popupMenu.setOnMenuItemClickListener { menuItem ->
+//                menuItem.actionView?.startAnimation(scaleAnim)
+//                when (menuItem.itemId) {
+//                    R.id.item_razao_social -> {
+//                        showFornecedorDialog(StatusSearch.RAZAO_SOCIAL)
+//                        true
+//                    }
+//                    R.id.item_cnpj -> {
+//                        // Ação para CNPJ
+//                        Toast.makeText(this, "CNPJ selecionado", Toast.LENGTH_SHORT).show()
+//                        true
+//                    }
+//                    R.id.item_status -> {
+//                        // Ação para Status
+//                        Toast.makeText(this, "Status selecionado", Toast.LENGTH_SHORT).show()
+//                        true
+//                    }
+//                    else -> false
+//                }
+//            }
         }
     }
 
@@ -214,38 +218,23 @@ class HomeActivity: AppCompatActivity() {
         binding.rvList.adapter = agendaProdutoAdapter
         viewModel.listAgendaProduto(mes, binding.root)
     }
-    private fun showFornecedorDialog() {
-        val dialog = FornecedorDialogFragment()
-        dialog.show(supportFragmentManager, dialog.tag)
-        val radioGroup: RadioGroup? = findViewById(R.id.rd_group)
-        val btnSubmitFornecedor: Button? = findViewById(R.id.btn_submitFornecedor)
+    private fun showFornecedorDialog(status: StatusSearch) {
+        val dialog = FornecedorDialogFragment.newInstance()
+        dialog.show(supportFragmentManager, "fornecedorDialog")
+        dialog.onSubmitClick = { input ->
+            when (status) {
+                StatusSearch.RAZAO_SOCIAL -> {
+                        viewModel.listByRazaoSocial(input, binding.root)
+                }
+                StatusSearch.CNPJ -> {
+                    viewModel.findFornecedorByCnpj(input)
+                }
+                StatusSearch.STATUS -> {
 
-        val checkId = radioGroup?.checkedRadioButtonId
-        btnSubmitFornecedor?.setOnClickListener {
-           listar()
+                }
+            }
         }
 
-//        radioGroup?.setOnCheckedChangeListener { _, checkId ->
-//                when (checkId) {
-//                R.id.btn_cnpj -> {
-//                    val cnpj: EditText = findViewById(R.id.etv_cnpj)
-//                    btnSubmitFornecedor?.setOnClickListener {
-//                        viewModel.findFornecedorByCnpj(cnpj.text.toString())
-//                    }
-//                }
-//                R.id.btn_razaoSocial -> {
-//                    val razaoSocial: EditText = findViewById(R.id.etv_razaoSocial)
-//                    btnSubmitFornecedor?.setOnClickListener {
-//                       viewModel.listByRazaoSocial(razaoSocial.text.toString())
-//                   }
-//                }
-//                R.id.btn_getAll -> {
-//                    btnSubmitFornecedor?.setOnClickListener {
-//                        listar()
-//                    }
-//                }
-//            }
-//        }
     }
 
 

@@ -11,7 +11,7 @@ import com.example.ghandapp.extencoes.show
 import com.example.ghandapp.home.view.HomeActivity
 import com.example.ghandapp.fornecedor.presentation.FornecedorViewModel
 import com.example.ghandapp.fornecedor.presentation.model.FornecedorViewState
-import com.example.ghandapp.home.presentation.model.StateStart
+import com.example.ghandapp.home.presentation.enums.StateStart
 import com.example.ghandapp.start.StartActivity
 import com.example.ghandapp.usuario.login.view.LoginActivity
 import com.google.android.material.snackbar.Snackbar

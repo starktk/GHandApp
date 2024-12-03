@@ -7,13 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.ghandapp.databinding.FornecedorListItemBinding
 import com.example.ghandapp.fornecedor.data.model.FornecedorModel
 
-class FornecedorListAdapter: RecyclerView.Adapter<FornecedorViewHolder>() {
+class FornecedorListAdapter(private val onStatusChange: (FornecedorModel) -> Unit): RecyclerView.Adapter<FornecedorViewHolder>() {
 
     private val list: MutableList<FornecedorModel> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FornecedorViewHolder {
         val binding = FornecedorListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return FornecedorViewHolder(binding)
+        return FornecedorViewHolder(binding, onStatusChange)
     }
 
     override fun getItemCount(): Int {
@@ -35,5 +35,12 @@ class FornecedorListAdapter: RecyclerView.Adapter<FornecedorViewHolder>() {
         list.clear()
         list.add(items)
         notifyDataSetChanged()
+    }
+    fun getItemAtPosition(position: Int): FornecedorModel? {
+        return if (position >= 0 && position < list.size) {
+            list[position]
+        } else {
+            null
+        }
     }
 }

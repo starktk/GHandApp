@@ -8,92 +8,33 @@
         android:id="@+id/dialog"
         android:background="@color/Weak_green">
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-
             <EditText
-                android:id="@+id/etv_cnpj"
-                android:layout_width="wrap_content"
+                android:id="@+id/etv_search_fornecedor"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/digite_cnpj"
-                android:textSize="25sp"
-                android:layout_marginTop="40dp"
-                android:layout_marginStart="10dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
-            <EditText
-                android:id="@+id/etv_razaoSocial"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="@string/digite_razaoSocial"
-                android:enabled="false"
+                android:gravity="center"
                 android:textSize="30sp"
-                app:layout_constraintTop_toBottomOf="@+id/etv_cnpj"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="10dp"/>
-
-
-            <RadioGroup
-                android:id="@+id/rd_group"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:layout_editor_absoluteY="0dp">
-
-                <RadioButton
-                    android:id="@+id/btn_cnpj"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="48dp"
-                    android:layout_marginRight="40dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.349"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <RadioButton
-                    android:id="@+id/btn_razaoSocial"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="40dp"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-                <RadioButton
-                    android:id="@+id/btn_getAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="40dp"
-                    app:layout_constraintEnd_toEndOf="parent" />
-            </RadioGroup>
+                app:layout_constraintTop_toTopOf="parent"
+                android:hint="@string/digite_razaoSocial"
+                android:enabled="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:inputType="text"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"/>
 
             <Button
                 android:id="@+id/btn_submitFornecedor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_margin="30dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etv_search_fornecedor"
+                android:layout_margin="5dp"
                 android:hint="@string/submit"
                 android:textSize="25sp"
                 android:backgroundTint="@color/Strong_green"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                android:hint="@string/gett_AllFornecedores"
-                android:textSize="30sp"
-                app:layout_constraintTop_toBottomOf="@+id/etv_razaoSocial"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="10dp"/>
-
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

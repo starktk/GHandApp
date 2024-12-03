@@ -1,6 +1,5 @@
 package com.example.ghandapp.home.presentation
 
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,7 +10,7 @@ import com.example.ghandapp.agenda.agendaProduto.data.domain.AgendaProdutoUseCas
 import com.example.ghandapp.fornecedor.data.domain.FornecedorUseCase
 import com.example.ghandapp.fornecedor.presentation.enums.Situacao
 import com.example.ghandapp.home.presentation.model.HomeViewState
-import com.example.ghandapp.home.presentation.model.StateStart
+import com.example.ghandapp.home.presentation.enums.StateStart
 import com.example.ghandapp.usuario.login.data.domain.LoginUseCase
 import kotlinx.coroutines.launch
 
@@ -50,10 +49,10 @@ class HomeViewModel: ViewModel() {
             }
         }
     }
-    fun listByRazaoSocial(razaoSocial: String) {
+    fun listByRazaoSocial(razaoSocial: String, contextView: View) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
-            val list = fornecedorUseCase.findFornecedoresByRazaoSocial(razaoSocial)
+            val list = fornecedorUseCase.findFornecedoresByRazaoSocial(razaoSocial, contextView)
             if (list.isEmpty()) {
                 viewState.value = HomeViewState.showEmptyList
             } else {
@@ -62,12 +61,19 @@ class HomeViewModel: ViewModel() {
 
         }
     }
+
+    fun listByStatus(status: Situacao) {
+        viewModelScope.launch {
+            viewState.value = HomeViewState.showLoading
+            val listFornecedores = fornecedorUseCase.findFornecedoresByStatus(status)
+
+        }
+    }
     fun modifyStatus(cnpj: String, status: String) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
             val statusOf = Situacao.valueOf(status)
             val response = fornecedorUseCase.modifyStatus(cnpj, statusOf)
-
             if (response) {
                 viewState.value = HomeViewState.changeStatus
             } else {

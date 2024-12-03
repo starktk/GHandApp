@@ -99,11 +99,10 @@ class FornecedorRepository {
     }
 
 
-    suspend fun modifyStatus(username: String, cnpj: String, status: Situacao): Boolean {
+    suspend fun modifyStatus(username: String, name: String, cnpj: String, status: Situacao): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val response = client.alterStatus(FornecedorRequest(username = username, cnpj = cnpj, status = status))
-                saveFornecedor(response)
+                val response = client.alterStatus(FornecedorRequest(username = username, cnpj = cnpj, status = status, name = name))
                 response.isSuccessful
             } catch (exception: Exception) {
                 Snackbar.make(bindingFornecedor.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
@@ -123,17 +122,17 @@ class FornecedorRepository {
         }
     }
 
-    suspend fun findByRazaoSocial(username: String, razaoSocial: String): List<FornecedorModel> {
+    suspend fun findByRazaoSocial(username: String, razaoSocial: String, contextView: View): List<FornecedorModel> {
         return withContext(Dispatchers.IO) {
             try {
                 val response = client.findFornecedoresByRazaoSocial(FornecedorRequest(razaoSocial = razaoSocial, username = username))
-                if (response.isSuccessful) {
+                if (response.isSuccessful || response.code() == 302) {
                     response.body()?.mapperFornecedor() ?: emptyList()
                 } else {
                     emptyList()
                 }
             } catch (exception: Exception) {
-                Snackbar.make(bindingFornecedor.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(contextView, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
                 emptyList()
             }
         }
@@ -142,7 +141,7 @@ class FornecedorRepository {
         return withContext(Dispatchers.IO) {
             try {
                 val response = client.findByStatus(FornecedorRequest(username = username , status = status))
-                if (response.isSuccessful) {
+                if (response.isSuccessful || response.code() == 302) {
                     response.body()?.mapperFornecedor() ?: emptyList()
                 } else {
                     emptyList()
@@ -179,7 +178,7 @@ class FornecedorRepository {
         return FornecedorModel(
             razaoSocial = this?.razaoSocial,
             cnpj = this?.cnpj,
-            status = this?.status?.toString()
+            status = this?.status
         )
     }
 
