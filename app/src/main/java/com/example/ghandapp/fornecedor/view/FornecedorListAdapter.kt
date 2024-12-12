@@ -43,4 +43,12 @@ class FornecedorListAdapter(private val onStatusChange: (FornecedorModel) -> Uni
             null
         }
     }
+    fun removeItem(position: Int) {
+        list.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    fun getObjectInListByPosition(position: Int): FornecedorModel{
+        return list[position]
+    }
 }

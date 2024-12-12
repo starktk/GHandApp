@@ -125,13 +125,15 @@ class FornecedorRepository {
             }
         }
     }
-    suspend fun deleteFornecedor(username: String, cnpj: String): Boolean {
+    suspend fun deleteFornecedor(username: String, cnpj: String?, contextView: View): Boolean {
         return withContext(Dispatchers.IO) {
            try {
-               val response = client.deleteFornecedor(FornecedorRequest(username = username, cnpj = cnpj))
+               println(username)
+               val response = client.deleteFornecedor(username = username, cnpj = cnpj)
+               println(response)
                response.isSuccessful
            } catch (exception: Exception) {
-               Snackbar.make(bindingFornecedor.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+               Snackbar.make(contextView, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
                false
            }
         }

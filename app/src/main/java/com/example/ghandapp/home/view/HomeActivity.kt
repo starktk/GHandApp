@@ -15,6 +15,8 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.ghandapp.R
 import com.example.ghandapp.agenda.agendaPagamento.data.local.AgendaPagamentoModel
 import com.example.ghandapp.agenda.agendaPagamento.view.AgendaPagamentoActivity
@@ -71,11 +73,11 @@ class HomeActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val intent = intent
 
         observeEvents()
         init(binding.root)
         initializeOberseve()
+        setupItemTouchHelper(binding.rvList)
     }
     private fun init(contextView: View) {
         viewModel.initializer(intent.getStringExtra("stateStart").toString(), contextView)
@@ -97,15 +99,49 @@ class HomeActivity: AppCompatActivity() {
                 HomeViewState.stateAgenda -> bindAgenda()
                 HomeViewState.showFailedStatusMessage -> showFailedStatusMessage()
                 HomeViewState.showFailedUpdateMessage -> showFailedUpdateMessage()
+                HomeViewState.showFailedMessageToDelete -> showFailedMessageToDelete()
+                HomeViewState.showSucessDeletedMessage -> showSucessDeletedMessage()
             }
         }
     }
 
+    private fun showFailedMessageToDelete() {
+        binding.pbLoading.hide()
+        Snackbar.make(binding.root, "Não foi possivel deletar", Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun showSucessDeletedMessage() {
+        binding.pbLoading.hide()
+        val emoji = "✅"
+        Snackbar.make(binding.root, emoji, Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun setupItemTouchHelper(recyclerView: RecyclerView) {
+        val itemTouchHelper = ItemTouchHelper(
+            object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder ):
+                        Boolean {
+                    return false
+                }
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val position = viewHolder.adapterPosition
+                    println(fornecedorAdapter.getObjectInListByPosition(position))
+                    viewModel.deleteFornecedor(fornecedorAdapter.getObjectInListByPosition(position).cnpj, binding.root)
+                    fornecedorAdapter.removeItem(position)
+                }
+        })
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+    }
     private fun showFailedUpdateMessage() {
+        binding.pbLoading.hide()
         Snackbar.make(binding.root, "Edição inválida", Snackbar.LENGTH_LONG).show()
     }
 
     private fun showFailedStatusMessage() {
+        binding.pbLoading.hide()
         Snackbar.make(binding.root, "Não foi possivel modificar o status", Snackbar.LENGTH_LONG).show()
     }
 

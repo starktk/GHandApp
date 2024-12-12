@@ -21,8 +21,8 @@ class FornecedorUseCase {
         return repositoryFornecedor.findFornecedorByCnpj(loginUseCase.getUser().username, cnpj)
     }
 
-    suspend fun deleteFornecedor(cnpj: String): Boolean {
-        return repositoryFornecedor.deleteFornecedor(loginUseCase.getUser().username, cnpj)
+    suspend fun deleteFornecedor(cnpj: String?, contextView: View): Boolean {
+        return repositoryFornecedor.deleteFornecedor(loginUseCase.getUser().username, cnpj, contextView)
     }
 
     suspend fun modifyStatus(cnpj: String,status: Situacao): Boolean {

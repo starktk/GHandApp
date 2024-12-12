@@ -20,5 +20,7 @@ sealed class HomeViewState {
     object showEmptyAgenda: HomeViewState()
     object showFailedStatusMessage: HomeViewState()
     object showFailedUpdateMessage: HomeViewState()
+    object showSucessDeletedMessage : HomeViewState()
+    object showFailedMessageToDelete : HomeViewState()
 
 }

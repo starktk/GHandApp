@@ -5,6 +5,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -22,8 +23,10 @@ interface FornecedorService {
     @PUT("/fornecedor/updateFornecedor/{cnpj}")
     suspend fun alterFornecedor(@Path("cnpj") cnpj: String?, @Body fornecedorRequest: FornecedorRequest): Response<FornecedorResponse>
 
+    @Headers("Content-Type: application/json")
     @DELETE("/fornecedor/deleteFornecedor")
-    suspend fun deleteFornecedor(@Body fornecedorRequest: FornecedorRequest): Response<ResponseBody>
+    suspend fun deleteFornecedor(    @Query("username") username: String?,
+                                     @Query("cnpj") cnpj: String?): Response<ResponseBody>
 
     @POST("/fornecedor/findAllFornecedores/{id}")
     suspend fun getAllFornecedores(@Path("id") username: String): Response<List<FornecedorResponse>>

@@ -76,6 +76,30 @@ class HomeViewModel: ViewModel() {
             }
         }
     }
+    fun modifyStatus(cnpj: String, status: String) {
+        viewModelScope.launch {
+            viewState.value = HomeViewState.showLoading
+            val statusOf = Situacao.valueOf(status)
+            val response = fornecedorUseCase.modifyStatus(cnpj, statusOf)
+            if (response) {
+                viewState.value = HomeViewState.changeStatus
+            } else {
+                viewState.value = HomeViewState.showFailedStatusMessage
+            }
+        }
+    }
+    fun deleteFornecedor(cnpj: String?, contextView: View) {
+        println(cnpj)
+        viewModelScope.launch {
+            val response = fornecedorUseCase.deleteFornecedor(cnpj, contextView)
+            println(response)
+            if (response) {
+                viewState.value = HomeViewState.showSucessDeletedMessage
+            } else {
+                viewState.value = HomeViewState.showFailedMessageToDelete
+            }
+        }
+    }
     fun listByRazaoSocial(razaoSocial: String, contextView: View) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
@@ -96,18 +120,7 @@ class HomeViewModel: ViewModel() {
 //
 //        }
 //    }
-    fun modifyStatus(cnpj: String, status: String) {
-        viewModelScope.launch {
-            viewState.value = HomeViewState.showLoading
-            val statusOf = Situacao.valueOf(status)
-            val response = fornecedorUseCase.modifyStatus(cnpj, statusOf)
-            if (response) {
-                viewState.value = HomeViewState.changeStatus
-            } else {
-                viewState.value = HomeViewState.showFailedStatusMessage
-            }
-        }
-    }
+
     fun findFornecedorByCnpj(cnpj: String) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
