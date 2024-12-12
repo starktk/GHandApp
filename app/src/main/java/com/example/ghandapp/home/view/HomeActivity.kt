@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.PopupMenu
 import android.widget.RadioGroup
@@ -41,9 +42,20 @@ class HomeActivity: AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
 
     private val fornecedorAdapter by lazy {
-        FornecedorListAdapter { fornecedor ->
-            viewModel.modifyStatus(fornecedor.cnpj.toString(), fornecedor.status.toString().uppercase())
-        }
+        FornecedorListAdapter(
+            onStatusChange = { fornecedor ->
+                viewModel.modifyStatus(
+                    fornecedor.cnpj.toString(),
+                    fornecedor.status.toString().uppercase()
+            )
+        },
+            onEditChange = { fornecedor, cnpj ->
+                if (cnpj != null) {
+                    viewModel.updateFornecedor(fornecedor, cnpj, binding.root)
+                }
+            }
+        )
+
     }
 
     private val agendaProdutoAdapter by lazy {
@@ -62,11 +74,12 @@ class HomeActivity: AppCompatActivity() {
         val intent = intent
 
         observeEvents()
-
-        viewModel.initializer(intent.getStringExtra("stateStart").toString())
+        init(binding.root)
         initializeOberseve()
     }
-
+    private fun init(contextView: View) {
+        viewModel.initializer(intent.getStringExtra("stateStart").toString(), contextView)
+    }
     @RequiresApi(Build.VERSION_CODES.O)
     private fun initializeOberseve() {
         viewModel.state.observe(this) { viewState ->
@@ -82,8 +95,18 @@ class HomeActivity: AppCompatActivity() {
                 HomeViewState.changeStatus -> showMessageStatus()
                 HomeViewState.showFailedMessage -> showFailMessage()
                 HomeViewState.stateAgenda -> bindAgenda()
+                HomeViewState.showFailedStatusMessage -> showFailedStatusMessage()
+                HomeViewState.showFailedUpdateMessage -> showFailedUpdateMessage()
             }
         }
+    }
+
+    private fun showFailedUpdateMessage() {
+        Snackbar.make(binding.root, "Edição inválida", Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun showFailedStatusMessage() {
+        Snackbar.make(binding.root, "Não foi possivel modificar o status", Snackbar.LENGTH_LONG).show()
     }
 
     private fun showMessageStatus() {
@@ -131,7 +154,6 @@ class HomeActivity: AppCompatActivity() {
     @SuppressLint("ResourceType")
     private fun bindForFornecedor() {
         binding.rvList.adapter = fornecedorAdapter
-        listar()
         binding.iconHome.setOnClickListener {
             finish()
         }
@@ -140,8 +162,9 @@ class HomeActivity: AppCompatActivity() {
         }
         binding.iconSearch.setOnClickListener {
             val popupMenu = PopupMenu(this, it)
-            listar()
-        //          menuInflater.inflate(R.menu.menu_search, popupMenu.menu)
+            Snackbar.make(binding.root, "Não faz nada ainda", Snackbar.LENGTH_SHORT).show()
+
+            //          menuInflater.inflate(R.menu.menu_search, popupMenu.menu)
 
 //            popupMenu.show()
 //            val scaleAnim = AnimationUtils.loadAnimation(this, R.anim.selectopt)
@@ -210,9 +233,6 @@ class HomeActivity: AppCompatActivity() {
         binding.pbLoading.hide()
     }
 
-    private fun listar() {
-        viewModel.listFornecedor(binding.root)
-    }
 
     private fun listarAgendaProduto(mes: String) {
         binding.rvList.adapter = agendaProdutoAdapter

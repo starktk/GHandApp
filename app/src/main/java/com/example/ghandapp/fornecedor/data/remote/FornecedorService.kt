@@ -19,8 +19,8 @@ interface FornecedorService {
     @POST("/fornecedor/createFornecedor")
     suspend fun createFornecedor(@Body fornecedorRequest: FornecedorRequest): Response<ResponseBody>
 
-    @PUT("/fornecedor/updateFornecedor")
-    suspend fun alterFornecedor(@Body fornecedorRequest: FornecedorRequest): Response<FornecedorResponse>
+    @PUT("/fornecedor/updateFornecedor/{cnpj}")
+    suspend fun alterFornecedor(@Path("cnpj") cnpj: String?, @Body fornecedorRequest: FornecedorRequest): Response<FornecedorResponse>
 
     @DELETE("/fornecedor/deleteFornecedor")
     suspend fun deleteFornecedor(@Body fornecedorRequest: FornecedorRequest): Response<ResponseBody>
@@ -34,6 +34,5 @@ interface FornecedorService {
     @GET("fornecedor/findFornecedorByStatus")
     suspend fun findByStatus(@Body fornecedorRequest: FornecedorRequest): Response<List<FornecedorResponse>>
 
-    @PUT("fornecedor/updateStatus")
-    suspend fun updateByStatus(@Body fornecedorRequest: FornecedorRequest): Response<FornecedorResponse>
+
 }

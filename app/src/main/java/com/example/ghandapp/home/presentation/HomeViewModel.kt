@@ -1,5 +1,6 @@
 package com.example.ghandapp.home.presentation
 
+import android.annotation.SuppressLint
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.ghandapp.agenda.agendaPagamento.data.domain.AgendaPagamentoUseCase
 import com.example.ghandapp.agenda.agendaProduto.data.domain.AgendaProdutoUseCase
 import com.example.ghandapp.fornecedor.data.domain.FornecedorUseCase
+import com.example.ghandapp.fornecedor.data.model.FornecedorModel
 import com.example.ghandapp.fornecedor.presentation.enums.Situacao
 import com.example.ghandapp.home.presentation.model.HomeViewState
 import com.example.ghandapp.home.presentation.enums.StateStart
@@ -31,21 +33,46 @@ class HomeViewModel: ViewModel() {
         AgendaPagamentoUseCase()
     }
 
-    fun initializer(state: String) {
+    fun initializer(state: String, contextView: View) {
         when (state) {
-            StateStart.FORNECEDOR.toString() -> viewState.value = HomeViewState.stateFornecedor
+            StateStart.FORNECEDOR.toString() -> oberserveCache(contextView)
             StateStart.AGENDA.toString() -> viewState.value = HomeViewState.stateAgenda
-
         }
     }
-    fun listFornecedor(contextView: View) {
+    private fun oberserveCache(contextView: View) {
+        viewState.value = HomeViewState.stateFornecedor
+        viewModelScope.launch{
+            val verifyEqualsList = areListsContentDifferent(fornecedorUseCase.getAllFornecedoresInCache(), fornecedorUseCase.getAllFornecedores(contextView))
+            if (verifyEqualsList) {
+                listFornecedor(fornecedorUseCase.getAllFornecedores(contextView))
+            } else {
+                listFornecedor(fornecedorUseCase.getAllFornecedoresInCache())
+            }
+        }
+    }
+    private fun <T> areListsContentDifferent(list1: List<T>, list2: List<T>): Boolean {
+        return list1.toSet() != list2.toSet() }
+
+    @SuppressLint("SuspiciousIndentation")
+    private fun listFornecedor(list: List<FornecedorModel>) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
-            val list = fornecedorUseCase.getAllFornecedores(contextView)
-            if (list.isEmpty()) {
-                viewState.value = HomeViewState.showEmptyList
+                if (list.isEmpty()) {
+                    viewState.value = HomeViewState.showEmptyList
+                } else {
+                    viewState.value = HomeViewState.showHomeScreen(list)
+                }
+        }
+    }
+    fun updateFornecedor(fornecedorModel: FornecedorModel, cnpj: String, contextView: View) {
+        viewModelScope.launch {
+            viewState.value = HomeViewState.showLoading
+            val fornecedorUpdated = fornecedorUseCase.alterFornecedor(fornecedorModel.razaoSocial, fornecedorModel.cnpj, fornecedorModel.status, cnpj, contextView)
+            if (fornecedorUpdated) {
+                val list = fornecedorUseCase.getAllFornecedores(contextView)
+                listFornecedor(list)
             } else {
-                viewState.value = HomeViewState.showHomeScreen(list)
+                viewState.value = HomeViewState.showFailedUpdateMessage
             }
         }
     }
@@ -62,13 +89,13 @@ class HomeViewModel: ViewModel() {
         }
     }
 
-    fun listByStatus(status: Situacao) {
-        viewModelScope.launch {
-            viewState.value = HomeViewState.showLoading
-            val listFornecedores = fornecedorUseCase.findFornecedoresByStatus(status)
-
-        }
-    }
+//    fun listByStatus(status: Situacao) {
+//        viewModelScope.launch {
+//            viewState.value = HomeViewState.showLoading
+//            val listFornecedores = fornecedorUseCase.findFornecedoresByStatus(status)
+//
+//        }
+//    }
     fun modifyStatus(cnpj: String, status: String) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
@@ -77,7 +104,7 @@ class HomeViewModel: ViewModel() {
             if (response) {
                 viewState.value = HomeViewState.changeStatus
             } else {
-                viewState.value = HomeViewState.showFailedMessage
+                viewState.value = HomeViewState.showFailedStatusMessage
             }
         }
     }
@@ -97,11 +124,11 @@ class HomeViewModel: ViewModel() {
         }
     }
 
-    fun getNameToShow() {
-        viewModelScope.launch {
-            logUsecase.getUser().name
-        }
-    }
+//    fun getNameToShow() {
+//        viewModelScope.launch {
+//            logUsecase.getUser().name
+//        }
+//    }
     fun listAgendaProduto(mes: String, contextView: View) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading

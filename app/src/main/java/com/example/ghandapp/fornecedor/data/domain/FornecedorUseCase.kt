@@ -40,8 +40,11 @@ class FornecedorUseCase {
     suspend fun findFornecedoresByStatus(status: Situacao): List<FornecedorModel> {
         return repositoryFornecedor.findByStatus(loginUseCase.getUser().username, status)
     }
+    suspend fun getAllFornecedoresInCache(): List<FornecedorModel>{
+        return repositoryFornecedor.getFornecedoresInDb(loginUseCase.getUsername())
+    }
 
-    suspend fun alterFornecedor(razaoSocial: String, cnpj: String, status: Situacao): FornecedorModel? {
-        return repositoryFornecedor.alterFornecedor(loginUseCase.getUser().username, cnpj, razaoSocial, status, loginUseCase.getUser().name)
+    suspend fun alterFornecedor(razaoSocial: String?, cnpjUpdated: String?, status: Situacao?, cnpj: String?, contextView: View): Boolean {
+        return repositoryFornecedor.alterFornecedor(loginUseCase.getUser().username, cnpjUpdated, razaoSocial, status, cnpj, loginUseCase.getUser().name, contextView)
     }
 }

@@ -4,7 +4,7 @@ import android.util.Log
 import android.view.View
 import com.example.ghandapp.database.FHdatabase
 import com.example.ghandapp.databinding.ActivityFornecedorBinding
-import com.example.ghandapp.fornecedor.data.local.FornecedorEntitiy
+import com.example.ghandapp.fornecedor.data.local.FornecedorEntity
 import com.example.ghandapp.fornecedor.data.remote.FornecedorRequest
 import com.example.ghandapp.fornecedor.data.model.FornecedorModel
 import com.example.ghandapp.fornecedor.data.remote.FornecedorResponse
@@ -19,7 +19,6 @@ import retrofit2.Response
 class FornecedorRepository {
 
     private lateinit var bindingFornecedor: ActivityFornecedorBinding
-
 
     private val database: FHdatabase by lazy {
         FHdatabase.getInstance()
@@ -69,7 +68,10 @@ class FornecedorRepository {
                 val fornecedoresReturn = client.getAllFornecedores(username = username)
                 if(fornecedoresReturn.isSuccessful) {
                     println(fornecedoresReturn.body())
+                    cleanDBFornecedor()
+                    saveFornecedorInDb(username,fornecedoresReturn.body()?.mapperFornecedor() ?: emptyList())
                     fornecedoresReturn.body()?.mapperFornecedor() ?: emptyList()
+
                 } else {
                     println("Erro na requisição: Código ${fornecedoresReturn.code()} - ${fornecedoresReturn.message()}")
                     emptyList()
@@ -81,23 +83,36 @@ class FornecedorRepository {
         }
     }
 
-
-    suspend fun alterFornecedor(username: String, cnpj: String, razaoSocial: String, status: Situacao, name: String): FornecedorModel? {
+    suspend fun getFornecedoresInDb(username: String): List<FornecedorModel> {
+        return try {
+            database.fornecedorDao().getFornecedor(username).fornecedores ?: emptyList()
+        } catch (exception: Exception) {
+            println("Sem cache para mostrar")
+            emptyList()
+        }
+    }
+    suspend fun alterFornecedor(username: String?, cnpjUpdated: String?, razaoSocial: String?, status: Situacao?, cnpj: String?, name: String?, contextView: View): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val response = client.alterFornecedor(FornecedorRequest(razaoSocial = razaoSocial, cnpj = cnpj, status = status, username = username, name = name))
-                if (response.isSuccessful) {
-                    response.body().fornecedorResponseToFornecedorModel()
-                } else {
-                    null
-                }
+                val response = client.alterFornecedor(cnpj = cnpj, FornecedorRequest(razaoSocial = razaoSocial, cnpj = cnpjUpdated, status = status, username = username, name = name))
+                response.isSuccessful
             } catch (exception: Exception) {
-                Snackbar.make(bindingFornecedor.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
-                null
+                Snackbar.make(contextView, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+                false
             }
         }
     }
 
+    suspend fun saveFornecedorInDb(username: String, fornecedores: List<FornecedorModel>) {
+        return withContext(Dispatchers.IO){
+            try {
+                val fornecedorEntity = FornecedorEntity(username, fornecedores)
+                database.fornecedorDao().insertAllFornecedores(fornecedorEntity)
+            } catch (exception: Exception) {
+                Log.e("DB Error", "Erro ao salvar fornecedores no banco local: ${exception.message}")
+            }
+        }
+    }
 
     suspend fun modifyStatus(username: String, name: String, cnpj: String, status: Situacao): Boolean {
         return withContext(Dispatchers.IO) {
@@ -153,20 +168,9 @@ class FornecedorRepository {
         }
     }
 
-    private suspend fun saveFornecedor(fornecedor: Response<FornecedorResponse>) {
-        return withContext(Dispatchers.IO) {
-            if (fornecedor.isSuccessful) {
-                fornecedor.body()?.run {
-                    database.fornecedorDao().insertFornecedor(
-                        fornecedorResponseToEntity()
-                    )
-                }
-            }
-        }
-    }
+
 
     private fun List<FornecedorResponse>.mapperFornecedor(): List<FornecedorModel> {
-        Log.d("MapLog Info", "Lsta: ${this.size}")
         return map {
             it.fornecedorResponseToFornecedorModel()
         }
@@ -174,19 +178,12 @@ class FornecedorRepository {
 
 
     private fun FornecedorResponse?.fornecedorResponseToFornecedorModel(): FornecedorModel {
-
         return FornecedorModel(
             razaoSocial = this?.razaoSocial,
             cnpj = this?.cnpj,
             status = this?.status
         )
     }
-
-    private fun FornecedorResponse.fornecedorResponseToEntity(): FornecedorEntitiy {
-        return FornecedorEntitiy(
-            razaoSocial = razaoSocial,
-            cnpj = cnpj,
-            status = status.toString()
-        )
-    }
 }
+
+
