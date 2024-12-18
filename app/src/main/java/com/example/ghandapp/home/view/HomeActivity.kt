@@ -74,6 +74,7 @@ class HomeActivity: AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        refresh()
         observeEvents()
         init(binding.root)
         initializeOberseve()
@@ -104,7 +105,14 @@ class HomeActivity: AppCompatActivity() {
             }
         }
     }
-
+    private fun refresh() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.listFornecedoresRefresh(binding.root)
+            binding.swipeRefreshLayout.postDelayed({
+                binding.swipeRefreshLayout.isRefreshing = false
+            }, 2000)
+        }
+    }
     private fun showFailedMessageToDelete() {
         binding.pbLoading.hide()
         Snackbar.make(binding.root, "Não foi possivel deletar", Snackbar.LENGTH_LONG).show()

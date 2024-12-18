@@ -64,6 +64,16 @@ class HomeViewModel: ViewModel() {
                 }
         }
     }
+    fun listFornecedoresRefresh(contextView: View) {
+        viewModelScope.launch {
+            val list = fornecedorUseCase.getAllFornecedores(contextView)
+            if (list.isEmpty()) {
+                viewState.value = HomeViewState.showEmptyList
+            } else {
+                viewState.value = HomeViewState.showHomeScreen(list)
+            }
+        }
+    }
     fun updateFornecedor(fornecedorModel: FornecedorModel, cnpj: String, contextView: View) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
