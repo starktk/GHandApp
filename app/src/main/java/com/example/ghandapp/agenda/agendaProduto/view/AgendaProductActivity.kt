@@ -14,7 +14,6 @@ import com.example.ghandapp.extencoes.hide
 import com.example.ghandapp.extencoes.show
 import com.example.ghandapp.home.presentation.enums.StateStart
 import com.example.ghandapp.home.view.HomeActivity
-import com.example.ghandapp.start.StartActivity
 import com.google.android.material.snackbar.Snackbar
 
 class AgendaProductActivity: AppCompatActivity() {
@@ -51,7 +50,7 @@ class AgendaProductActivity: AppCompatActivity() {
     }
 
     private fun backHomePage() {
-        startActivity(Intent(this@AgendaProductActivity, StartActivity::class.java))
+        startActivity(Intent(this@AgendaProductActivity, HomeActivity::class.java))
         finish()
     }
 

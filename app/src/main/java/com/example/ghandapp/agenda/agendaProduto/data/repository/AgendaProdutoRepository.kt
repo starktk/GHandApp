@@ -2,21 +2,19 @@ package com.example.ghandapp.agenda.agendaProduto.data.repository
 
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.ghandapp.agenda.agendaProduto.data.local.AgendaToDelete
 import com.example.ghandapp.agenda.agendaProduto.data.local.AgendaProdutoModel
 import com.example.ghandapp.agenda.agendaProduto.data.remote.AgendaRequestModel
 import com.example.ghandapp.agenda.agendaProduto.data.remote.AgendaToFindModel
-import com.example.ghandapp.agenda.agendaProduto.data.local.SituacaoProduto
+import com.example.ghandapp.agenda.agendaProduto.presentation.enums.SituacaoProduto
 import com.example.ghandapp.agenda.agendaProduto.data.remote.AgendaResponse
 import com.example.ghandapp.agenda.agendaProduto.data.remote.AgendaService
-import com.example.ghandapp.agenda.agendaProduto.presentation.model.AgendaProdutoViewState
 
 import com.example.ghandapp.network.RetrofitNetworkClient
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.Response
 
 class AgendaProdutoRepository {
 
@@ -52,6 +50,24 @@ class AgendaProdutoRepository {
             }
         }
     }
+
+    suspend fun listAgenda(username: String, contextView: View): List<AgendaProdutoModel> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = client.findAgendas(username)
+                if (response.isSuccessful) {
+                    response.body()?.mapperAgenda() ?: emptyList()
+
+                } else {
+                    emptyList()
+                }
+            } catch (exception: Exception) {
+                Snackbar.make(contextView, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+                emptyList()
+            }
+        }
+
+    }
     suspend fun deleteAgenda(username: String, cnpj: String, dateToPayOrReceive: String) {
         return withContext(Dispatchers.IO) {
             try {
@@ -74,7 +90,8 @@ class AgendaProdutoRepository {
             nameProduct = nameProduct,
             amount = amount,
             date = dateToPayOrReceive,
-            status = status,
+            situacaoProduto = status,
+            cnpj = fornecedorDto.cnpj
         )
     }
 

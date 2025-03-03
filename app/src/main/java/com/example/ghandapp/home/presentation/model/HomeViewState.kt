@@ -10,6 +10,7 @@ sealed class HomeViewState {
     data class showFornecedorSingle(val fornecedor: FornecedorModel): HomeViewState()
     data class showAgendaProdutoScreen(val list: List<AgendaProdutoModel>): HomeViewState()
     data class showAgendaPagamentoScreen(val list: List<AgendaPagamentoModel>): HomeViewState()
+    data class sucessUser(val name: String): HomeViewState()
     object stateFornecedor: HomeViewState()
     object stateAgenda: HomeViewState()
     object showLoading: HomeViewState()
@@ -22,5 +23,6 @@ sealed class HomeViewState {
     object showFailedUpdateMessage: HomeViewState()
     object showSucessDeletedMessage : HomeViewState()
     object showFailedMessageToDelete : HomeViewState()
+    object showFailedUser : HomeViewState()
 
 }

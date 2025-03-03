@@ -10,6 +10,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 
 interface AgendaService {
@@ -22,4 +23,7 @@ interface AgendaService {
 
     @DELETE("agendaProduto/deleteReceive")
     suspend fun deleteAgenda(@Body agendaToDelete: AgendaToDelete): Response<ResponseBody>
+
+    @POST("agendaProduto/findAgenda/{username}")
+    suspend fun findAgendas(@Path("username") username: String): Response<List<AgendaResponse>>
 }

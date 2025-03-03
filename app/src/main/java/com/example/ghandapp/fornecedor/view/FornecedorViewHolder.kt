@@ -11,17 +11,14 @@ import com.example.ghandapp.fornecedor.data.domain.FornecedorUseCase
 import com.example.ghandapp.fornecedor.data.model.FornecedorModel
 import com.example.ghandapp.fornecedor.presentation.enums.Situacao
 
+
 class FornecedorViewHolder(
     private val binding: FornecedorListItemBinding,
     private val onStatusChange: (FornecedorModel) -> Unit,
     private val onEditChange: (FornecedorModel, cnpj: String?) -> Unit
 ): RecyclerView.ViewHolder(binding.root) {
     private val originalHeight = binding.cardview.height
-    private val fornecedorUseCase by lazy {
-        FornecedorUseCase()
-    }
     fun bind(fornecedor: FornecedorModel) {
-
         binding.executePendingBindings()
         binding.tvRazaoSocial.setText(fornecedor.razaoSocial)
         binding.tvCnpj.setText(fornecedor.cnpj)
@@ -38,6 +35,7 @@ class FornecedorViewHolder(
                 PorterDuff.Mode.SRC_IN
             )
         }
+
         permithedEdits(fornecedor)
         changeStatus(fornecedor)
 
@@ -65,22 +63,31 @@ class FornecedorViewHolder(
         binding.editButton.setOnClickListener {
             val cardView = binding.cardview
             cardView.layoutParams.height = 530
+            cardView.requestLayout()
             allowVisibilities(true)
             observeEdit(fornecedor, cardView)
         }
     }
-    private fun observeEdit(fornecedor: FornecedorModel, carrView: CardView) {
+    private fun observeEdit(fornecedor: FornecedorModel, cardView: CardView) {
             binding.btnSave.setOnClickListener {
                 val razaoSocial = binding.tvRazaoSocial.text
                 val cnpj = binding.tvCnpj.text
                 val oldCnpj = fornecedor.cnpj
                 allowVisibilities(false)
-                carrView.layoutParams.height = originalHeight
+                cardView.layoutParams.height = originalHeight
+                cardView.requestLayout()
                 fornecedor.razaoSocial = razaoSocial.toString()
                 fornecedor.cnpj = cnpj.toString()
                 onEditChange(fornecedor, oldCnpj)
             }
             binding.btnCancel.setOnClickListener {
+                cardView.layoutParams.height = originalHeight
+                cardView.requestLayout()
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    // Atualiza o item no RecyclerView
+                    (itemView.parent as RecyclerView).adapter?.notifyItemChanged(position)
+                }
                 allowVisibilities(false)
             }
     }

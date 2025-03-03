@@ -61,6 +61,21 @@ class FornecedorRepository {
             database.fornecedorDao().cleanFornecedor()
         }
     }
+    suspend fun filterByRazaoSocial(razaoSocial: String): List<FornecedorModel> {
+        return withContext(Dispatchers.IO) {
+            val fornecedores: List<FornecedorModel> = getFornecedoresInDb(database.userDao().getUsername())
+            val filteredFornecedores = fornecedores.filter { oldList -> oldList.razaoSocial == razaoSocial }
+            filteredFornecedores
+        }
+    }
+
+    suspend fun filterByStatus(status: Situacao): List<FornecedorModel> {
+        return withContext(Dispatchers.IO) {
+            val fornecedores: List<FornecedorModel> = getFornecedoresInDb(database.userDao().getUsername())
+            val filteredFornecedores = fornecedores.filter { oldList -> oldList.status == status }
+            filteredFornecedores
+        }
+    }
 
     suspend fun getAllFornecedores(username: String, contextView: View): List<FornecedorModel> {
         return withContext(Dispatchers.IO) {
@@ -89,6 +104,22 @@ class FornecedorRepository {
         } catch (exception: Exception) {
             println("Sem cache para mostrar")
             emptyList()
+        }
+    }
+
+    suspend fun getFornecedores(username: String, contextView: View): List<FornecedorModel> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = client.getAllFornecedores(username)
+                if (response.isSuccessful) {
+                    response.body()?.mapperFornecedor() ?: emptyList()
+                } else {
+                    emptyList()
+                }
+            } catch (exception: Exception) {
+                Snackbar.make(contextView, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+                emptyList()
+            }
         }
     }
     suspend fun alterFornecedor(username: String?, cnpjUpdated: String?, razaoSocial: String?, status: Situacao?, cnpj: String?, name: String?, contextView: View): Boolean {
@@ -139,11 +170,11 @@ class FornecedorRepository {
         }
     }
 
-    suspend fun findByRazaoSocial(username: String, razaoSocial: String, contextView: View): List<FornecedorModel> {
+    suspend fun findByRazaoSocial(name: String, username: String, razaoSocial: String, contextView: View): List<FornecedorModel> {
         return withContext(Dispatchers.IO) {
             try {
-                val response = client.findFornecedoresByRazaoSocial(FornecedorRequest(razaoSocial = razaoSocial, username = username))
-                if (response.isSuccessful || response.code() == 302) {
+                val response = client.findFornecedoresByRazaoSocial(FornecedorRequest(razaoSocial = razaoSocial, username = username, name = name))
+                if (response.isSuccessful) {
                     response.body()?.mapperFornecedor() ?: emptyList()
                 } else {
                     emptyList()
@@ -154,17 +185,20 @@ class FornecedorRepository {
             }
         }
     }
-    suspend fun findByStatus(username: String, status: Situacao): List<FornecedorModel> {
+
+
+    suspend fun findByStatus(username: String, status: Situacao, contextView: View): List<FornecedorModel> {
         return withContext(Dispatchers.IO) {
             try {
                 val response = client.findByStatus(FornecedorRequest(username = username , status = status))
+                println(response.body())
                 if (response.isSuccessful || response.code() == 302) {
                     response.body()?.mapperFornecedor() ?: emptyList()
                 } else {
                     emptyList()
                 }
             } catch (exception: Exception) {
-                Snackbar.make(bindingFornecedor.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(contextView, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
                 emptyList()
             }
         }

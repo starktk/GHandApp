@@ -2,7 +2,6 @@ package com.example.ghandapp.home.view
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -13,8 +12,6 @@ import android.widget.Spinner
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SwitchCompat
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ghandapp.R
@@ -28,12 +25,12 @@ import com.example.ghandapp.databinding.ActivityHomeBinding
 import com.example.ghandapp.extencoes.hide
 import com.example.ghandapp.extencoes.show
 import com.example.ghandapp.fornecedor.data.model.FornecedorModel
+import com.example.ghandapp.fornecedor.presentation.enums.Situacao
 import com.example.ghandapp.fornecedor.view.FornecedorActivity
 import com.example.ghandapp.fornecedor.view.FornecedorListAdapter
 import com.example.ghandapp.home.presentation.HomeViewModel
-import com.example.ghandapp.home.presentation.enums.StatusSearch
+import com.example.ghandapp.home.presentation.enums.StateStart
 import com.example.ghandapp.home.presentation.model.HomeViewState
-import com.example.ghandapp.start.StartActivity
 import com.example.ghandapp.usuario.login.view.LoginActivity
 import com.google.android.material.snackbar.Snackbar
 import java.time.LocalDate
@@ -42,6 +39,8 @@ import java.time.LocalDate
 class HomeActivity: AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
+    private var activeMenu: PopupMenu? = null
+
 
     private val fornecedorAdapter by lazy {
         FornecedorListAdapter(
@@ -54,6 +53,7 @@ class HomeActivity: AppCompatActivity() {
             onEditChange = { fornecedor, cnpj ->
                 if (cnpj != null) {
                     viewModel.updateFornecedor(fornecedor, cnpj, binding.root)
+                    viewModel.listFornecedoresRefresh(binding.root)
                 }
             }
         )
@@ -76,12 +76,18 @@ class HomeActivity: AppCompatActivity() {
 
         refresh()
         observeEvents()
-        init(binding.root)
+        init()
         initializeOberseve()
         setupItemTouchHelper(binding.rvList)
     }
-    private fun init(contextView: View) {
-        viewModel.initializer(intent.getStringExtra("stateStart").toString(), contextView)
+    private fun init() {
+        viewModel.getUsername()
+        binding.fornecedorScreen.setOnClickListener {
+            viewModel.initializer(StateStart.FORNECEDOR, binding.root)
+        }
+        binding.agendaScreen.setOnClickListener {
+            viewModel.initializer(StateStart.AGENDA, binding.root)
+        }
     }
     @RequiresApi(Build.VERSION_CODES.O)
     private fun initializeOberseve() {
@@ -91,13 +97,15 @@ class HomeActivity: AppCompatActivity() {
                 is HomeViewState.showAgendaProdutoScreen -> showAgendaProdutoList(viewState.list)
                 is HomeViewState.showFornecedorSingle -> showFornecedor(viewState.fornecedor)
                 is HomeViewState.showAgendaPagamentoScreen -> showAgendaPagamentoList(viewState.list)
+                is HomeViewState.sucessUser -> showNameForFinalUser(viewState.name)
+                HomeViewState.showFailedUser -> userFail()
                 HomeViewState.showEmptyList -> showEmptyList()
                 HomeViewState.showLoading -> showLoading()
                 HomeViewState.showEmptyAgenda -> showEmptyAgenda()
                 HomeViewState.stateFornecedor -> bindForFornecedor()
+                HomeViewState.stateAgenda -> bindAgenda()
                 HomeViewState.changeStatus -> showMessageStatus()
                 HomeViewState.showFailedMessage -> showFailMessage()
-                HomeViewState.stateAgenda -> bindAgenda()
                 HomeViewState.showFailedStatusMessage -> showFailedStatusMessage()
                 HomeViewState.showFailedUpdateMessage -> showFailedUpdateMessage()
                 HomeViewState.showFailedMessageToDelete -> showFailedMessageToDelete()
@@ -105,6 +113,16 @@ class HomeActivity: AppCompatActivity() {
             }
         }
     }
+
+    private fun userFail() {
+        Snackbar.make(binding.root, "Faça Login novamente", Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun showNameForFinalUser(name: String) {
+        binding.userName.text = name
+        viewModel.initializer(StateStart.FORNECEDOR, binding.root)
+    }
+
     private fun refresh() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             viewModel.listFornecedoresRefresh(binding.root)
@@ -154,20 +172,14 @@ class HomeActivity: AppCompatActivity() {
     }
 
     private fun showMessageStatus() {
-        binding.pbLoading.hide()
-        Snackbar.make(binding.root, "Status modificado com sucesso", Snackbar.LENGTH_LONG).show()
+//        binding.pbLoading.hide()
+//        Snackbar.make(binding.root, "Status modificado com sucesso", Snackbar.LENGTH_LONG).show()
     }
 
 
     private fun observeEvents() {
-        binding.iconHome.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, StartActivity::class.java))
-            finish()
-        }
-
         binding.iconProfile.setOnClickListener{
             startActivity(Intent(this@HomeActivity, LoginActivity::class.java))
-            finish()
         }
     }
 
@@ -183,14 +195,14 @@ class HomeActivity: AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun bindAgenda() {
-        binding.iconHome.setOnClickListener {
-            finish()
-        }
-        binding.iconAdd.setOnClickListener {
-            showMiddleChoiceDIalog()
+        binding.rvList.adapter = agendaProdutoAdapter
+        binding.searchMenu.visibility = View.GONE
+        binding.iconAddAgenda.visibility = View.VISIBLE
+        binding.iconAddAgenda.setOnClickListener {
+            startActivity(Intent(this@HomeActivity, AgendaProductActivity::class.java))
         }
         binding.iconSearch.setOnClickListener {
-            showAgendaDialog()
+            viewModel.listAgendaProdutos(binding.root)
         }
 
     }
@@ -198,50 +210,33 @@ class HomeActivity: AppCompatActivity() {
     @SuppressLint("ResourceType")
     private fun bindForFornecedor() {
         binding.rvList.adapter = fornecedorAdapter
-        binding.iconHome.setOnClickListener {
-            finish()
-        }
+        binding.searchMenu.visibility = View.VISIBLE
+        binding.swStatus.isChecked = false
         binding.iconAdd.setOnClickListener {
             showRegisterFornecedorScreen()
         }
-        binding.iconSearch.setOnClickListener {
-            val popupMenu = PopupMenu(this, it)
-            Snackbar.make(binding.root, "Não faz nada ainda", Snackbar.LENGTH_SHORT).show()
-
-            //          menuInflater.inflate(R.menu.menu_search, popupMenu.menu)
-
-//            popupMenu.show()
-//            val scaleAnim = AnimationUtils.loadAnimation(this, R.anim.selectopt)
-//            popupMenu.setOnMenuItemClickListener { menuItem ->
-//                menuItem.actionView?.startAnimation(scaleAnim)
-//                when (menuItem.itemId) {
-//                    R.id.item_razao_social -> {
-//                        showFornecedorDialog(StatusSearch.RAZAO_SOCIAL)
-//                        true
-//                    }
-//                    R.id.item_cnpj -> {
-//                        // Ação para CNPJ
-//                        Toast.makeText(this, "CNPJ selecionado", Toast.LENGTH_SHORT).show()
-//                        true
-//                    }
-//                    R.id.item_status -> {
-//                        // Ação para Status
-//                        Toast.makeText(this, "Status selecionado", Toast.LENGTH_SHORT).show()
-//                        true
-//                    }
-//                    else -> false
-//                }
-//            }
+        binding.iconProfile.setOnClickListener {
+            startActivity(Intent(this@HomeActivity, LoginActivity::class.java))
         }
+        binding.iconSearch.setOnClickListener {
+            val textToSearch = binding.searchBar.text.toString()
+            viewModel.searchFornecedores(binding.root, textToSearch)
+        }
+        binding.swStatus.setOnCheckedChangeListener { _, isCheck ->
+            if (isCheck){
+                    viewModel.listByStatus(Situacao.INATIVA)
+                } else {
+                    viewModel.listByStatus(Situacao.ATIVA)
+                }
+            }
     }
+
 
     private fun showRegisterAgendaProdutoScren() {
         startActivity(Intent(this@HomeActivity, AgendaProductActivity::class.java))
-        finish()
     }
     private fun showRegisterAgendaPagamentoScreen() {
         startActivity(Intent(this@HomeActivity, AgendaPagamentoActivity::class.java))
-        finish()
     }
 
     private fun showFornecedor(fornecedorModel: FornecedorModel) {
@@ -275,31 +270,15 @@ class HomeActivity: AppCompatActivity() {
 
     private fun showEmptyList() {
         binding.pbLoading.hide()
+        Snackbar.make(binding.root, "Não foi encontrado", Snackbar.LENGTH_SHORT).show()
     }
 
 
     private fun listarAgendaProduto(mes: String) {
         binding.rvList.adapter = agendaProdutoAdapter
-        viewModel.listAgendaProduto(mes, binding.root)
+        viewModel.listAgendaProdutoByMonth(mes, binding.root)
     }
-    private fun showFornecedorDialog(status: StatusSearch) {
-        val dialog = FornecedorDialogFragment.newInstance()
-        dialog.show(supportFragmentManager, "fornecedorDialog")
-        dialog.onSubmitClick = { input ->
-            when (status) {
-                StatusSearch.RAZAO_SOCIAL -> {
-                        viewModel.listByRazaoSocial(input, binding.root)
-                }
-                StatusSearch.CNPJ -> {
-                    viewModel.findFornecedorByCnpj(input)
-                }
-                StatusSearch.STATUS -> {
 
-                }
-            }
-        }
-
-    }
 
 
     @RequiresApi(Build.VERSION_CODES.O)

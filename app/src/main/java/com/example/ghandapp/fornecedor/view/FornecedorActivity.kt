@@ -12,7 +12,6 @@ import com.example.ghandapp.home.view.HomeActivity
 import com.example.ghandapp.fornecedor.presentation.FornecedorViewModel
 import com.example.ghandapp.fornecedor.presentation.model.FornecedorViewState
 import com.example.ghandapp.home.presentation.enums.StateStart
-import com.example.ghandapp.start.StartActivity
 import com.example.ghandapp.usuario.login.view.LoginActivity
 import com.google.android.material.snackbar.Snackbar
 
@@ -41,7 +40,7 @@ class FornecedorActivity: AppCompatActivity() {
     }
 
     private fun backHomePage() {
-        startActivity(Intent(this@FornecedorActivity, StartActivity::class.java))
+        startActivity(Intent(this@FornecedorActivity, HomeActivity::class.java))
         finish()
     }
     private fun initializeObserver() {

@@ -34,7 +34,7 @@ interface FornecedorService {
     @PUT("/fornecedor/updateStatus")
     suspend fun alterStatus(@Body fornecedorRequest: FornecedorRequest): Response<FornecedorResponse>
 
-    @GET("fornecedor/findFornecedorByStatus")
+    @POST("fornecedor/findFornecedorByStatus")
     suspend fun findByStatus(@Body fornecedorRequest: FornecedorRequest): Response<List<FornecedorResponse>>
 
 

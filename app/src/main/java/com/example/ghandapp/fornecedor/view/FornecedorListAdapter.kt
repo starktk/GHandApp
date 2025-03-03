@@ -28,6 +28,7 @@ class FornecedorListAdapter(private val onStatusChange: (FornecedorModel) -> Uni
         println(items)
         list.clear()
         list.addAll(items)
+        println(list)
         notifyDataSetChanged()
     }
     @SuppressLint("NotifyDataSetChanged")
@@ -51,4 +52,5 @@ class FornecedorListAdapter(private val onStatusChange: (FornecedorModel) -> Uni
     fun getObjectInListByPosition(position: Int): FornecedorModel{
         return list[position]
     }
+
 }

@@ -5,9 +5,9 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ghandapp.databinding.ActivitySplashscreenBinding
+import com.example.ghandapp.home.view.HomeActivity
 import com.example.ghandapp.splashscreen.presentation.SplashScreenViewModel
 import com.example.ghandapp.splashscreen.presentation.model.SplashScreenViewState
-import com.example.ghandapp.start.StartActivity
 import com.example.ghandapp.usuario.login.view.LoginActivity
 
 
@@ -36,7 +36,7 @@ class SplashScreenActivity: AppCompatActivity() {
 
 
     private fun showIsSucess() {
-        startActivity(Intent(this@SplashScreenActivity, StartActivity::class.java))
+        startActivity(Intent(this@SplashScreenActivity, HomeActivity::class.java))
         finish()
     }
 

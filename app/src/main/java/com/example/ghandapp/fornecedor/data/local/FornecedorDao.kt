@@ -18,4 +18,6 @@ interface FornecedorDao {
 
     @Query("DELETE from fornecedorTable")
     fun cleanFornecedor()
+
+
 }

@@ -22,6 +22,9 @@ class AgendaProdutoUseCase {
     suspend fun findAgendaByMonth(dateToPayOrReceive: String, contextView: View): List<AgendaProdutoModel> {
         return repository.findAgenda(loginRepo.getUser().username, dateToPayOrReceive, contextView)
     }
+    suspend fun listAgenda(contextView: View): List<AgendaProdutoModel> {
+        return repository.listAgenda(loginRepo.getUsername(), contextView)
+    }
     suspend fun deleteAgenda(cnpj: String, dateToPayOrReceive: String) {
         return repository.deleteAgenda(loginRepo.getUser().username, cnpj, dateToPayOrReceive)
     }

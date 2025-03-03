@@ -1,6 +1,6 @@
 package com.example.ghandapp.agenda.agendaProduto.data.remote
 
-import com.example.ghandapp.agenda.agendaProduto.data.local.SituacaoProduto
+import com.example.ghandapp.agenda.agendaProduto.presentation.enums.SituacaoProduto
 
 data class AgendaRequestModel(
 

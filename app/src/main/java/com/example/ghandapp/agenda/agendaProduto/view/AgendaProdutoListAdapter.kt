@@ -4,14 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ghandapp.agenda.agendaProduto.data.local.AgendaProdutoModel
-import com.example.ghandapp.databinding.AgendaprodutoItemBinding
+import com.example.ghandapp.databinding.AgendaprodutoListItemBinding
 
 class AgendaProdutoListAdapter: RecyclerView.Adapter<AgendaProdutoViewHolder>() {
 
     private val list: MutableList<AgendaProdutoModel> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AgendaProdutoViewHolder {
-        val binding = AgendaprodutoItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = AgendaprodutoListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return AgendaProdutoViewHolder(binding)
     }
 

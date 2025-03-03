@@ -9,7 +9,7 @@ import com.example.ghandapp.databinding.ActivityLoginBinding
 
 import com.example.ghandapp.extencoes.hide
 import com.example.ghandapp.extencoes.show
-import com.example.ghandapp.start.StartActivity
+import com.example.ghandapp.home.view.HomeActivity
 import com.example.ghandapp.usuario.login.presentation.LoginViewModel
 import com.example.ghandapp.usuario.login.presentation.model.LoginViewState
 import com.example.ghandapp.usuario.registerUser.view.UsuarioActivity
@@ -56,11 +56,9 @@ class LoginActivity: AppCompatActivity() {
         }
     }
 
-
     private fun showLoading() {
         binding.pbLoading.show()
     }
-
 
     private fun showGenericErrorMessage() {
         binding.root.hide()
@@ -68,7 +66,6 @@ class LoginActivity: AppCompatActivity() {
     }
 
     private fun inputsBlank() {
-
         binding.root.hide()
         Snackbar.make(binding.btLogin, R.string.blank_fields, Snackbar.LENGTH_SHORT).show()
     }
@@ -89,7 +86,7 @@ class LoginActivity: AppCompatActivity() {
     }
 
     private fun showHome() {
-        startActivity(Intent(this@LoginActivity, StartActivity::class.java))
+        startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
         finish()
     }
 
