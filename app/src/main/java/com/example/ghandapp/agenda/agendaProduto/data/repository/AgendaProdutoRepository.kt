@@ -68,14 +68,25 @@ class AgendaProdutoRepository {
         }
 
     }
-    suspend fun deleteAgenda(username: String, cnpj: String, dateToPayOrReceive: String) {
+    suspend fun deleteAgenda(username: String,name: String,  cnpj: String, dateToPayOrReceive: String, contextView: View): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val response = client.deleteAgenda(AgendaToDelete(username, cnpj, dateToPayOrReceive))
+                val response = client.deleteAgenda(username, name, cnpj, dateToPayOrReceive)
                 response.isSuccessful
-            } catch (exceptio: java.lang.Exception) {
-                Log.e("delete", exceptio.message.orEmpty())
-
+            } catch (exceptio: Exception) {
+                Snackbar.make(contextView, exceptio.message.toString(), Snackbar.LENGTH_SHORT).show()
+                false
+            }
+        }
+    }
+    suspend fun updateStatus(username: String, name: String, cnpj: String, dateToPayOrReceive: String, contextView: View): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = client.changeStatus(username, name, cnpj, dateToPayOrReceive, SituacaoProduto.RECEBIDO)
+                response.isSuccessful
+            } catch (exception: Exception) {
+                Snackbar.make(contextView, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+                false
             }
         }
     }

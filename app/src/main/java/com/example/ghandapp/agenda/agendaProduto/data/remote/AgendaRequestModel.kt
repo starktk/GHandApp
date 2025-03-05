@@ -4,11 +4,11 @@ import com.example.ghandapp.agenda.agendaProduto.presentation.enums.SituacaoProd
 
 data class AgendaRequestModel(
 
-    val username: String,
-    val name: String,
-    val cnpj: String,
-    val nameProduct: String,
-    val amount: Int,
-    val status: SituacaoProduto,
-    val dateToPayOrReceive: String
+    val username: String?,
+    val name: String?,
+    val cnpj: String?,
+    val nameProduct: String?,
+    val amount: Int?,
+    val status: SituacaoProduto?,
+    val dateToPayOrReceive: String?
 )

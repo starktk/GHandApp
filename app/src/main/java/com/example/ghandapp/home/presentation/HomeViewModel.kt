@@ -119,7 +119,7 @@ class HomeViewModel: ViewModel() {
             }
         }
     }
-    fun modifyStatus(cnpj: String, status: String) {
+    fun modifyStatusFornecedor(cnpj: String, status: String) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
             val statusOf = Situacao.valueOf(status)
@@ -215,6 +215,28 @@ class HomeViewModel: ViewModel() {
             } else {
                 viewState.value = HomeViewState.showHomeScreen(list)
             }
+        }
+    }
+    fun modifyStatusAgendaProduto(cnpj: String, dateToPayOrReceive: String, contextView: View) {
+        viewModelScope.launch {
+            viewState.value = HomeViewState.showLoading
+            val response = agendaProdutoUseCase.modifyStatus(cnpj, dateToPayOrReceive, contextView)
+            if (response) {
+                viewState.value = HomeViewState.changeStatus
+            } else {
+                viewState.value = HomeViewState.showFailedStatusMessage
+            }
+        }
+    }
+    fun deleteAgenda(cnpj: String, dateToPayOrReceive: String, contextView: View) {
+        viewModelScope.launch {
+            val agenda = agendaProdutoUseCase.deleteAgenda(cnpj, dateToPayOrReceive, contextView)
+            if (agenda) {
+                viewState.value = HomeViewState.showSucessDeletedMessage
+            } else {
+                viewState.value = HomeViewState.showFailedMessageToDelete
+            }
+
         }
     }
 }

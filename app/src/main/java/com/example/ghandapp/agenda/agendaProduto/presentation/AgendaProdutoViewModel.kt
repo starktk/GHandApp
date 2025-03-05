@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.ghandapp.agenda.agendaProduto.data.domain.AgendaProdutoUseCase
 import com.example.ghandapp.agenda.agendaProduto.presentation.model.AgendaProdutoViewState
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class AgendaProdutoViewModel: ViewModel() {
@@ -20,13 +21,14 @@ class AgendaProdutoViewModel: ViewModel() {
         AgendaProdutoUseCase()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun validateInputs(nomeProduto: String, amount: Int, date: String, cnpj: String, contextView: View) {
         viewState.value = AgendaProdutoViewState.showLoading
+        val formato = DateTimeFormatter.ofPattern("yyyy-dd-MM")
+        val dateNew = LocalDate.parse(date, formato)
 
-        if(nomeProduto.isNullOrBlank() && amount <= 0 && date.equals(dateFormat) && cnpj.isNullOrBlank()) {
+        if(nomeProduto.isNullOrBlank() && amount <= 0 && date.isNullOrBlank() && cnpj.isNullOrBlank()) {
             viewState.value = AgendaProdutoViewState.genericError
             return
         }
@@ -38,7 +40,7 @@ class AgendaProdutoViewModel: ViewModel() {
             viewState.value = AgendaProdutoViewState.amountError
             return
         }
-        if (date.equals(dateFormat) || date.isNullOrBlank()) {
+        if (dateNew.isBefore(LocalDate.now()) || date.isNullOrBlank()) {
             viewState.value = AgendaProdutoViewState.dayToMarkError
             return
         }

@@ -7,8 +7,10 @@ import com.example.ghandapp.R
 import com.example.ghandapp.agenda.agendaProduto.data.local.AgendaProdutoModel
 import com.example.ghandapp.agenda.agendaProduto.presentation.enums.SituacaoProduto
 import com.example.ghandapp.databinding.AgendaprodutoListItemBinding
+import com.example.ghandapp.fornecedor.data.model.FornecedorModel
 
-class AgendaProdutoViewHolder(private val binding: AgendaprodutoListItemBinding): RecyclerView.ViewHolder(binding.root) {
+class AgendaProdutoViewHolder(private val binding: AgendaprodutoListItemBinding,
+                              private val onStatusChange: (AgendaProdutoModel) -> Unit): RecyclerView.ViewHolder(binding.root) {
 
     fun bind(agenda: AgendaProdutoModel) {
         binding.nameProductCd.setText(agenda.nameProduct)
@@ -31,9 +33,30 @@ class AgendaProdutoViewHolder(private val binding: AgendaprodutoListItemBinding)
                 PorterDuff.Mode.SRC_IN
             )
         }
+
+        changeStatus(agenda)
     }
 
     fun permithedEdits() {
 
+    }
+
+    fun changeStatus(agendaProdutoModel: AgendaProdutoModel) {
+        binding.switchStatus.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                agendaProdutoModel.situacaoProduto == SituacaoProduto.NAO_RECEBIDO
+                binding.switchStatus.trackDrawable?.setColorFilter(
+                    ContextCompat.getColor(binding.root.context, R.color.red),
+                    PorterDuff.Mode.SRC_IN
+                )
+            } else {
+                agendaProdutoModel.situacaoProduto == SituacaoProduto.RECEBIDO
+                binding.switchStatus.trackDrawable?.setColorFilter(
+                    ContextCompat.getColor(binding.root.context, R.color.green),
+                    PorterDuff.Mode.SRC_IN
+                )
+            }
+            onStatusChange(agendaProdutoModel)
+        }
     }
 }

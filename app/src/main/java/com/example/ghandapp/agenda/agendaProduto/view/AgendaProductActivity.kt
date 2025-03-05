@@ -3,6 +3,7 @@ package com.example.ghandapp.agenda.agendaProduto.view
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -36,8 +37,8 @@ class AgendaProductActivity: AppCompatActivity() {
             viewModel.validateInputs(
                 nomeProduto = binding.nameProduct.text.toString(),
                 amount = binding.amount.text.toString().toInt(),
-                date = binding.dateTimePicker.toString(),
-                cnpj = binding.digiteCnpj.toString(),
+                date = binding.agenda.text.toString(),
+                cnpj = findViewById<EditText>(R.id.cnpjAgendaSet).text.toString(),
                 binding.root
             )
         }

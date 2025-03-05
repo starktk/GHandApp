@@ -37,7 +37,7 @@ import java.time.LocalDate
 
 
 class HomeActivity: AppCompatActivity() {
-
+    var contextScreen: StateStart = StateStart.FORNECEDOR
     private lateinit var binding: ActivityHomeBinding
     private var activeMenu: PopupMenu? = null
 
@@ -45,7 +45,7 @@ class HomeActivity: AppCompatActivity() {
     private val fornecedorAdapter by lazy {
         FornecedorListAdapter(
             onStatusChange = { fornecedor ->
-                viewModel.modifyStatus(
+                viewModel.modifyStatusFornecedor(
                     fornecedor.cnpj.toString(),
                     fornecedor.status.toString().uppercase()
             )
@@ -61,7 +61,12 @@ class HomeActivity: AppCompatActivity() {
     }
 
     private val agendaProdutoAdapter by lazy {
-        AgendaProdutoListAdapter()
+        AgendaProdutoListAdapter(
+            onStatusChange = {
+                agendaProduto -> viewModel.modifyStatusAgendaProduto(agendaProduto.cnpj, agendaProduto.date, binding.root)
+                viewModel.listAgendaProdutos(binding.root)
+            }
+        )
     }
     private val agendaPagamentoAdapter by lazy {
         AgendaPagamentoListAdapter()
@@ -83,9 +88,11 @@ class HomeActivity: AppCompatActivity() {
     private fun init() {
         viewModel.getUsername()
         binding.fornecedorScreen.setOnClickListener {
+            contextScreen = StateStart.FORNECEDOR
             viewModel.initializer(StateStart.FORNECEDOR, binding.root)
         }
         binding.agendaScreen.setOnClickListener {
+            contextScreen = StateStart.AGENDA
             viewModel.initializer(StateStart.AGENDA, binding.root)
         }
     }
@@ -125,10 +132,18 @@ class HomeActivity: AppCompatActivity() {
 
     private fun refresh() {
         binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.listFornecedoresRefresh(binding.root)
-            binding.swipeRefreshLayout.postDelayed({
-                binding.swipeRefreshLayout.isRefreshing = false
-            }, 2000)
+            if (contextScreen.equals(StateStart.FORNECEDOR)) {
+                viewModel.listFornecedoresRefresh(binding.root)
+                binding.swipeRefreshLayout.postDelayed({
+                    binding.swipeRefreshLayout.isRefreshing = false
+                }, 2000)
+            } else {
+                viewModel.listAgendaProdutos(binding.root)
+                binding.swipeRefreshLayout.postDelayed({
+                    binding.swipeRefreshLayout.isRefreshing = false
+                }, 2000)
+            }
+
         }
     }
     private fun showFailedMessageToDelete() {
@@ -154,9 +169,13 @@ class HomeActivity: AppCompatActivity() {
                 }
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val position = viewHolder.adapterPosition
-                    println(fornecedorAdapter.getObjectInListByPosition(position))
-                    viewModel.deleteFornecedor(fornecedorAdapter.getObjectInListByPosition(position).cnpj, binding.root)
-                    fornecedorAdapter.removeItem(position)
+                    if (contextScreen == StateStart.FORNECEDOR) {
+                        viewModel.deleteFornecedor(fornecedorAdapter.getObjectInListByPosition(position).cnpj, binding.root)
+                        fornecedorAdapter.removeItem(position)
+                    } else {
+                        viewModel.deleteAgenda(agendaProdutoAdapter.getObjectInListByPosition(position).cnpj, agendaProdutoAdapter.getObjectInListByPosition(position).date, binding.root)
+                        agendaProdutoAdapter.removeItem(position)
+                    }
                 }
         })
         itemTouchHelper.attachToRecyclerView(recyclerView)

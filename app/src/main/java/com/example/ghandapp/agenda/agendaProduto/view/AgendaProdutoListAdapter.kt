@@ -5,14 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ghandapp.agenda.agendaProduto.data.local.AgendaProdutoModel
 import com.example.ghandapp.databinding.AgendaprodutoListItemBinding
+import com.example.ghandapp.fornecedor.data.model.FornecedorModel
 
-class AgendaProdutoListAdapter: RecyclerView.Adapter<AgendaProdutoViewHolder>() {
+class AgendaProdutoListAdapter(private val onStatusChange: (AgendaProdutoModel) -> Unit): RecyclerView.Adapter<AgendaProdutoViewHolder>() {
 
     private val list: MutableList<AgendaProdutoModel> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AgendaProdutoViewHolder {
         val binding = AgendaprodutoListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return AgendaProdutoViewHolder(binding)
+        return AgendaProdutoViewHolder(binding, onStatusChange)
     }
 
     override fun getItemCount(): Int {
@@ -29,5 +30,12 @@ class AgendaProdutoListAdapter: RecyclerView.Adapter<AgendaProdutoViewHolder>() 
         notifyDataSetChanged()
     }
 
+    fun getObjectInListByPosition(position: Int): AgendaProdutoModel {
+        return list[position]
+    }
 
+    fun removeItem(position: Int) {
+        list.removeAt(position)
+        notifyItemRemoved(position)
+    }
 }
