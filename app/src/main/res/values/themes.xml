@@ -16,4 +16,13 @@
     <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
         <item name="cornerSize">50%</item>
     </style>
+
+    <style name="CalendarDateTextAppearance">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:navigationMode">listMode</item>  <!-- Ocultar as setas de navegação -->
+    </style>
+
+
 </resources>

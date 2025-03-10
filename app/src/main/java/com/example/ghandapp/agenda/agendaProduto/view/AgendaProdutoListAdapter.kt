@@ -1,7 +1,9 @@
 package com.example.ghandapp.agenda.agendaProduto.view
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ghandapp.agenda.agendaProduto.data.local.AgendaProdutoModel
 import com.example.ghandapp.databinding.AgendaprodutoListItemBinding
@@ -20,13 +22,16 @@ class AgendaProdutoListAdapter(private val onStatusChange: (AgendaProdutoModel) 
         return list.size
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: AgendaProdutoViewHolder, position: Int) {
         holder.bind(list[position])
     }
 
     fun add(items: List<AgendaProdutoModel>) {
+        println(items + "Teste Nav 1.0")
         list.clear()
         list.addAll(items)
+        println(list)
         notifyDataSetChanged()
     }
 

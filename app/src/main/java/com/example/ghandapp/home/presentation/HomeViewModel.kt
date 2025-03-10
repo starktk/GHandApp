@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ghandapp.agenda.agendaPagamento.data.domain.AgendaPagamentoUseCase
 import com.example.ghandapp.agenda.agendaProduto.data.domain.AgendaProdutoUseCase
+import com.example.ghandapp.agenda.agendaProduto.presentation.enums.SituacaoProduto
 import com.example.ghandapp.fornecedor.data.domain.FornecedorUseCase
 import com.example.ghandapp.fornecedor.data.model.FornecedorModel
 import com.example.ghandapp.fornecedor.presentation.enums.Situacao
@@ -186,7 +187,7 @@ class HomeViewModel: ViewModel() {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
             val agenda = agendaProdutoUseCase.findAgendaByMonth(mes, contextView)
-
+            println(agenda)
             if (agenda.isEmpty()) {
                 viewState.value = HomeViewState.showEmptyList
             } else {
@@ -217,9 +218,12 @@ class HomeViewModel: ViewModel() {
             }
         }
     }
-    fun modifyStatusAgendaProduto(cnpj: String, dateToPayOrReceive: String, contextView: View) {
+    fun modifyStatusAgendaProduto(status: SituacaoProduto, cnpj: String, dateToPayOrReceive: String, contextView: View) {
         viewModelScope.launch {
             viewState.value = HomeViewState.showLoading
+            if (status.equals(SituacaoProduto.RECEBIDO)) {
+                viewState.value = HomeViewState.showFailedStatusMessage
+            }
             val response = agendaProdutoUseCase.modifyStatus(cnpj, dateToPayOrReceive, contextView)
             if (response) {
                 viewState.value = HomeViewState.changeStatus

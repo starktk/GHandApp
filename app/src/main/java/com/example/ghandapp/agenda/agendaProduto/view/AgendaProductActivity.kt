@@ -1,9 +1,11 @@
 package com.example.ghandapp.agenda.agendaProduto.view
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -15,14 +17,18 @@ import com.example.ghandapp.extencoes.hide
 import com.example.ghandapp.extencoes.show
 import com.example.ghandapp.home.presentation.enums.StateStart
 import com.example.ghandapp.home.view.HomeActivity
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class AgendaProductActivity: AppCompatActivity() {
 
     private lateinit var binding: ActivityAgendaproductBinding
 
     private val viewModel: AgendaProdutoViewModel by viewModels()
-
+    private var selectedDate: String = ""
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,16 +37,25 @@ class AgendaProductActivity: AppCompatActivity() {
 
         setContentView(binding.root)
 
+        binding.dateAgendaProd.setOnClickListener {
+            openDialog { date ->
+                selectedDate = date // Armazena a data quando o "OK" é clicado
+            }
+        }
 
+        binding.registerAgendaProduto.setOnClickListener {
+            if (selectedDate.isNotEmpty()) {
+                viewModel.validateInputs(
+                    nomeProduto = binding.nameProduct.text.toString(),
+                    amount = binding.amount.text.toString().toInt(),
+                    date = selectedDate,
+                    cnpj = findViewById<EditText>(R.id.cnpjAgendaSet).text.toString(),
+                    binding.root
+                )
+            } else {
 
-        binding.agendarData.setOnClickListener {
-            viewModel.validateInputs(
-                nomeProduto = binding.nameProduct.text.toString(),
-                amount = binding.amount.text.toString().toInt(),
-                date = binding.agenda.text.toString(),
-                cnpj = findViewById<EditText>(R.id.cnpjAgendaSet).text.toString(),
-                binding.root
-            )
+                Toast.makeText(this, "Por favor, selecione uma data.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.iconHome.setOnClickListener {
@@ -50,6 +65,24 @@ class AgendaProductActivity: AppCompatActivity() {
         initializerObserve()
     }
 
+    private fun openDialog(onDateSelected: (String) -> Unit) {
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Selecione a data")
+            .build()
+
+        datePicker.show(supportFragmentManager, "DATE_PICKER")
+        datePicker.addOnPositiveButtonClickListener { selection ->
+            val formattedDate = convertTimestampToDate(selection)
+            println("Data formatada: $formattedDate")
+            onDateSelected(formattedDate)
+        }
+    }
+
+    private fun convertTimestampToDate(timestamp: Long): String {
+        val date = Date(timestamp)
+        val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return outputFormat.format(date)
+    }
     private fun backHomePage() {
         startActivity(Intent(this@AgendaProductActivity, HomeActivity::class.java))
         finish()

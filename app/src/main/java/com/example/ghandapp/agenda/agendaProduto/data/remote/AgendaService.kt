@@ -28,7 +28,7 @@ interface AgendaService {
                              @Query("dateToPayOrReceive") dateToPayorReceive: String,
                              @Query("status") status: SituacaoProduto): Response<ResponseBody>
 
-    @GET("agendaProduto/findAgendaByMonth")
+    @POST("agendaProduto/findAgendaByMonth")
     suspend fun findAgenda(@Body agendaToFindModel: AgendaToFindModel): Response<List<AgendaResponse>>
 
     @Headers("Content-Type: application/json")

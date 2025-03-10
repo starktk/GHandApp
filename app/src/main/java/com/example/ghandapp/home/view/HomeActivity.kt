@@ -5,13 +5,14 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
+import android.widget.AdapterView
 import android.widget.PopupMenu
 import android.widget.RadioGroup
 import android.widget.Spinner
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ghandapp.R
@@ -36,11 +37,11 @@ import com.google.android.material.snackbar.Snackbar
 import java.time.LocalDate
 
 
-class HomeActivity: AppCompatActivity() {
+class HomeActivity: AppCompatActivity(), AgendaDialogFragment.AgendaValue {
     var contextScreen: StateStart = StateStart.FORNECEDOR
     private lateinit var binding: ActivityHomeBinding
     private var activeMenu: PopupMenu? = null
-
+    private var contextMonthFilter: Boolean = false
 
     private val fornecedorAdapter by lazy {
         FornecedorListAdapter(
@@ -63,15 +64,16 @@ class HomeActivity: AppCompatActivity() {
     private val agendaProdutoAdapter by lazy {
         AgendaProdutoListAdapter(
             onStatusChange = {
-                agendaProduto -> viewModel.modifyStatusAgendaProduto(agendaProduto.cnpj, agendaProduto.date, binding.root)
+                agendaProduto -> viewModel.modifyStatusAgendaProduto(agendaProduto.situacaoProduto, agendaProduto.cnpj, agendaProduto.date, binding.root)
                 viewModel.listAgendaProdutos(binding.root)
+
             }
         )
     }
     private val agendaPagamentoAdapter by lazy {
         AgendaPagamentoListAdapter()
     }
-    
+
     private val viewModel: HomeViewModel by viewModels()
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -132,12 +134,13 @@ class HomeActivity: AppCompatActivity() {
 
     private fun refresh() {
         binding.swipeRefreshLayout.setOnRefreshListener {
-            if (contextScreen.equals(StateStart.FORNECEDOR)) {
+            if (contextScreen == StateStart.FORNECEDOR) {
                 viewModel.listFornecedoresRefresh(binding.root)
                 binding.swipeRefreshLayout.postDelayed({
                     binding.swipeRefreshLayout.isRefreshing = false
                 }, 2000)
             } else {
+                binding.monthFilter.setSelection(0)
                 viewModel.listAgendaProdutos(binding.root)
                 binding.swipeRefreshLayout.postDelayed({
                     binding.swipeRefreshLayout.isRefreshing = false
@@ -216,20 +219,39 @@ class HomeActivity: AppCompatActivity() {
     private fun bindAgenda() {
         binding.rvList.adapter = agendaProdutoAdapter
         binding.searchMenu.visibility = View.GONE
-        binding.iconAddAgenda.visibility = View.VISIBLE
-        binding.iconAddAgenda.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AgendaProductActivity::class.java))
+        binding.searchMenuAgenda.visibility = View.VISIBLE
+        val swipeParams = binding.swipeRefreshLayout.layoutParams as ConstraintLayout.LayoutParams
+        swipeParams.topToBottom = binding.searchMenuAgenda.id
+        binding.swipeRefreshLayout.layoutParams = swipeParams
+        binding.iconAddsScreenContext.setOnClickListener {
+            if (contextScreen.equals(StateStart.AGENDA)) {
+                startActivity(Intent(this@HomeActivity, AgendaProductActivity::class.java))
+            }
         }
-        binding.iconSearch.setOnClickListener {
-            viewModel.listAgendaProdutos(binding.root)
-        }
+        binding.monthFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val itemSelecionado = parent.getItemAtPosition(position).toString()
 
+                if (itemSelecionado != "Selecione uma opção") {
+                    listarAgendaProduto(filterMonth().toString())
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+        binding.iconProfile.setOnClickListener {
+            startActivity(Intent(this@HomeActivity, LoginActivity::class.java))
+        }
     }
 
     @SuppressLint("ResourceType")
     private fun bindForFornecedor() {
         binding.rvList.adapter = fornecedorAdapter
+        binding.searchMenuAgenda.visibility = View.GONE
         binding.searchMenu.visibility = View.VISIBLE
+        val swipeParams = binding.swipeRefreshLayout.layoutParams as ConstraintLayout.LayoutParams
+        swipeParams.topToBottom = binding.searchMenu.id
+        binding.swipeRefreshLayout.layoutParams = swipeParams
         binding.swStatus.isChecked = false
         binding.iconAdd.setOnClickListener {
             showRegisterFornecedorScreen()
@@ -248,6 +270,7 @@ class HomeActivity: AppCompatActivity() {
                     viewModel.listByStatus(Situacao.ATIVA)
                 }
             }
+
     }
 
 
@@ -295,30 +318,13 @@ class HomeActivity: AppCompatActivity() {
 
     private fun listarAgendaProduto(mes: String) {
         binding.rvList.adapter = agendaProdutoAdapter
+
         viewModel.listAgendaProdutoByMonth(mes, binding.root)
     }
 
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun setDateMonth(spinner: Spinner): LocalDate {
-        val dateNow: LocalDate = LocalDate.now()
-         when (spinner.selectedItem.toString()) {
-            "Janeiro" -> dateNow.withMonth(1)
-            "Fevereiro" -> dateNow.withMonth(2)
-            "Março" -> dateNow.withMonth(3)
-            "Abril" -> dateNow.withMonth(4)
-            "Maio" -> dateNow.withMonth(5)
-            "Junho" -> dateNow.withMonth(6)
-            "Julho" -> dateNow.withMonth(7)
-            "Agosto" -> dateNow.withMonth(8)
-            "Setembro" -> dateNow.withMonth(9)
-            "Outubro" -> dateNow.withMonth(10)
-            "Novembro" -> dateNow.withMonth(11)
-            "Dezembro" -> dateNow.withMonth(12)
-        }
-        return dateNow
-    }
+
 
     private fun showMiddleChoiceDIalog() {
         val dialog = MiddleDialogFragment()
@@ -335,26 +341,31 @@ class HomeActivity: AppCompatActivity() {
     private fun showAgendaDialog() {
         val dialog = AgendaDialogFragment()
         dialog.show(supportFragmentManager, dialog.tag)
-        val rdGroup = findViewById<RadioGroup>(R.id.rd_group)
-        val button = findViewById<Button>(R.id.btn_submit)
-        rdGroup.setOnCheckedChangeListener { _, checkId ->
-            when (checkId) {
-                R.id.btn_pagamento -> button.setOnClickListener {
-
-                }
-                R.id.btn_produto -> button.setOnClickListener {
-                    val spinner = findViewById<Spinner>(R.id.spinner_month)
-                    val month = setDateMonth(spinner)
-                    button.setOnClickListener {
-                        listarAgendaProduto(
-                            mes = month.toString()
-                        )
-                    }
-                }
-            }
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun filterMonth(): LocalDate {
+        val dateNow: LocalDate = LocalDate.now()
+        val datefiltered = when (binding.monthFilter.selectedItem.toString()) {
+            "Janeiro" -> dateNow.withMonth(1)
+            "Fevereiro" -> dateNow.withMonth(2)
+            "Março" -> dateNow.withMonth(3)
+            "Abril" -> dateNow.withMonth(4)
+            "Maio" -> dateNow.withMonth(5)
+            "Junho" -> dateNow.withMonth(6)
+            "Julho" -> dateNow.withMonth(7)
+            "Agosto" -> dateNow.withMonth(8)
+            "Setembro" -> dateNow.withMonth(9)
+            "Outubro" -> dateNow.withMonth(10)
+            "Novembro" -> dateNow.withMonth(11)
+            "Dezembro" -> dateNow.withMonth(12)
+            else -> dateNow
         }
+        println("$datefiltered teste 1")
+        return datefiltered
+    }
 
-
+    override fun onAgendaSelecionada(month: String) {
+        viewModel.listAgendaProdutoByMonth(month, binding.root)
     }
 }
 

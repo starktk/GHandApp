@@ -25,7 +25,7 @@ class AgendaProdutoViewModel: ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun validateInputs(nomeProduto: String, amount: Int, date: String, cnpj: String, contextView: View) {
         viewState.value = AgendaProdutoViewState.showLoading
-        val formato = DateTimeFormatter.ofPattern("yyyy-dd-MM")
+        val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val dateNew = LocalDate.parse(date, formato)
 
         if(nomeProduto.isNullOrBlank() && amount <= 0 && date.isNullOrBlank() && cnpj.isNullOrBlank()) {
