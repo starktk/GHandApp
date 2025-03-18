@@ -13,6 +13,8 @@ sealed class HomeViewState {
     data class sucessUser(val name: String): HomeViewState()
     object stateFornecedor: HomeViewState()
     object stateAgenda: HomeViewState()
+
+    object stateAgendaPayment: HomeViewState()
     object showLoading: HomeViewState()
 
     object changeStatus: HomeViewState()

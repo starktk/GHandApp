@@ -28,13 +28,13 @@ class AgendaProdutoViewHolder(private val binding: AgendaprodutoListItemBinding,
         binding.executePendingBindings()
 
         if (agenda.situacaoProduto.equals(SituacaoProduto.RECEBIDO)) {
-            binding.switchStatus.isChecked = false
+            binding.switchStatus.isChecked = true
             binding.switchStatus.trackDrawable?.setColorFilter(
                 ContextCompat.getColor(binding.root.context, R.color.green),
                 PorterDuff.Mode.SRC_IN
             )
         } else if (agenda.situacaoProduto.equals(SituacaoProduto.NAO_RECEBIDO)) {
-            binding.switchStatus.isChecked = true
+            binding.switchStatus.isChecked = false
             binding.switchStatus.trackDrawable?.setColorFilter(
                 ContextCompat.getColor(binding.root.context, R.color.red),
                 PorterDuff.Mode.SRC_IN

@@ -35,7 +35,7 @@
             android:name=".fornecedor.view.FornecedorActivity"
             android:exported="false"/>
         <activity
-            android:name=".start.StartActivity"
+            android:name=".agenda.agendaPagamento.view.AgendaPagamentoActivity"
             android:exported="false"/>
         <activity
             android:name=".splashscreen.view.SplashScreenActivity"

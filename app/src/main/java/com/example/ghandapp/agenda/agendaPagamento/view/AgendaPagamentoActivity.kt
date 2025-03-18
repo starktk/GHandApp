@@ -12,23 +12,33 @@ import com.example.ghandapp.extencoes.hide
 import com.example.ghandapp.extencoes.show
 import com.example.ghandapp.home.presentation.enums.StateStart
 import com.example.ghandapp.home.view.HomeActivity
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class AgendaPagamentoActivity: AppCompatActivity() {
 
     private lateinit var binding: ActivityAgendapagamentoBinding
-
     private val viewModel: AgendaPagamentoViewModel by viewModels()
+    private var selectedDate: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAgendapagamentoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.agendarData.setOnClickListener {
+        binding.dateAgendaPag.setOnClickListener {
+            openDialog {
+                date -> selectedDate = date
+            }
+        }
+
+        binding.registerAgendaPagamento.setOnClickListener {
             viewModel.validateInputs(
                 valueToPay = binding.valueToPay.text.toString(),
-                dateToPayOrReceive = binding.dateTimePicker.toString(),
+                dateToPayOrReceive = selectedDate,
                 cnpj = binding.cnpjDigite.text.toString(),
                 binding.root
             )
@@ -41,9 +51,28 @@ class AgendaPagamentoActivity: AppCompatActivity() {
         initializerObserve()
     }
 
+    private fun openDialog(onDateSelected: (String) -> Unit) {
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Selecione a data")
+            .build()
+
+        datePicker.show(supportFragmentManager, "DATE_PICKER")
+        datePicker.addOnPositiveButtonClickListener { selection ->
+            val formattedDate = convertTimestampToDate(selection)
+            println("Data formatada: $formattedDate")
+            onDateSelected(formattedDate)
+        }
+    }
+
+    private fun convertTimestampToDate(timestamp: Long): String {
+        val date = Date(timestamp)
+        val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return outputFormat.format(date)
+    }
+
     private fun backHomePage() {
         startActivity(Intent(this@AgendaPagamentoActivity, HomeActivity::class.java))
-        finish()
+
     }
 
     private fun initializerObserve() {
@@ -72,7 +101,7 @@ class AgendaPagamentoActivity: AppCompatActivity() {
 
     private fun showSucess() {
         val intent = Intent(this@AgendaPagamentoActivity, HomeActivity::class.java)
-        intent.putExtra("stateStart", StateStart.AGENDA.toString())
+        intent.putExtra("stateStart", StateStart.AGENDAPROD.toString())
         startActivity(intent)
         finish()
     }
@@ -95,4 +124,5 @@ class AgendaPagamentoActivity: AppCompatActivity() {
         binding.pbLoading.hide()
         Snackbar.make(binding.root, R.string.badCration, Snackbar.LENGTH_SHORT).show()
     }
+
 }

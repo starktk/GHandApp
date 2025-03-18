@@ -23,13 +23,13 @@ class FornecedorViewHolder(
         binding.tvRazaoSocial.setText(fornecedor.razaoSocial)
         binding.tvCnpj.setText(fornecedor.cnpj)
         if (fornecedor.status?.equals(Situacao.ATIVA) == true) {
-            binding.switchStatus.isChecked = false
+            binding.switchStatus.isChecked = true
             binding.switchStatus.trackDrawable?.setColorFilter(
                 ContextCompat.getColor(binding.root.context, R.color.green),
                 PorterDuff.Mode.SRC_IN
             )
         } else if (fornecedor.status?.equals(Situacao.INATIVA) == true) {
-            binding.switchStatus.isChecked = true
+            binding.switchStatus.isChecked = false
             binding.switchStatus.trackDrawable?.setColorFilter(
                 ContextCompat.getColor(binding.root.context, R.color.red),
                 PorterDuff.Mode.SRC_IN

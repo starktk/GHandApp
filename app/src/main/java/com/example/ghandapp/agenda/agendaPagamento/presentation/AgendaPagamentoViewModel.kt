@@ -28,7 +28,7 @@ class AgendaPagamentoViewModel: ViewModel() {
             viewState.value = AgendaPagamentoViewState.valueErrorMessage
             return
         }
-        if (cnpj.isNullOrEmpty() || cnpj.length >= 4) {
+        if (cnpj.isNullOrEmpty()) {
             viewState.value = AgendaPagamentoViewState.cnpjErrorMessage
             return
         }

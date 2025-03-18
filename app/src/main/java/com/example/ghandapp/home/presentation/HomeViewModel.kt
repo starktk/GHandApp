@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ghandapp.agenda.agendaPagamento.data.domain.AgendaPagamentoUseCase
+import com.example.ghandapp.agenda.agendaPagamento.data.local.SituacaoPagamento
 import com.example.ghandapp.agenda.agendaProduto.data.domain.AgendaProdutoUseCase
 import com.example.ghandapp.agenda.agendaProduto.presentation.enums.SituacaoProduto
 import com.example.ghandapp.fornecedor.data.domain.FornecedorUseCase
@@ -38,8 +39,14 @@ class HomeViewModel: ViewModel() {
     fun initializer(state: StateStart, contextView: View) {
         when (state) {
             StateStart.FORNECEDOR -> oberserveCacheFornecedor(contextView)
-            StateStart.AGENDA -> observeCacheAgendaProdutos(contextView)
+            StateStart.AGENDAPROD -> observeCacheAgendaProdutos(contextView)
+            StateStart.AGENDAPAG -> observeCacheAgendaPagamento(contextView)
         }
+    }
+
+    private fun observeCacheAgendaPagamento(contextView: View) {
+        viewState.value = HomeViewState.stateAgendaPayment
+        listAgendaPayment(contextView)
     }
 
     fun getUsername() {
@@ -69,6 +76,27 @@ class HomeViewModel: ViewModel() {
     private fun observeCacheAgendaProdutos(contextView: View) {
         viewState.value = HomeViewState.stateAgenda
         listAgendaProdutos(contextView)
+    }
+
+    fun listAgendaPayment(contextView: View) {
+        viewModelScope.launch {
+            val list = agendaPagamentoUseCase.listAgenda(contextView)
+            if (list.isEmpty()) {
+                viewState.value = HomeViewState.showEmptyList
+            } else {
+                viewState.value = HomeViewState.showAgendaPagamentoScreen(list)
+            }
+        }
+    }
+    fun deleteAgendaPag(contextView: View, cnpj: String, dateToPayOrReceive: String) {
+        viewModelScope.launch {
+            val deletedAgenda = agendaPagamentoUseCase.deleteAgenda(contextView, cnpj, dateToPayOrReceive)
+            if (deletedAgenda) {
+                viewState.value = HomeViewState.showSucessDeletedMessage
+            } else {
+                viewState.value = HomeViewState.showFailedMessageToDelete
+            }
+        }
     }
     @SuppressLint("SuspiciousIndentation")
     private fun listFornecedor(list: List<FornecedorModel>) {
@@ -207,7 +235,20 @@ class HomeViewModel: ViewModel() {
             }
         }
     }
-
+    fun modifyStatusAgendaPagamento(status: String, cnpj: String, dateToPayOrReceive: String, contextView: View) {
+        viewModelScope.launch {
+            viewState.value = HomeViewState.showLoading
+            if (status.equals(SituacaoPagamento.PAGA)) {
+                viewState.value = HomeViewState.showFailedStatusMessage
+            }
+            val response = agendaPagamentoUseCase.modifyStatus(cnpj, dateToPayOrReceive, contextView)
+            if (response) {
+                viewState.value = HomeViewState.changeStatus
+            } else {
+                viewState.value = HomeViewState.showFailedUpdateMessage
+            }
+        }
+    }
     fun listByStatus(status: Situacao) {
         viewModelScope.launch {
             val list = fornecedorUseCase.filterStatusInCache(status)

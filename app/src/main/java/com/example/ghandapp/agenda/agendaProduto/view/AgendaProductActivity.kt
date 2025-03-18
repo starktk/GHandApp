@@ -1,6 +1,5 @@
 package com.example.ghandapp.agenda.agendaProduto.view
 
-import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -39,7 +38,7 @@ class AgendaProductActivity: AppCompatActivity() {
 
         binding.dateAgendaProd.setOnClickListener {
             openDialog { date ->
-                selectedDate = date // Armazena a data quando o "OK" é clicado
+                selectedDate = date
             }
         }
 
@@ -115,7 +114,7 @@ class AgendaProductActivity: AppCompatActivity() {
 
     private fun showIsSucess() {
         val intent = Intent(this@AgendaProductActivity, HomeActivity::class.java)
-        intent.putExtra("stateStart", StateStart.AGENDA.toString())
+        intent.putExtra("stateStart", StateStart.AGENDAPROD.toString())
         startActivity(intent)
         finish()
     }

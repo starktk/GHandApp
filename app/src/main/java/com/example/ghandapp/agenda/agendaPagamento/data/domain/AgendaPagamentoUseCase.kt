@@ -15,11 +15,22 @@ class AgendaPagamentoUseCase {
         LoginRepository()
     }
 
+    suspend fun listAgenda(contextView: View): List<AgendaPagamentoModel> {
+        return repository.listAgendas(contextView, loginRepo.getUsername())
+    }
     suspend fun createDate(cnpj: String, valueToPay: Double, dateToPayOrReceive: String, contextView: View): Boolean {
         return repository.createDate(loginRepo.getUser().username, loginRepo.getUser().name, cnpj, valueToPay, dateToPayOrReceive, contextView)
     }
 
     suspend fun findAgendaByMonth(dateToPayOrReceive: String, contextView: View): List<AgendaPagamentoModel> {
         return repository.findByMonth(loginRepo.getUser().username, dateToPayOrReceive, contextView)
+    }
+
+    suspend fun deleteAgenda(contextView: View, cnpj: String, dateToPayOrReceive: String): Boolean {
+        return repository.deleteAgenda(loginRepo.getUsername(),cnpj, dateToPayOrReceive, contextView)
+    }
+
+    suspend fun modifyStatus(cnpj: String, dateToPayOrReceive: String, contextView: View): Boolean {
+        return repository.modifyStatus(loginRepo.getUsername(), loginRepo.getUser().name, cnpj, dateToPayOrReceive, contextView)
     }
 }

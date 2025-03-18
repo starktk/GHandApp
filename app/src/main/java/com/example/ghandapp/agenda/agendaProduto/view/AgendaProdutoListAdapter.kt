@@ -28,7 +28,6 @@ class AgendaProdutoListAdapter(private val onStatusChange: (AgendaProdutoModel) 
     }
 
     fun add(items: List<AgendaProdutoModel>) {
-        println(items + "Teste Nav 1.0")
         list.clear()
         list.addAll(items)
         println(list)

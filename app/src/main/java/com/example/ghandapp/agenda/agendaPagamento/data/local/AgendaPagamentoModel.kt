@@ -2,7 +2,8 @@ package com.example.ghandapp.agenda.agendaPagamento.data.local
 
 data class AgendaPagamentoModel(
 
-    val valueToPay: Double? = null,
-    val dateToPayOrReceive: String? = null,
-    val status: String? = null
+    val valueToPay: Double,
+    val dateToPayOrReceive: String,
+    val status: String,
+    val cnpj: String
 )

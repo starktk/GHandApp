@@ -6,9 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
-import android.widget.PopupMenu
 import android.widget.RadioGroup
-import android.widget.Spinner
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -40,7 +38,6 @@ import java.time.LocalDate
 class HomeActivity: AppCompatActivity(), AgendaDialogFragment.AgendaValue {
     var contextScreen: StateStart = StateStart.FORNECEDOR
     private lateinit var binding: ActivityHomeBinding
-    private var activeMenu: PopupMenu? = null
     private var contextMonthFilter: Boolean = false
 
     private val fornecedorAdapter by lazy {
@@ -66,12 +63,15 @@ class HomeActivity: AppCompatActivity(), AgendaDialogFragment.AgendaValue {
             onStatusChange = {
                 agendaProduto -> viewModel.modifyStatusAgendaProduto(agendaProduto.situacaoProduto, agendaProduto.cnpj, agendaProduto.date, binding.root)
                 viewModel.listAgendaProdutos(binding.root)
-
             }
         )
     }
     private val agendaPagamentoAdapter by lazy {
-        AgendaPagamentoListAdapter()
+        AgendaPagamentoListAdapter(
+            onStatusChange = {
+                agendaPagamento -> viewModel.modifyStatusAgendaPagamento(agendaPagamento.status, agendaPagamento.cnpj, agendaPagamento.dateToPayOrReceive, binding.root)
+            }
+        )
     }
 
     private val viewModel: HomeViewModel by viewModels()
@@ -94,8 +94,12 @@ class HomeActivity: AppCompatActivity(), AgendaDialogFragment.AgendaValue {
             viewModel.initializer(StateStart.FORNECEDOR, binding.root)
         }
         binding.agendaScreen.setOnClickListener {
-            contextScreen = StateStart.AGENDA
-            viewModel.initializer(StateStart.AGENDA, binding.root)
+            contextScreen = StateStart.AGENDAPROD
+            viewModel.initializer(StateStart.AGENDAPROD, binding.root)
+        }
+        binding.agendaScreenPayment.setOnClickListener {
+            contextScreen = StateStart.AGENDAPAG
+            viewModel.initializer(StateStart.AGENDAPAG, binding.root)
         }
     }
     @RequiresApi(Build.VERSION_CODES.O)
@@ -113,6 +117,7 @@ class HomeActivity: AppCompatActivity(), AgendaDialogFragment.AgendaValue {
                 HomeViewState.showEmptyAgenda -> showEmptyAgenda()
                 HomeViewState.stateFornecedor -> bindForFornecedor()
                 HomeViewState.stateAgenda -> bindAgenda()
+                HomeViewState.stateAgendaPayment -> bindAgendaPayment()
                 HomeViewState.changeStatus -> showMessageStatus()
                 HomeViewState.showFailedMessage -> showFailMessage()
                 HomeViewState.showFailedStatusMessage -> showFailedStatusMessage()
@@ -122,6 +127,8 @@ class HomeActivity: AppCompatActivity(), AgendaDialogFragment.AgendaValue {
             }
         }
     }
+
+
 
     private fun userFail() {
         Snackbar.make(binding.root, "Faça Login novamente", Snackbar.LENGTH_SHORT).show()
@@ -139,14 +146,19 @@ class HomeActivity: AppCompatActivity(), AgendaDialogFragment.AgendaValue {
                 binding.swipeRefreshLayout.postDelayed({
                     binding.swipeRefreshLayout.isRefreshing = false
                 }, 2000)
-            } else {
+            } else if (contextScreen == StateStart.AGENDAPROD) {
                 binding.monthFilter.setSelection(0)
                 viewModel.listAgendaProdutos(binding.root)
                 binding.swipeRefreshLayout.postDelayed({
                     binding.swipeRefreshLayout.isRefreshing = false
                 }, 2000)
+            } else {
+                binding.monthFilter.setSelection(0)
+                viewModel.listAgendaPayment(binding.root)
+                binding.swipeRefreshLayout.postDelayed({
+                    binding.swipeRefreshLayout.isRefreshing = false
+                }, 2000)
             }
-
         }
     }
     private fun showFailedMessageToDelete() {
@@ -175,9 +187,12 @@ class HomeActivity: AppCompatActivity(), AgendaDialogFragment.AgendaValue {
                     if (contextScreen == StateStart.FORNECEDOR) {
                         viewModel.deleteFornecedor(fornecedorAdapter.getObjectInListByPosition(position).cnpj, binding.root)
                         fornecedorAdapter.removeItem(position)
-                    } else {
+                    } else if (contextScreen == StateStart.AGENDAPROD) {
                         viewModel.deleteAgenda(agendaProdutoAdapter.getObjectInListByPosition(position).cnpj, agendaProdutoAdapter.getObjectInListByPosition(position).date, binding.root)
                         agendaProdutoAdapter.removeItem(position)
+                    } else {
+                        viewModel.deleteAgendaPag(binding.root, agendaPagamentoAdapter.getObjectInListByPosition(position).cnpj, agendaPagamentoAdapter.getObjectInListByPosition(position).dateToPayOrReceive)
+                        agendaPagamentoAdapter.removeItem(position)
                     }
                 }
         })
@@ -224,15 +239,17 @@ class HomeActivity: AppCompatActivity(), AgendaDialogFragment.AgendaValue {
         swipeParams.topToBottom = binding.searchMenuAgenda.id
         binding.swipeRefreshLayout.layoutParams = swipeParams
         binding.iconAddsScreenContext.setOnClickListener {
-            if (contextScreen.equals(StateStart.AGENDA)) {
+            if (contextScreen.equals(StateStart.AGENDAPROD)) {
                 startActivity(Intent(this@HomeActivity, AgendaProductActivity::class.java))
             }
         }
         binding.monthFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val itemSelecionado = parent.getItemAtPosition(position).toString()
-
+                contextMonthFilter = false
+                binding.monthFilter.setSelection(0)
                 if (itemSelecionado != "Selecione uma opção") {
+                    contextMonthFilter = true
                     listarAgendaProduto(filterMonth().toString())
                 }
             }
@@ -253,7 +270,7 @@ class HomeActivity: AppCompatActivity(), AgendaDialogFragment.AgendaValue {
         swipeParams.topToBottom = binding.searchMenu.id
         binding.swipeRefreshLayout.layoutParams = swipeParams
         binding.swStatus.isChecked = false
-        binding.iconAdd.setOnClickListener {
+        binding.iconAddsScreenContext.setOnClickListener {
             showRegisterFornecedorScreen()
         }
         binding.iconProfile.setOnClickListener {
@@ -270,7 +287,18 @@ class HomeActivity: AppCompatActivity(), AgendaDialogFragment.AgendaValue {
                     viewModel.listByStatus(Situacao.ATIVA)
                 }
             }
+    }
 
+    private fun bindAgendaPayment() {
+        binding.rvList.adapter = agendaPagamentoAdapter
+        binding.searchMenu.visibility = View.GONE
+        binding.searchMenuAgenda.visibility = View.VISIBLE
+        val swipeParams = binding.swipeRefreshLayout.layoutParams as ConstraintLayout.LayoutParams
+        swipeParams.topToBottom = binding.searchMenuAgenda.id
+        binding.swipeRefreshLayout.layoutParams = swipeParams
+        binding.iconAddsScreenContext.setOnClickListener {
+            startActivity(Intent(this@HomeActivity, AgendaPagamentoActivity::class.java))
+        }
     }
 
 
@@ -302,8 +330,9 @@ class HomeActivity: AppCompatActivity(), AgendaDialogFragment.AgendaValue {
     }
 
     private fun showRegisterFornecedorScreen() {
-        startActivity(Intent(this@HomeActivity, FornecedorActivity::class.java))
-        finish()
+        if (contextScreen == StateStart.FORNECEDOR) {
+            startActivity(Intent(this@HomeActivity, FornecedorActivity::class.java))
+        }
     }
 
     private fun showLoading() {

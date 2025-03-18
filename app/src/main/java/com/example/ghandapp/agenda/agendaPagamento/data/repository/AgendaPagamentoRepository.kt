@@ -31,6 +31,22 @@ class AgendaPagamentoRepository {
         }
     }
 
+    suspend fun listAgendas(contextView: View, username: String): List<AgendaPagamentoModel> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = client.listAgendas(username)
+                if (response.isSuccessful) {
+                    response.body()?.mapperAgendaPagamento() ?: emptyList()
+                } else {
+                    emptyList()
+                }
+            } catch (exception: Exception) {
+                Snackbar.make(contextView, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+                emptyList()
+            }
+        }
+    }
+
     suspend fun findByMonth(username: String, dateToPayOrReceive: String, contextView: View): List<AgendaPagamentoModel> {
         return withContext(Dispatchers.IO) {
            try{
@@ -46,16 +62,43 @@ class AgendaPagamentoRepository {
            }
         }
     }
-    private suspend fun List<AgendaPagamentoResponse>.mapperAgendaPagamento(): List<AgendaPagamentoModel> {
+    suspend fun modifyStatus(username: String, name: String, cnpj: String, dateToPayOrReceive: String, contextView: View): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = client.modifyStatus(username, name, cnpj, dateToPayOrReceive, SituacaoPagamento.PAGA)
+                response.isSuccessful
+            } catch (exception: Exception) {
+                Snackbar.make(contextView, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+                false
+            }
+        }
+    }
+    suspend fun deleteAgenda(username: String, cnpj: String, dateToPayOrReceive: String, contextView: View): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = client.deleteAgenda(username, cnpj, dateToPayOrReceive)
+                response.isSuccessful
+            } catch (exception: Exception) {
+                Snackbar.make(contextView, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+                false
+            }
+        }
+    }
+    private fun List<AgendaPagamentoResponse>.mapperAgendaPagamento(): List<AgendaPagamentoModel> {
         return map {
             it.agendaPagamentoResponseToAgendaModel()
         }
     }
-    private suspend fun AgendaPagamentoResponse?.agendaPagamentoResponseToAgendaModel(): AgendaPagamentoModel {
+    private fun AgendaPagamentoResponse.agendaPagamentoResponseToAgendaModel(): AgendaPagamentoModel {
         return AgendaPagamentoModel(
-            valueToPay = this?.valueToPay,
-            dateToPayOrReceive = this?.dateToPayOrReceive,
-            status =  this?.situacaoPagamento.toString()
+            valueToPay = this.valueToPay,
+            dateToPayOrReceive = this.dateToPayOrReceive,
+            status =  this.situacaoPagamento.toString(),
+            cnpj = this.fornecedorDto.cnpj
         )
     }
+
+
+
+
 }
