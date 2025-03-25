@@ -2,6 +2,7 @@ package com.example.ghandapp.agenda.agendaPagamento.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ghandapp.R
@@ -59,7 +60,6 @@ class AgendaPagamentoActivity: AppCompatActivity() {
         datePicker.show(supportFragmentManager, "DATE_PICKER")
         datePicker.addOnPositiveButtonClickListener { selection ->
             val formattedDate = convertTimestampToDate(selection)
-            println("Data formatada: $formattedDate")
             onDateSelected(formattedDate)
         }
     }
@@ -71,8 +71,10 @@ class AgendaPagamentoActivity: AppCompatActivity() {
     }
 
     private fun backHomePage() {
-        startActivity(Intent(this@AgendaPagamentoActivity, HomeActivity::class.java))
-
+        val intent = Intent(this@AgendaPagamentoActivity, HomeActivity::class.java)
+        intent.putExtra("stateStart", StateStart.AGENDAPAG as Parcelable)
+        startActivity(intent)
+        finish()
     }
 
     private fun initializerObserve() {
@@ -101,7 +103,7 @@ class AgendaPagamentoActivity: AppCompatActivity() {
 
     private fun showSucess() {
         val intent = Intent(this@AgendaPagamentoActivity, HomeActivity::class.java)
-        intent.putExtra("stateStart", StateStart.AGENDAPROD.toString())
+        intent.putExtra("stateStart", StateStart.AGENDAPAG as Parcelable)
         startActivity(intent)
         finish()
     }

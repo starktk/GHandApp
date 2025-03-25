@@ -45,7 +45,7 @@ class LoginActivity: AppCompatActivity() {
     private fun initializeObserver() {
         viewModel.state.observe(this) { viewState ->
             when (viewState) {
-                LoginViewState.showIsSucess -> showHome()
+                is LoginViewState.showIsSucess -> showHome(viewState.name)
                 LoginViewState.loginInvalidMessage -> invalidLogin()
                 LoginViewState.showLoading -> showLoading()
                 LoginViewState.usernameErrorMessage -> usernameErrorMesage()
@@ -85,8 +85,10 @@ class LoginActivity: AppCompatActivity() {
         Snackbar.make(binding.root, R.string.login_invalid, Snackbar.LENGTH_SHORT).show()
     }
 
-    private fun showHome() {
-        startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
+    private fun showHome(name: String) {
+        val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+        intent.putExtra("userNAME", name)
+        startActivity(intent)
         finish()
     }
 

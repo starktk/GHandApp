@@ -28,15 +28,17 @@ class SplashScreenActivity: AppCompatActivity() {
     fun initializer() {
         viewModel.state.observe(this) {
                 viewState -> when(viewState) {
-                SplashScreenViewState.showIsSucess -> showIsSucess()
+                is SplashScreenViewState.showIsSucess -> showIsSucess(viewState.name)
                 SplashScreenViewState.showFailed -> showFailed()
             }
         }
     }
 
 
-    private fun showIsSucess() {
-        startActivity(Intent(this@SplashScreenActivity, HomeActivity::class.java))
+    private fun showIsSucess(name: String) {
+        val intent = Intent(this@SplashScreenActivity, HomeActivity::class.java)
+        intent.putExtra("userNAME", name)
+        startActivity(intent)
         finish()
     }
 

@@ -37,6 +37,19 @@ class LoginRepository {
             }
         }
     }
+    suspend fun modifyUser(username: String, usernameToSet: String, nameToSet: String, password: String,  contextView: View): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = client.alterUser(username, usernameToSet, nameToSet, password)
+                saveUser(response)
+                response.isSuccessful
+            } catch (exception: Exception) {
+                Snackbar.make(contextView, exception.message.toString(), Snackbar.LENGTH_LONG).show()
+                false
+            }
+        }
+    }
+
     suspend fun createUser(username: String, name: String, password: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {

@@ -64,7 +64,9 @@ class FornecedorRepository {
     suspend fun filterByRazaoSocial(razaoSocial: String): List<FornecedorModel> {
         return withContext(Dispatchers.IO) {
             val fornecedores: List<FornecedorModel> = getFornecedoresInDb(database.userDao().getUsername())
-            val filteredFornecedores = fornecedores.filter { oldList -> oldList.razaoSocial == razaoSocial }
+            val filteredFornecedores = fornecedores.filter { oldList ->
+                oldList.razaoSocial?.contains(razaoSocial, ignoreCase = true) == true
+            }
             filteredFornecedores
         }
     }

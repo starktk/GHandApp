@@ -47,10 +47,21 @@
     
     <string-array name="situation">
         <item>Status</item>
-        <item>Invative</item>
+        <item>Inactive</item>
         <item>Active</item>
     </string-array>
 
+    <string-array name="status_agendaProd">
+        <item>Status</item>
+        <item>Recebido</item>
+        <item>Não Recebido</item>
+    </string-array>
+
+    <string-array name="status_AgendaPag">
+        <item>Status</item>
+        <item>Pago</item>
+        <item>Não pago</item>
+    </string-array>
 
 
     <string-array name="month">
@@ -84,4 +95,5 @@
     <string name="fornecedor">fornecedor</string>
     <string name="gett_AllFornecedores">Listar todos</string>
     <string name="selecione_o_m_s">Selecione o mês</string>
+    <string name="visualizar_perfil">Visualizar Perfil</string>
 </resources>

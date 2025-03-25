@@ -3,6 +3,7 @@ package com.example.ghandapp.agenda.agendaProduto.view
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -83,7 +84,9 @@ class AgendaProductActivity: AppCompatActivity() {
         return outputFormat.format(date)
     }
     private fun backHomePage() {
-        startActivity(Intent(this@AgendaProductActivity, HomeActivity::class.java))
+        val intent = Intent(this@AgendaProductActivity, HomeActivity::class.java)
+        intent.putExtra("stateStart", StateStart.AGENDAPROD as Parcelable)
+        startActivity(intent)
         finish()
     }
 
@@ -114,7 +117,7 @@ class AgendaProductActivity: AppCompatActivity() {
 
     private fun showIsSucess() {
         val intent = Intent(this@AgendaProductActivity, HomeActivity::class.java)
-        intent.putExtra("stateStart", StateStart.AGENDAPROD.toString())
+        intent.putExtra("stateStart", StateStart.AGENDAPROD as Parcelable)
         startActivity(intent)
         finish()
     }

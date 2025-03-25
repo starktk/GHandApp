@@ -23,4 +23,7 @@ class LoginUseCase {
         return repository.getUser()
     }
 
+    suspend fun modifyUser(usernameToSet: String, nameToSet: String, password: String, contextView: View): Boolean {
+        return repository.modifyUser(getUsername(), usernameToSet, nameToSet, password, contextView)
+    }
 }

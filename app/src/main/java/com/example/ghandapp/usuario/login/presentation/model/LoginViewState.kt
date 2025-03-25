@@ -2,7 +2,7 @@ package com.example.ghandapp.usuario.login.presentation.model
 
 sealed class LoginViewState {
 
-    object showIsSucess : LoginViewState()
+    data class showIsSucess(val name: String) : LoginViewState()
     object usernameErrorMessage : LoginViewState()
     object loginInvalidMessage : LoginViewState()
     object passwordErrorMessage : LoginViewState()

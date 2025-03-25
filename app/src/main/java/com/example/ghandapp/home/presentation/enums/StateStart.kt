@@ -1,6 +1,10 @@
 package com.example.ghandapp.home.presentation.enums
 
-enum class StateStart {
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+enum class StateStart : Parcelable {
 
     FORNECEDOR, AGENDAPROD, AGENDAPAG
 }

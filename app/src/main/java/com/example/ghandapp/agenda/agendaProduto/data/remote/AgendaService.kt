@@ -21,6 +21,9 @@ interface AgendaService {
 
     @POST("/agendaProduto/setDateToReceive")
     suspend fun markADate(@Body agendaRequestModel: AgendaRequestModel): Response<ResponseBody>
+
+    @POST("agendaProduto/findByStatus")
+    suspend fun findByStatus(@Body agendaToFindModel: AgendaToFindModel): Response<List<AgendaResponse>>
     @PUT("/agendaProduto/updateStatus")
     suspend fun changeStatus(@Query("username") username: String,
                              @Query("name") name: String,

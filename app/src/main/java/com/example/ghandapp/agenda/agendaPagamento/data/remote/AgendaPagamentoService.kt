@@ -18,7 +18,7 @@ interface AgendaPagamentoService {
     @POST("/agendaPagamento/setDateToPay")
     suspend fun setDateToPay(@Body agendaPagamentoRequest: AgendaPagamentoRequest): Response<ResponseBody>
 
-    @GET()
+    @POST("/agendaPagamento/findPaymentsByMonth")
     suspend fun getMarkedDate(@Body agendaPagamentoRequest: AgendaPagamentoRequest): Response<List<AgendaPagamentoResponse>>
     @POST("agendaPagamento/listAgendas/{username}")
     suspend fun listAgendas(@Path("username") username: String): Response<List<AgendaPagamentoResponse>>
@@ -29,11 +29,14 @@ interface AgendaPagamentoService {
                              @Query("cnpj") cnpj: String,
                              @Query("dateToPayOrReceive") dateToPayOrReceive: String): Response<ResponseBody>
 
-    @PUT("/agendaProduto/updateStatus")
+    @PUT("/agendaPagamento/updateStatus")
     suspend fun modifyStatus(@Query("username") username: String,
                              @Query("name") name: String,
                              @Query("cnpj") cnpj: String,
                              @Query("dateToPayOrReceive") dateToPayorReceive: String,
                              @Query("status") status: SituacaoPagamento
     ): Response<ResponseBody>
+
+    @POST("/agendaPagamento/findPaymentsByStatus")
+    suspend fun listByStatus(@Body agendaPagamentoRequest: AgendaPagamentoRequest): Response<List<AgendaPagamentoResponse>>
 }

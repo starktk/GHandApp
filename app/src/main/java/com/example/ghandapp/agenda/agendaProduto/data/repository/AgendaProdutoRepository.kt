@@ -34,6 +34,21 @@ class AgendaProdutoRepository {
             }
         }
     }
+    suspend fun findAgendaByStatus(username: String, status: SituacaoProduto, contextView: View): List<AgendaProdutoModel> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = client.findByStatus(AgendaToFindModel(username = username, status = status))
+                if (response.isSuccessful) {
+                    response.body()?.mapperAgenda() ?: emptyList()
+                } else {
+                    emptyList()
+                }
+            } catch (exception: Exception) {
+                Snackbar.make(contextView, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+                emptyList()
+            }
+        }
+    }
 
     suspend fun findAgenda(username: String, dateToPayOrReceive: String, contextView: View): List<AgendaProdutoModel> {
         return withContext(Dispatchers.IO) {

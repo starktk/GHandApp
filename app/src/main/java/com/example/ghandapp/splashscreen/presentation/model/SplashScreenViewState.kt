@@ -2,7 +2,7 @@ package com.example.ghandapp.splashscreen.presentation.model
 
 sealed class SplashScreenViewState {
 
-    object showIsSucess: SplashScreenViewState()
+    data class showIsSucess(val name: String): SplashScreenViewState()
 
     object showFailed: SplashScreenViewState()
 }

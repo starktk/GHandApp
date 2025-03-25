@@ -31,6 +31,21 @@ class AgendaPagamentoRepository {
         }
     }
 
+    suspend fun listAgendaByStatus(username: String, status: SituacaoPagamento, contextView: View): List<AgendaPagamentoModel> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = client.listByStatus(AgendaPagamentoRequest(username = username,  situacaoPagamento = status))
+                if (response.isSuccessful) {
+                    response.body()?.mapperAgendaPagamento() ?: emptyList()
+                } else {
+                    emptyList()
+                }
+            } catch (exception: Exception) {
+                Snackbar.make(contextView, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+                emptyList()
+            }
+        }
+    }
     suspend fun listAgendas(contextView: View, username: String): List<AgendaPagamentoModel> {
         return withContext(Dispatchers.IO) {
             try {

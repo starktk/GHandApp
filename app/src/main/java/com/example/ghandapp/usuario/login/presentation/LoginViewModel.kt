@@ -40,7 +40,7 @@ class LoginViewModel: ViewModel() {
         viewModelScope.launch {
             val isSucess = useCase.login(username, password, contextView)
             if(isSucess == true) {
-                viewState.value = LoginViewState.showIsSucess
+                viewState.value = LoginViewState.showIsSucess(useCase.getUser().name)
             } else {
                 viewState.value = LoginViewState.loginInvalidMessage
             }

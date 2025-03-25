@@ -22,7 +22,7 @@ class SplashScreenViewModel: ViewModel() {
         viewModelScope.launch {
                 val isSucess: UserEntity = usecase.getUser()
                 if (isSucess != null) {
-                    viewState.value = SplashScreenViewState.showIsSucess
+                    viewState.value = SplashScreenViewState.showIsSucess(isSucess.name)
                 } else {
                     viewState.value = SplashScreenViewState.showFailed
                 }

@@ -20,8 +20,11 @@ interface LoginService {
     @GET("/usuario/findUserByid/{username}")
     suspend fun findUser(@Query("username") username: String):Response<LoginResponse>
 
-    @PUT("usuario/alterUser")
-    suspend fun alterUser(@Body loginResponse: LoginResponse): Response<LoginResponse>
+    @PUT("usuario/modifyUserInfos")
+    suspend fun alterUser(@Query("username")username: String,
+                          @Query("usernameToSet")usernameToSet: String,
+                          @Query("nameToSet")nameToSet: String,
+                          @Query("password")password: String): Response<LoginResponse>
 
     @DELETE("usuario/deleteUser/{username}")
     suspend fun deleteUser(@Query("username") username: String): Response<ResponseBody>

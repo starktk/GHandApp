@@ -2,6 +2,9 @@ package com.example.ghandapp.fornecedor.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ghandapp.R
@@ -25,6 +28,7 @@ class FornecedorActivity: AppCompatActivity() {
         binding = ActivityFornecedorBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        addCnpjMask()
 
         binding.registerFornecedor.setOnClickListener {
             viewModel.validateInputs(
@@ -39,8 +43,44 @@ class FornecedorActivity: AppCompatActivity() {
         initializeObserver()
     }
 
+    private fun addCnpjMask() {
+        binding.cnpj.addTextChangedListener(object : TextWatcher {
+            private var isUpdating = false
+            private val mask = "##.###.###/####-##"
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (isUpdating || s.isNullOrEmpty()) return
+
+                isUpdating = true
+                val unmasked = s.replace(Regex("[^\\d]"), "")
+                val masked = StringBuilder()
+                var index = 0
+
+                for (char in mask) {
+                    if (index >= unmasked.length) break
+                    if (char == '#') {
+                        masked.append(unmasked[index])
+                        index++
+                    } else {
+                        masked.append(char)
+                    }
+                }
+
+                binding.cnpj.setText(masked.toString())
+                binding.cnpj.setSelection(masked.length)
+
+                isUpdating = false
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
     private fun backHomePage() {
-        startActivity(Intent(this@FornecedorActivity, HomeActivity::class.java))
+        val intent = Intent(this@FornecedorActivity, HomeActivity::class.java)
+        intent.putExtra("stateStart", StateStart.FORNECEDOR as Parcelable)
+        startActivity(intent)
         finish()
     }
     private fun initializeObserver() {
@@ -87,7 +127,7 @@ class FornecedorActivity: AppCompatActivity() {
 
     private fun showIsCreatedSucess() {
         val intent = Intent(this@FornecedorActivity, HomeActivity::class.java)
-        intent.putExtra("stateStart", StateStart.FORNECEDOR.toString())
+        intent.putExtra("stateStart", StateStart.FORNECEDOR as Parcelable)
         startActivity(intent)
         finish()
     }
