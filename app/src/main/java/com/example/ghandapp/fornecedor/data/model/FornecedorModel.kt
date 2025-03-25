@@ -9,5 +9,7 @@ data class FornecedorModel(
 
     var razaoSocial: String? = null,
     var cnpj: String? = null,
-    var status: Situacao? = null
+    var status: Situacao? = null,
+    var contactNumber: String? = null,
+    var eletronicAddres: String? = null
 )

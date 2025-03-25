@@ -10,5 +10,7 @@ sealed class FornecedorViewState {
     object missingUsernameReference: FornecedorViewState()
     object showLoading: FornecedorViewState()
 
+    object phoneErrorMessage: FornecedorViewState()
+    object emailErrorMessage: FornecedorViewState()
     object blankOrEmptyInputs: FornecedorViewState()
 }

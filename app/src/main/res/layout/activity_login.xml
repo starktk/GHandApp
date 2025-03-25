@@ -5,6 +5,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/loginScreen"
         tools:context=".usuario.login.view.LoginActivity"
         android:background="@color/Wheat">
 
@@ -53,6 +54,28 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ti_newPwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/ti_pwd"
+            app:layout_constraintBottom_toTopOf="@id/Register"
+            app:passwordToggleEnabled="true"
+            android:visibility="gone">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/newPwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="40dp"
+                android:hint="@string/confirme_a_senha_nova"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <Button
             android:id="@+id/bt_login"
             android:layout_width="wrap_content"
@@ -73,21 +96,13 @@
             android:layout_marginHorizontal="30dp"
             android:hint="@string/registrar"
             android:textSize="20sp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@id/bt_login"
             app:layout_constraintTop_toBottomOf="@id/ti_pwd"/>
 
-        <TextView
-            android:id="@+id/ForgotPwd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="@string/recuperarSenha"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/Register"
-            app:layout_constraintBottom_toTopOf="@id/bt_login"
-            app:layout_constraintTop_toBottomOf="@id/ti_pwd"
-            />
+
 
 
         <de.hdodenhof.circleimageview.CircleImageView

@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -42,7 +44,7 @@ class AgendaProductActivity: AppCompatActivity() {
                 selectedDate = date
             }
         }
-
+        addCnpjMask()
         binding.registerAgendaProduto.setOnClickListener {
             if (selectedDate.isNotEmpty()) {
                 viewModel.validateInputs(
@@ -63,6 +65,41 @@ class AgendaProductActivity: AppCompatActivity() {
         }
 
         initializerObserve()
+    }
+
+    private fun addCnpjMask() {
+        binding.cnpjAgendaSet.addTextChangedListener(object : TextWatcher {
+            private var isUpdating = false
+            private val mask = "##.###.###/####-##"
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (isUpdating || s.isNullOrEmpty()) return
+
+                isUpdating = true
+                val unmasked = s.replace(Regex("[^\\d]"), "")
+                val masked = StringBuilder()
+                var index = 0
+
+                for (char in mask) {
+                    if (index >= unmasked.length) break
+                    if (char == '#') {
+                        masked.append(unmasked[index])
+                        index++
+                    } else {
+                        masked.append(char)
+                    }
+                }
+
+                binding.cnpjAgendaSet.setText(masked.toString())
+                binding.cnpjAgendaSet.setSelection(masked.length)
+
+                isUpdating = false
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
     }
 
     private fun openDialog(onDateSelected: (String) -> Unit) {

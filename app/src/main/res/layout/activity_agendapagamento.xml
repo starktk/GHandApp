@@ -97,14 +97,7 @@
             android:layout_margin="10dp"
             />
 
-        <ImageButton
-            android:id="@+id/icon_profile"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/oip"
-            android:layout_margin="13dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+
 
         <ProgressBar
             android:id="@+id/pb_loading"

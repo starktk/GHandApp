@@ -3,6 +3,8 @@ package com.example.ghandapp.agenda.agendaPagamento.view
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ghandapp.R
@@ -35,7 +37,7 @@ class AgendaPagamentoActivity: AppCompatActivity() {
                 date -> selectedDate = date
             }
         }
-
+        addCnpjMask()
         binding.registerAgendaPagamento.setOnClickListener {
             viewModel.validateInputs(
                 valueToPay = binding.valueToPay.text.toString(),
@@ -50,6 +52,41 @@ class AgendaPagamentoActivity: AppCompatActivity() {
         }
 
         initializerObserve()
+    }
+
+    private fun addCnpjMask() {
+        binding.cnpjDigite.addTextChangedListener(object : TextWatcher {
+            private var isUpdating = false
+            private val mask = "##.###.###/####-##"
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (isUpdating || s.isNullOrEmpty()) return
+
+                isUpdating = true
+                val unmasked = s.replace(Regex("[^\\d]"), "")
+                val masked = StringBuilder()
+                var index = 0
+
+                for (char in mask) {
+                    if (index >= unmasked.length) break
+                    if (char == '#') {
+                        masked.append(unmasked[index])
+                        index++
+                    } else {
+                        masked.append(char)
+                    }
+                }
+
+                binding.cnpjDigite.setText(masked.toString())
+                binding.cnpjDigite.setSelection(masked.length)
+
+                isUpdating = false
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
     }
 
     private fun openDialog(onDateSelected: (String) -> Unit) {

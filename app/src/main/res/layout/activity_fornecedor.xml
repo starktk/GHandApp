@@ -5,14 +5,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/Wheat"
+        android:background="@color/Weak_green"
         tools:context=".fornecedor.view.FornecedorActivity">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/ti_razaoSocial"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="18dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -34,11 +33,11 @@
             android:id="@+id/ti_cnpj"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ti_razaoSocial"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/ti_contactNumber"
             app:layout_constraintVertical_chainStyle="packed">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/cnpj"
@@ -51,8 +50,53 @@
             android:layout_marginHorizontal="40dp" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ti_contactNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_goneMarginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/ti_eletronicAddres"
+            app:layout_constraintTop_toBottomOf="@id/ti_cnpj"
+            app:layout_constraintVertical_chainStyle="packed">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/contactNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/contactNumber"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:layout_marginHorizontal="40dp"
+                android:inputType="phone"
+                android:maxLength="15"
+                android:digits="0123456789"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ti_eletronicAddres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ti_contactNumber"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_chainStyle="packed">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/eletronicAddres"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:gravity="center"
+                android:layout_marginHorizontal="40dp"
+                android:inputType="textEmailAddress"/>
+        </com.google.android.material.textfield.TextInputLayout>
         <ImageButton
             android:id="@+id/icon_home"
             android:layout_width="50dp"

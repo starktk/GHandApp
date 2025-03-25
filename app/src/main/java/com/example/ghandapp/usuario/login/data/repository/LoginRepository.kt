@@ -54,7 +54,7 @@ class LoginRepository {
         return withContext(Dispatchers.IO) {
             try {
                 println(name)
-                val response = client.createUser(UserRequest(username, name, password))
+                val response = client.createUser(UserRequest(username = username, name = name, password = password))
                 response.isSuccessful
             } catch (exception: Exception) {
                 Log.e("create", exception.message.orEmpty())
@@ -99,7 +99,7 @@ class LoginRepository {
     private fun LoginResponse.userResponseToEntity(): UserEntity {
         return UserEntity(
             username = username,
-            name = name
+            name = name,
         )
     }
 

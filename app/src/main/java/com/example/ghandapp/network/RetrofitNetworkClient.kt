@@ -12,7 +12,7 @@ private const val TIME_OUT = 60L
 
 object RetrofitNetworkClient {
 
-    fun createNetworkClient(baseUrl: String = "https://ghand-backend-production.up.railway.app") =
+    fun createNetworkClient(baseUrl: String = "http://10.0.2.2:8084") =
         retrofitClient(
             baseUrl,
             httpClint(),

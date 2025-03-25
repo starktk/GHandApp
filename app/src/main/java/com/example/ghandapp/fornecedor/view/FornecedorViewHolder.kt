@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ghandapp.R
 import com.example.ghandapp.databinding.FornecedorListItemBinding
-import com.example.ghandapp.fornecedor.data.domain.FornecedorUseCase
 import com.example.ghandapp.fornecedor.data.model.FornecedorModel
 import com.example.ghandapp.fornecedor.presentation.enums.Situacao
 
@@ -15,13 +14,16 @@ import com.example.ghandapp.fornecedor.presentation.enums.Situacao
 class FornecedorViewHolder(
     private val binding: FornecedorListItemBinding,
     private val onStatusChange: (FornecedorModel) -> Unit,
-    private val onEditChange: (FornecedorModel, cnpj: String?) -> Unit
+    private val onEditChange: (FornecedorModel, cnpj: String?) -> Unit,
+    private val sendToWhatsapp: (FornecedorModel) -> Unit
 ): RecyclerView.ViewHolder(binding.root) {
     private val originalHeight = binding.cardview.height
     fun bind(fornecedor: FornecedorModel) {
         binding.executePendingBindings()
         binding.tvRazaoSocial.setText(fornecedor.razaoSocial)
         binding.tvCnpj.setText(fornecedor.cnpj)
+        binding.tvContactNumber.setText(fornecedor.contactNumber)
+        binding.tvEletronicAddres.setText(fornecedor.eletronicAddres)
         if (fornecedor.status?.equals(Situacao.ATIVA) == true) {
             binding.switchStatus.isChecked = true
             binding.switchStatus.trackDrawable?.setColorFilter(
@@ -38,7 +40,7 @@ class FornecedorViewHolder(
 
         permithedEdits(fornecedor)
         changeStatus(fornecedor)
-
+        sendToWhatsapp(fornecedor)
     }
 
     fun changeStatus(fornecedor: FornecedorModel){
@@ -62,7 +64,7 @@ class FornecedorViewHolder(
     private fun permithedEdits(fornecedor: FornecedorModel) {
         binding.editButton.setOnClickListener {
             val cardView = binding.cardview
-            cardView.layoutParams.height = 530
+            cardView.layoutParams.height = 760
             cardView.requestLayout()
             allowVisibilities(true)
             observeEdit(fornecedor, cardView)
@@ -78,6 +80,7 @@ class FornecedorViewHolder(
                 cardView.requestLayout()
                 fornecedor.razaoSocial = razaoSocial.toString()
                 fornecedor.cnpj = cnpj.toString()
+
                 onEditChange(fornecedor, oldCnpj)
             }
             binding.btnCancel.setOnClickListener {
@@ -101,7 +104,15 @@ class FornecedorViewHolder(
             binding.tvCnpj.isFocusableInTouchMode = true
             binding.btnSave.visibility = View.VISIBLE
             binding.btnCancel.visibility = View.VISIBLE
+            binding.tvContactNumber.isClickable = true
+            binding.tvContactNumber.isFocusable = true
+            binding.tvContactNumber.isFocusableInTouchMode = true
+            binding.tvEletronicAddres.isFocusable = true
+            binding.tvEletronicAddres.isClickable = true
+            binding.tvEletronicAddres.isFocusableInTouchMode = true
             binding.switchStatus.visibility = View.GONE
+            binding.icWhatsapp.isClickable = false
+            binding.icWhatsapp.isFocusable = false
         } else {
             binding.switchStatus.visibility = View.VISIBLE
             binding.btnSave.visibility = View.GONE
@@ -112,6 +123,20 @@ class FornecedorViewHolder(
             binding.tvCnpj.isFocusable = false
             binding.tvCnpj.isClickable = false
             binding.tvCnpj.isFocusableInTouchMode = false
+            binding.tvContactNumber.isClickable = false
+            binding.tvContactNumber.isFocusable = false
+            binding.tvContactNumber.isFocusableInTouchMode = false
+            binding.tvEletronicAddres.isFocusable = false
+            binding.tvEletronicAddres.isClickable = false
+            binding.tvEletronicAddres.isFocusableInTouchMode = false
+            binding.icWhatsapp.isClickable = true
+            binding.icWhatsapp.isFocusable = true
+        }
+    }
+
+    private fun sendToWhatsapp(fornecedor: FornecedorModel) {
+        binding.icWhatsapp.setOnClickListener {
+            sendToWhatsapp(fornecedor)
         }
     }
 }

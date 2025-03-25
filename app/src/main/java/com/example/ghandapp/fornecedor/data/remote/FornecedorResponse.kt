@@ -7,5 +7,7 @@ import com.squareup.moshi.JsonClass
 data class FornecedorResponse(
     val razaoSocial: String,
     val cnpj: String,
-    val status: Situacao
+    val status: Situacao,
+    val contactNumber: String,
+    val eletronicAddres: String
 )

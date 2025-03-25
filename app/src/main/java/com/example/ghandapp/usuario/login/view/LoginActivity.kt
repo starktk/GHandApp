@@ -1,9 +1,13 @@
 package com.example.ghandapp.usuario.login.view
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import com.example.ghandapp.R
 import com.example.ghandapp.databinding.ActivityLoginBinding
 
@@ -17,6 +21,8 @@ import com.google.android.material.snackbar.Snackbar
 
 
 class LoginActivity: AppCompatActivity() {
+
+
 
     private lateinit var binding: ActivityLoginBinding
 
@@ -34,13 +40,13 @@ class LoginActivity: AppCompatActivity() {
             )
         }
 
-
-
         binding.Register.setOnClickListener {
             showRegisterUser()
         }
+
         initializeObserver()
     }
+
 
     private fun initializeObserver() {
         viewModel.state.observe(this) { viewState ->

@@ -1,8 +1,10 @@
 package com.example.ghandapp.home.view
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -60,6 +62,9 @@ class HomeActivity: AppCompatActivity() {
                     viewModel.updateFornecedor(fornecedor, cnpj, binding.root)
                     viewModel.listFornecedoresRefresh(binding.root)
                 }
+            },
+            sendToWhatsapp = {fornecedor ->
+                viewModel.sendToWhatsapp(fornecedor.contactNumber.toString())
             }
         )
 
@@ -117,14 +122,17 @@ class HomeActivity: AppCompatActivity() {
     private fun init() {
         binding.fornecedorScreen.setOnClickListener {
             contextScreen = StateStart.FORNECEDOR
+            binding.rvList.adapter = fornecedorAdapter
             viewModel.initializer(contextScreen, binding.root)
         }
         binding.agendaScreen.setOnClickListener {
             contextScreen = StateStart.AGENDAPROD
+            binding.rvList.adapter = agendaProdutoAdapter
             viewModel.initializer(contextScreen, binding.root)
         }
         binding.agendaScreenPayment.setOnClickListener {
             contextScreen = StateStart.AGENDAPAG
+            binding.rvList.adapter = agendaPagamentoAdapter
             viewModel.initializer(contextScreen, binding.root)
         }
     }
@@ -139,6 +147,8 @@ class HomeActivity: AppCompatActivity() {
                 is HomeViewState.sucessUser -> showNameForFinalUser(viewState.name)
                 is HomeViewState.showProfile -> showProfile(viewState.user)
                 is HomeViewState.showSucessUserEdited -> showNewUserSettings(viewState.user)
+                is HomeViewState.showWhatsapp -> intentToWhatsapp(viewState.contactNumber)
+                HomeViewState.numberErrorMessage -> showMessageErrorForContactNumber()
                 HomeViewState.showFailedMessageUpdateUser -> showFailUpdateMessage()
                 HomeViewState.showFailedUser -> userFail()
                 HomeViewState.showEmptyList -> showEmptyList()
@@ -157,6 +167,28 @@ class HomeActivity: AppCompatActivity() {
         }
     }
 
+    private fun showMessageErrorForContactNumber() {
+        binding.pbLoading.hide()
+        Snackbar.make(binding.root, "Número inválido", Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun intentToWhatsapp(contactNumber: String) {
+        binding.pbLoading.hide()
+        val uri = Uri.parse("https://api.whatsapp.com/send?phone=$contactNumber")
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.setPackage("com.whatsapp")
+        try {
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            val playStoreIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.whatsapp"))
+            try {
+                startActivity(playStoreIntent)
+            } catch (ex: ActivityNotFoundException) {
+                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.whatsapp"))
+                startActivity(webIntent)
+            }
+        }
+    }
 
 
     private fun userFail() {
@@ -311,6 +343,7 @@ class HomeActivity: AppCompatActivity() {
             binding.edtName.isFocusable = true
             binding.edtName.isFocusableInTouchMode = true
             binding.edtName.isClickable = true
+
             binding.edtPassword.visibility = View.VISIBLE
         } else {
             binding.edtNameProfile.isClickable = false
@@ -510,6 +543,8 @@ class HomeActivity: AppCompatActivity() {
             override fun onNothingSelected(p0: AdapterView<*>?) {
             }
         }
+
+
     }
 
     @SuppressLint("ResourceType")
@@ -539,7 +574,7 @@ class HomeActivity: AppCompatActivity() {
                 val itemSelecionado = parent.getItemAtPosition(position).toString()
                 contextStatus = false
                 when (itemSelecionado) {
-                    "Status" -> Toast.makeText(this@HomeActivity, "Selecione uma opção", Toast.LENGTH_SHORT).show()
+                    "Status" -> {}
                     "Não pago" -> {
                         contextStatus = true
                         viewModel.listAgendaPagByStatus(SituacaoPagamento.A_PAGAR, binding.root)

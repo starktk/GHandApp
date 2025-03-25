@@ -336,4 +336,14 @@ class HomeViewModel: ViewModel() {
             }
         }
     }
+    fun sendToWhatsapp(contacNumber: String) {
+        viewModelScope.launch {
+            viewState.value = HomeViewState.showLoading
+            if (contacNumber.isEmpty()) {
+                viewState.value = HomeViewState.numberErrorMessage
+            } else {
+                viewState.value = HomeViewState.showWhatsapp(contacNumber)
+            }
+        }
+    }
 }

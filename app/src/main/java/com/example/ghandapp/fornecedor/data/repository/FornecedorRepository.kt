@@ -29,10 +29,10 @@ class FornecedorRepository {
             .createNetworkClient()
             .create(FornecedorService::class.java)
 
-    suspend fun createFornecedor(razaoSocial: String, cnpj: String, username: String, name: String): Boolean {
+    suspend fun createFornecedor(razaoSocial: String, cnpj: String,contactNumber: String, eletronicAddres: String, username: String, name: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val response = client.createFornecedor(FornecedorRequest(razaoSocial, cnpj, status = Situacao.ATIVA , username, name = name))
+                val response = client.createFornecedor(FornecedorRequest(razaoSocial, cnpj,contactNumber, eletronicAddres, status = Situacao.ATIVA , username, name = name))
                 response.isSuccessful
             } catch (exception: Exception) {
                 Snackbar.make(bindingFornecedor.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
@@ -219,7 +219,9 @@ class FornecedorRepository {
         return FornecedorModel(
             razaoSocial = this?.razaoSocial,
             cnpj = this?.cnpj,
-            status = this?.status
+            status = this?.status,
+            contactNumber = this?.contactNumber,
+            eletronicAddres = this?.eletronicAddres
         )
     }
 }

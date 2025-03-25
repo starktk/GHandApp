@@ -96,4 +96,7 @@
     <string name="gett_AllFornecedores">Listar todos</string>
     <string name="selecione_o_m_s">Selecione o mês</string>
     <string name="visualizar_perfil">Visualizar Perfil</string>
+    <string name="contactNumber">Número de contato</string>
+    <string name="eletronicAddres">Email</string>
+    <string name="confirme_a_senha_nova">Confirme a senha nova</string>
 </resources>

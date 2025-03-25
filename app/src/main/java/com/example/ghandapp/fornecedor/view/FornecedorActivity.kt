@@ -29,11 +29,14 @@ class FornecedorActivity: AppCompatActivity() {
         setContentView(binding.root)
 
         addCnpjMask()
-
+        addPhoneMask()
+        addEmailValidation()
         binding.registerFornecedor.setOnClickListener {
             viewModel.validateInputs(
                 razaoSocial = binding.razaoSocial.text.toString(),
-                cnpj = binding.cnpj.text.toString()
+                cnpj = binding.cnpj.text.toString(),
+                contactNumber = binding.contactNumber.text.toString(),
+                eletronicAddres = binding.email.text.toString()
             )
         }
 
@@ -43,6 +46,59 @@ class FornecedorActivity: AppCompatActivity() {
         initializeObserver()
     }
 
+    private fun addEmailValidation() {
+        binding.email.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+            override fun afterTextChanged(s: Editable?) {
+                val email = s.toString()
+                if (!isValidEmail(email)) {
+                    binding.email.error = "E-mail inválido"
+                }
+            }
+        })
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        val emailRegex = "[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}".toRegex()
+        return email.matches(emailRegex)
+    }
+
+    private fun addPhoneMask() {
+        binding.contactNumber.addTextChangedListener(object : TextWatcher {
+            private var isUpdating = false
+            private val mask = "(##) #####-####"
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (isUpdating || s.isNullOrEmpty()) return
+
+                isUpdating = true
+                val unmasked = s.replace(Regex("[^\\d]"), "")
+                val masked = StringBuilder()
+                var index = 0
+
+                for (char in mask) {
+                    if (index >= unmasked.length) break
+                    if (char == '#') {
+                        masked.append(unmasked[index])
+                        index++
+                    } else {
+                        masked.append(char)
+                    }
+                }
+
+                binding.contactNumber.setText(masked.toString())
+                binding.contactNumber.setSelection(masked.length)
+
+                isUpdating = false
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
     private fun addCnpjMask() {
         binding.cnpj.addTextChangedListener(object : TextWatcher {
             private var isUpdating = false
@@ -94,8 +150,20 @@ class FornecedorActivity: AppCompatActivity() {
                 FornecedorViewState.cnpjErrorMessage -> showCnpjErrorMessage()
                 FornecedorViewState.missingUsernameReference -> missingUsernameReference()
                 FornecedorViewState.blankOrEmptyInputs -> showInputsInvalidMessage()
+                FornecedorViewState.phoneErrorMessage -> showMessageErrorPhone()
+                FornecedorViewState.emailErrorMessage -> showMessageErrorEmail()
             }
         }
+    }
+
+    private fun showMessageErrorEmail() {
+        binding.pbLoading.hide()
+        Snackbar.make(binding.root, "Número de telefone inválido", Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun showMessageErrorPhone() {
+        binding.pbLoading.hide()
+        Snackbar.make(binding.root, "Email inválido", Snackbar.LENGTH_SHORT).show()
     }
 
     private fun showLoading() {

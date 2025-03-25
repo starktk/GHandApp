@@ -2,6 +2,8 @@ package com.example.ghandapp.usuario.registerUser.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ghandapp.R
@@ -28,7 +30,7 @@ class UsuarioActivity: AppCompatActivity() {
             viewModel.validateInputs(
                 username = binding.username.text.toString(),
                 name = binding.nome.text.toString(),
-                password = binding.pwd.text.toString()
+                password = binding.pwd.text.toString(),
             )
         }
 
@@ -40,6 +42,9 @@ class UsuarioActivity: AppCompatActivity() {
 
     }
 
+
+
+
     private fun initializeObserver() {
         viewModel.state.observe(this) { viewState ->
             when (viewState) {
@@ -50,9 +55,16 @@ class UsuarioActivity: AppCompatActivity() {
                 UsuarioViewState.showLoading -> showLoading()
                 UsuarioViewState.passwordInvalidMessage -> showPasswordInvalidMessage()
                 UsuarioViewState.badCreation -> showInvalidCreation()
+                UsuarioViewState.errorEmailMessage -> showErrorEmailMessage()
             }
         }
     }
+
+    private fun showErrorEmailMessage() {
+        binding.pbLoading.hide()
+        Snackbar.make(binding.root, "Email inválido", Snackbar.LENGTH_SHORT).show()
+    }
+
     private fun showLoading() {
         binding.pbLoading.show()
     }

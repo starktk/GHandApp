@@ -13,8 +13,8 @@ class FornecedorUseCase {
     private val loginUseCase by lazy {
         LoginUseCase()
     }
-    suspend fun createFornecedor(razaoSocial: String, cnpj: String,): Boolean {
-        return repositoryFornecedor.createFornecedor(razaoSocial, cnpj, loginUseCase.getUser().username, loginUseCase.getUser().name)
+    suspend fun createFornecedor(razaoSocial: String, cnpj: String, contactNumber: String, eletronicAddres: String): Boolean {
+        return repositoryFornecedor.createFornecedor(razaoSocial, cnpj, contactNumber, eletronicAddres, loginUseCase.getUser().username, loginUseCase.getUser().name)
     }
 
     suspend fun findFornecedorByCnpj(cnpj: String): FornecedorModel? {

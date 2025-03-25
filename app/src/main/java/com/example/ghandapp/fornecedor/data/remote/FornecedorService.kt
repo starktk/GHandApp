@@ -20,8 +20,8 @@ interface FornecedorService {
     @POST("/fornecedor/createFornecedor")
     suspend fun createFornecedor(@Body fornecedorRequest: FornecedorRequest): Response<ResponseBody>
 
-    @PUT("/fornecedor/updateFornecedor/{cnpj}")
-    suspend fun alterFornecedor(@Path("cnpj") cnpj: String?, @Body fornecedorRequest: FornecedorRequest): Response<FornecedorResponse>
+    @PUT("/fornecedor/updateFornecedor")
+    suspend fun alterFornecedor(@Query("cnpj") cnpj: String?, @Body fornecedorRequest: FornecedorRequest): Response<FornecedorResponse>
 
     @Headers("Content-Type: application/json")
     @DELETE("/fornecedor/deleteFornecedor")

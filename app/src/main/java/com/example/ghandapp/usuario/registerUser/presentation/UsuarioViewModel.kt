@@ -33,8 +33,11 @@ class UsuarioViewModel: ViewModel() {
             return
         }
 
+
+
         fetchCreate(username = username, name = name, password = password)
     }
+
 
     private fun fetchCreate(username: String, name: String, password: String) {
         viewModelScope.launch {

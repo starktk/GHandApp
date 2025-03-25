@@ -17,19 +17,31 @@ class FornecedorViewModel: ViewModel() {
 
     private val usecaseFornecedor by lazy { FornecedorUseCase() }
     private val usecaseLogin by lazy { LoginUseCase() }
-    fun validateInputs(razaoSocial: String, cnpj: String) {
+    fun validateInputs(razaoSocial: String, cnpj: String, contactNumber: String, eletronicAddres: String) {
         viewState.value = FornecedorViewState.showLoading
 
-        if(!razaoSocial.isNullOrEmpty() && cnpj.isNullOrEmpty ()) {
+        if (razaoSocial.isEmpty() || cnpj.isEmpty() || contactNumber.isEmpty() || eletronicAddres.isEmpty()) {
             viewState.value = FornecedorViewState.blankOrEmptyInputs
             return
         }
-        if(!isValidCnpj(cnpj)) {
+
+        if (!isValidCnpj(cnpj)) {
             viewState.value = FornecedorViewState.cnpjErrorMessage
             return
         }
 
-        fetchCreate(razaoSocial, cnpj)
+        if (!isValidPhoneNumber(contactNumber)) {
+            viewState.value = FornecedorViewState.phoneErrorMessage
+            return
+        }
+
+        if (!isValidEmail(eletronicAddres)) {
+            viewState.value = FornecedorViewState.emailErrorMessage
+            return
+        }
+
+        // Agora, faz a criação do fornecedor
+        fetchCreate(razaoSocial, cnpj, contactNumber, eletronicAddres)
     }
 
     private fun isValidCnpj(cnpj: String): Boolean {
@@ -56,7 +68,14 @@ class FornecedorViewModel: ViewModel() {
         return numbers.endsWith("$digit1$digit2")
     }
 
-    private fun fetchCreate(razaoSocial: String, cnpj: String) {
+    private fun isValidPhoneNumber(phone: String): Boolean {
+        return phone.matches(Regex("^\\(\\d{2}\\) \\d{5}-\\d{4}\$"))
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        return email.matches(Regex("[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}"))
+    }
+    private fun fetchCreate(razaoSocial: String, cnpj: String, contactPhone: String, eletronicAddres: String) {
         viewModelScope.launch {
             val username = usecaseLogin.getUser().username
             println(username)
@@ -64,7 +83,7 @@ class FornecedorViewModel: ViewModel() {
                 viewState.value = FornecedorViewState.missingUsernameReference
             }
 
-            val isCreated = usecaseFornecedor.createFornecedor(razaoSocial, cnpj)
+            val isCreated = usecaseFornecedor.createFornecedor(razaoSocial, cnpj, contactPhone, eletronicAddres)
 
             if(isCreated) {
                 viewState.value = FornecedorViewState.isCreated

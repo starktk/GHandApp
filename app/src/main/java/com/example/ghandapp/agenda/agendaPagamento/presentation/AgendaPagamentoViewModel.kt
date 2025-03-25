@@ -28,7 +28,7 @@ class AgendaPagamentoViewModel: ViewModel() {
             viewState.value = AgendaPagamentoViewState.valueErrorMessage
             return
         }
-        if (cnpj.isNullOrEmpty()) {
+        if (!isValidCnpj(cnpj)) {
             viewState.value = AgendaPagamentoViewState.cnpjErrorMessage
             return
         }
@@ -37,6 +37,29 @@ class AgendaPagamentoViewModel: ViewModel() {
             return
         }
         fetchCreation(valueToPay.toDouble(), cnpj, dateToPayOrReceive, contextView)
+    }
+    private fun isValidCnpj(cnpj: String): Boolean {
+        val numbers = cnpj.replace(Regex("[^\\d]"), "")
+
+        if (numbers.length != 14) return false
+
+        val invalids = listOf("00000000000000", "11111111111111", "22222222222222")
+        if (numbers in invalids) return false
+
+        fun calculateDigit(cnpj: String, weights: IntArray): Int {
+            var sum = 0
+            for (i in weights.indices) sum += (cnpj[i].toString().toInt() * weights[i])
+            val remainder = sum % 11
+            return if (remainder < 2) 0 else 11 - remainder
+        }
+
+        val weight1 = intArrayOf(5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2)
+        val weight2 = intArrayOf(6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2)
+
+        val digit1 = calculateDigit(numbers, weight1)
+        val digit2 = calculateDigit(numbers + digit1, weight2)
+
+        return numbers.endsWith("$digit1$digit2")
     }
 
     private fun fetchCreation(valueToPay: Double, cnpj: String,dateToPayOrReceive: String, contextView: View) {

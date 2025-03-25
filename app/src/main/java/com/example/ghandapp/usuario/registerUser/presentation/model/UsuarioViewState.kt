@@ -12,5 +12,7 @@ sealed class UsuarioViewState {
 
     object badCreation : UsuarioViewState()
 
+    object errorEmailMessage: UsuarioViewState()
+
 
 }

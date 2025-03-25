@@ -17,6 +17,8 @@ sealed class HomeViewState {
 
     data class showSucessUserEdited(val user: UserEntity): HomeViewState()
 
+    data class showWhatsapp(val contactNumber: String): HomeViewState()
+    object numberErrorMessage: HomeViewState()
     object showFailedMessageUpdateUser: HomeViewState()
     object stateFornecedor: HomeViewState()
     object stateAgenda: HomeViewState()
